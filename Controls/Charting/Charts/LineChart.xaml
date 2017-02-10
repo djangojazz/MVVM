@@ -35,7 +35,7 @@
                 <ScaleTransform ScaleX="-1" ScaleY="-1" />
               </Canvas.LayoutTransform>
             </Canvas>
-            <Canvas x:Name="PART_CanvasPoints" Grid.Row="0" Grid.Column="2" Height="1000px" Width="1000px">
+            <Canvas x:Name="PART_CanvasPoints" Grid.Row="0" Grid.Column="2" Height="1000px" Width="1000px" >
               <Canvas.LayoutTransform>
                 <ScaleTransform ScaleX="1" ScaleY="-1" />
               </Canvas.LayoutTransform>

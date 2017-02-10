@@ -1,7 +1,8 @@
 ﻿Imports System.Windows.Threading
 
-Public Class BaseChart
+Public MustInherit Class BaseChart
   Inherits UserControl
+
   Private _xType As Type
   Private _xFloor As Decimal = 0
   Private _xCeiling As Decimal = 0
@@ -16,6 +17,10 @@ Public Class BaseChart
   Private _labelHeight As Double = 0
   Private _timer As New DispatcherTimer
   Private _defaultTimeSpan As New TimeSpan(1000)
+
+  Public Sub New()
+    _timer.Interval = _defaultTimeSpan
+  End Sub
 
 #Region "Dependent Properties"
 
@@ -241,37 +246,46 @@ Public Class BaseChart
   End Property
 #End Region
 
-  '#Region "ChartData"
-  '  Public Shared ReadOnly ChartDataProperty As DependencyProperty = DependencyProperty.Register("ChartData", GetType(ObservableCollectionContentNotifying(Of PlotTrend)), GetType(BaseChart), New UIPropertyMetadata(New ObservableCollectionContentNotifying(Of PlotTrend), AddressOf ChartDataChanged))
+#Region "ChartData"
+  Public Shared ReadOnly ChartDataProperty As DependencyProperty = DependencyProperty.Register("ChartData", GetType(ObservableCollectionContentNotifying(Of PlotTrend)), GetType(BaseChart), New UIPropertyMetadata(New ObservableCollectionContentNotifying(Of PlotTrend), AddressOf ChartDataChanged))
 
-  '  Public Property ChartData As ObservableCollectionContentNotifying(Of PlotTrend)
-  '    Get
-  '      Return CType(GetValue(ChartDataProperty), ObservableCollectionContentNotifying(Of PlotTrend))
-  '    End Get
-  '    Set
-  '      SetValue(ChartDataProperty, Value)
-  '    End Set
-  '  End Property
-  '#End Region
+  Public Property ChartData As ObservableCollectionContentNotifying(Of PlotTrend)
+    Get
+      Return CType(GetValue(ChartDataProperty), ObservableCollectionContentNotifying(Of PlotTrend))
+    End Get
+    Set
+      SetValue(ChartDataProperty, Value)
+    End Set
+  End Property
+#End Region
 
-  '  Public Shared Sub ChartDataChanged(d As DependencyObject, e As DependencyPropertyChangedEventArgs)
-  '    Dim LC As LineChart = DirectCast(d, LineChart)
+  Public Shared Sub ChartDataChanged(d As DependencyObject, e As DependencyPropertyChangedEventArgs)
+    Dim o = DirectCast(d, LineChart)
 
-  '    If Not IsNothing(e.OldValue) Then
-  '      Dim OldCollection = TryCast(e.OldValue, ObservableCollectionContentNotifying(Of PlotTrend))
-  '      RemoveHandler OldCollection.OnCollectionItemChanged, AddressOf LC.CalculatePlotTrends
-  '      RemoveHandler OldCollection.CollectionChanged, AddressOf LC.CalculatePlotTrends
-  '    End If
+    If Not IsNothing(e.OldValue) Then
+      Dim OldCollection = TryCast(e.OldValue, ObservableCollectionContentNotifying(Of PlotTrend))
+      RemoveHandler OldCollection.OnCollectionItemChanged, AddressOf o.CalculatePlotTrends
+      RemoveHandler OldCollection.CollectionChanged, AddressOf o.CalculatePlotTrends
+    End If
 
-  '    If Not IsNothing(e.NewValue) Then
-  '      Dim NewCollection = TryCast(e.NewValue, ObservableCollectionContentNotifying(Of PlotTrend))
-  '      AddHandler NewCollection.OnCollectionItemChanged, AddressOf LC.CalculatePlotTrends
-  '      AddHandler NewCollection.CollectionChanged, AddressOf LC.CalculatePlotTrends
-  '      'AddHandler LC.Loaded, Sub() LC.ResizeAndPlotPoints(LC)
-  '      'AddHandler LC.SizeChanged, Sub() LC.Resized()
-  '      'AddHandler LC._timer.Tick, Sub() LC.OnTick(LC)
-  '    End If
+    If Not IsNothing(e.NewValue) Then
+      Dim NewCollection = TryCast(e.NewValue, ObservableCollectionContentNotifying(Of PlotTrend))
+      AddHandler NewCollection.OnCollectionItemChanged, AddressOf o.CalculatePlotTrends
+      AddHandler NewCollection.CollectionChanged, AddressOf o.CalculatePlotTrends
+      AddHandler o.Loaded, Sub() o.ResizeAndPlotPoints(o)
+      AddHandler o.SizeChanged, Sub() o.Resized()
+      AddHandler o._timer.Tick, Sub() o.OnTick(o)
+    End If
 
-  '  End Sub
+  End Sub
+
+
+  Public MustOverride Sub OnTick(o As LineChart)
+
+  Public MustOverride Sub Resized()
+
+  Public MustOverride Sub ResizeAndPlotPoints(o As LineChart)
+
+  Public MustOverride Sub CalculatePlotTrends()
 #End Region
 End Class

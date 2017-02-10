@@ -31,63 +31,24 @@ Public Class LineChart
     _timer.Interval = _defaultTimeSpan
   End Sub
 
-  '#Region "Dependent Properties"
-
-#Region "ChartData"
-  Public Shared ReadOnly ChartDataProperty As DependencyProperty = DependencyProperty.Register("ChartData", GetType(ObservableCollectionContentNotifying(Of PlotTrend)), GetType(LineChart), New UIPropertyMetadata(New ObservableCollectionContentNotifying(Of PlotTrend), AddressOf ChartDataChanged))
-
-  Public Property ChartData As ObservableCollectionContentNotifying(Of PlotTrend)
-    Get
-      Return CType(GetValue(ChartDataProperty), ObservableCollectionContentNotifying(Of PlotTrend))
-    End Get
-    Set
-      SetValue(ChartDataProperty, Value)
-    End Set
-  End Property
-#End Region
-
-
 #Region "DataChangedAndTimingEvents"
 
-
-  Public Shared Sub ChartDataChanged(d As DependencyObject, e As DependencyPropertyChangedEventArgs)
-    Dim LC As LineChart = DirectCast(d, LineChart)
-
-    If Not IsNothing(e.OldValue) Then
-      Dim OldCollection = TryCast(e.OldValue, ObservableCollectionContentNotifying(Of PlotTrend))
-      RemoveHandler OldCollection.OnCollectionItemChanged, AddressOf LC.CalculatePlotTrends
-      RemoveHandler OldCollection.CollectionChanged, AddressOf LC.CalculatePlotTrends
-    End If
-
-    If Not IsNothing(e.NewValue) Then
-      Dim NewCollection = TryCast(e.NewValue, ObservableCollectionContentNotifying(Of PlotTrend))
-      AddHandler NewCollection.OnCollectionItemChanged, AddressOf LC.CalculatePlotTrends
-      AddHandler NewCollection.CollectionChanged, AddressOf LC.CalculatePlotTrends
-      AddHandler LC.Loaded, Sub() LC.ResizeAndPlotPoints(LC)
-      AddHandler LC.SizeChanged, Sub() LC.Resized()
-      AddHandler LC._timer.Tick, Sub() LC.OnTick(LC)
-    End If
-
-  End Sub
-
-
-
-  Private Sub OnTick(lc As LineChart)
+  Public Overrides Sub OnTick(o As LineChart)
     _timer.Stop()
-    lc.ResizeAndPlotPoints(lc)
+    o.ResizeAndPlotPoints(o)
   End Sub
 
-  Private Sub Resized()
+  Public Overrides Sub Resized()
     _timer.Stop()
     _timer.Start()
   End Sub
 #End Region
 
 #Region "ResivingAndPlotPoints"
-  Private Sub ResizeAndPlotPoints(lc As LineChart)
+  Public Overrides Sub ResizeAndPlotPoints(o As LineChart)
     SetupInternalHeightAndWidths()
     SetupHeightAndWidthsOfObjects()
-    lc.CalculatePlotTrends()
+    o.CalculatePlotTrends()
   End Sub
 
   Private Sub SetupHeightAndWidthsOfObjects()
@@ -132,10 +93,8 @@ Public Class LineChart
 
   End Sub
 
-  Public Sub CalculatePlotTrends(o As Object, ev As EventArgs)
-    CalculatePlotTrends()
-  End Sub
-  Public Sub CalculatePlotTrends()
+
+  Public Overrides Sub CalculatePlotTrends()
     If Me.PART_CanvasPoints IsNot Nothing AndAlso ChartData IsNot Nothing Then
       If ChartData.Count > 1 Then
 

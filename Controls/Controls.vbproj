@@ -83,6 +83,7 @@
     <Compile Include="BaseTest.vb" />
     <Compile Include="BusinessLogic\DelegateCommand.vb" />
     <Compile Include="BusinessLogic\ExtensionMethods.vb" />
+    <Compile Include="Charting\Charts\BaseChart.vb" />
     <Compile Include="Charting\Charts\LineChart.xaml.vb">
       <DependentUpon>LineChart.xaml</DependentUpon>
     </Compile>

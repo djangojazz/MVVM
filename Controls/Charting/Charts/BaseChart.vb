@@ -17,12 +17,10 @@ Public Class BaseChart
   Private _timer As New DispatcherTimer
   Private _defaultTimeSpan As New TimeSpan(1000)
 
-
 #Region "Dependent Properties"
 
-
 #Region "ChartTitle"
-  Public Shared ReadOnly ChartTitleProperty As DependencyProperty = DependencyProperty.Register(NameOf(ChartTitle), GetType(String), GetType(LineChart), New UIPropertyMetadata(String.Empty))
+  Public Shared ReadOnly ChartTitleProperty As DependencyProperty = DependencyProperty.Register(NameOf(ChartTitle), GetType(String), GetType(BaseChart), New UIPropertyMetadata(String.Empty))
 
   Public Property ChartTitle As String
     Get
@@ -35,7 +33,7 @@ Public Class BaseChart
 #End Region
 
 #Region "ChartForeground"
-  Public Shared ReadOnly ChartForegroundProperty As DependencyProperty = DependencyProperty.Register(NameOf(ChartForeground), GetType(Brush), GetType(LineChart), New UIPropertyMetadata(Brushes.Black))
+  Public Shared ReadOnly ChartForegroundProperty As DependencyProperty = DependencyProperty.Register(NameOf(ChartForeground), GetType(Brush), GetType(BaseChart), New UIPropertyMetadata(Brushes.Black))
 
   Public Property ChartForeground As Brush
     Get
@@ -62,7 +60,7 @@ Public Class BaseChart
 #End Region
 
 #Region "ChartTitleHidden"
-  Public Shared ReadOnly ChartTitleHiddenProperty As DependencyProperty = DependencyProperty.Register(NameOf(ChartTitleHidden), GetType(Boolean), GetType(LineChart), New UIPropertyMetadata(False, AddressOf LineChart.ChartTitleHiddenChanged))
+  Public Shared ReadOnly ChartTitleHiddenProperty As DependencyProperty = DependencyProperty.Register(NameOf(ChartTitleHidden), GetType(Boolean), GetType(BaseChart), New UIPropertyMetadata(False, AddressOf ChartTitleHiddenChanged))
 
   Public Property ChartTitleHidden As Boolean
     Get
@@ -86,7 +84,7 @@ Public Class BaseChart
 #End Region
 
 #Region "BackGroundColor"
-  Public Shared ReadOnly BackGroundColorProperty As DependencyProperty = DependencyProperty.Register(NameOf(BackGroundColor), GetType(Brush), GetType(LineChart), New UIPropertyMetadata(Brushes.Black))
+  Public Shared ReadOnly BackGroundColorProperty As DependencyProperty = DependencyProperty.Register(NameOf(BackGroundColor), GetType(Brush), GetType(BaseChart), New UIPropertyMetadata(Brushes.Black))
 
   Public Property BackGroundColor As Brush
     Get
@@ -99,7 +97,7 @@ Public Class BaseChart
 #End Region
 
 #Region "BackGroundColorCanvas"
-  Public Shared ReadOnly BackGroundColorCanvasProperty As DependencyProperty = DependencyProperty.Register(NameOf(BackGroundColorCanvas), GetType(Brush), GetType(LineChart), New UIPropertyMetadata(Brushes.Black))
+  Public Shared ReadOnly BackGroundColorCanvasProperty As DependencyProperty = DependencyProperty.Register(NameOf(BackGroundColorCanvas), GetType(Brush), GetType(BaseChart), New UIPropertyMetadata(Brushes.Black))
 
   Public Property BackGroundColorCanvas As Brush
     Get
@@ -112,7 +110,7 @@ Public Class BaseChart
 #End Region
 
 #Region "BackGroundColorLegend"
-  Public Shared ReadOnly BackGroundColorLegendProperty As DependencyProperty = DependencyProperty.Register(NameOf(BackGroundColorLegend), GetType(Brush), GetType(LineChart), New UIPropertyMetadata(Brushes.Black))
+  Public Shared ReadOnly BackGroundColorLegendProperty As DependencyProperty = DependencyProperty.Register(NameOf(BackGroundColorLegend), GetType(Brush), GetType(BaseChart), New UIPropertyMetadata(Brushes.Black))
 
   Public Property BackGroundColorLegend As Brush
     Get
@@ -153,7 +151,7 @@ Public Class BaseChart
 #End Region
 
 #Region "LegendForeground"
-  Public Shared ReadOnly LegendForegroundProperty As DependencyProperty = DependencyProperty.Register(NameOf(LegendForeground), GetType(Brush), GetType(LineChart), New UIPropertyMetadata(Brushes.Black))
+  Public Shared ReadOnly LegendForegroundProperty As DependencyProperty = DependencyProperty.Register(NameOf(LegendForeground), GetType(Brush), GetType(BaseChart), New UIPropertyMetadata(Brushes.Black))
 
   Public Property LegendForeground As Brush
     Get
@@ -167,7 +165,7 @@ Public Class BaseChart
 #End Region
 
 #Region "LegendHidden"
-  Public Shared ReadOnly LegendHiddenProperty As DependencyProperty = DependencyProperty.Register(NameOf(LegendHidden), GetType(Boolean), GetType(LineChart), New UIPropertyMetadata(False, AddressOf LineChart.ChartLegendHiddenChanged))
+  Public Shared ReadOnly LegendHiddenProperty As DependencyProperty = DependencyProperty.Register(NameOf(LegendHidden), GetType(Boolean), GetType(BaseChart), New UIPropertyMetadata(False, AddressOf ChartLegendHiddenChanged))
 
   Public Property LegendHidden As Boolean
     Get
@@ -192,7 +190,7 @@ Public Class BaseChart
 #End Region
 
 #Region "NumberOfTicks"
-  Public Shared ReadOnly NumberOfTicksProperty As DependencyProperty = DependencyProperty.Register(NameOf(NumberOfTicks), GetType(Integer), GetType(LineChart), New UIPropertyMetadata(0))
+  Public Shared ReadOnly NumberOfTicksProperty As DependencyProperty = DependencyProperty.Register(NameOf(NumberOfTicks), GetType(Integer), GetType(BaseChart), New UIPropertyMetadata(0))
 
   Public Property NumberOfTicks As Integer
     Get
@@ -205,7 +203,7 @@ Public Class BaseChart
 #End Region
 
 #Region "XValueConverter"
-  Public Shared ReadOnly XValueConverterProperty As DependencyProperty = DependencyProperty.Register(NameOf(XValueConverter), GetType(IValueConverter), GetType(LineChart), Nothing)
+  Public Shared ReadOnly XValueConverterProperty As DependencyProperty = DependencyProperty.Register(NameOf(XValueConverter), GetType(IValueConverter), GetType(BaseChart), Nothing)
 
   Public Property XValueConverter As IValueConverter
     Get
@@ -218,7 +216,7 @@ Public Class BaseChart
 #End Region
 
 #Region "YValueConverter"
-  Public Shared ReadOnly YValueConverterProperty As DependencyProperty = DependencyProperty.Register(NameOf(YValueConverter), GetType(IValueConverter), GetType(LineChart), Nothing)
+  Public Shared ReadOnly YValueConverterProperty As DependencyProperty = DependencyProperty.Register(NameOf(YValueConverter), GetType(IValueConverter), GetType(BaseChart), Nothing)
 
   Public Property YValueConverter As IValueConverter
     Get
@@ -231,7 +229,7 @@ Public Class BaseChart
 #End Region
 
 #Region "FontType"
-  Public Shared ReadOnly FontTypeProperty As DependencyProperty = DependencyProperty.Register(NameOf(FontType), GetType(FontFamily), GetType(LineChart), Nothing)
+  Public Shared ReadOnly FontTypeProperty As DependencyProperty = DependencyProperty.Register(NameOf(FontType), GetType(FontFamily), GetType(BaseChart), Nothing)
 
   Public Property FontType As FontFamily
     Get
@@ -242,5 +240,38 @@ Public Class BaseChart
     End Set
   End Property
 #End Region
+
+  '#Region "ChartData"
+  '  Public Shared ReadOnly ChartDataProperty As DependencyProperty = DependencyProperty.Register("ChartData", GetType(ObservableCollectionContentNotifying(Of PlotTrend)), GetType(BaseChart), New UIPropertyMetadata(New ObservableCollectionContentNotifying(Of PlotTrend), AddressOf ChartDataChanged))
+
+  '  Public Property ChartData As ObservableCollectionContentNotifying(Of PlotTrend)
+  '    Get
+  '      Return CType(GetValue(ChartDataProperty), ObservableCollectionContentNotifying(Of PlotTrend))
+  '    End Get
+  '    Set
+  '      SetValue(ChartDataProperty, Value)
+  '    End Set
+  '  End Property
+  '#End Region
+
+  '  Public Shared Sub ChartDataChanged(d As DependencyObject, e As DependencyPropertyChangedEventArgs)
+  '    Dim LC As LineChart = DirectCast(d, LineChart)
+
+  '    If Not IsNothing(e.OldValue) Then
+  '      Dim OldCollection = TryCast(e.OldValue, ObservableCollectionContentNotifying(Of PlotTrend))
+  '      RemoveHandler OldCollection.OnCollectionItemChanged, AddressOf LC.CalculatePlotTrends
+  '      RemoveHandler OldCollection.CollectionChanged, AddressOf LC.CalculatePlotTrends
+  '    End If
+
+  '    If Not IsNothing(e.NewValue) Then
+  '      Dim NewCollection = TryCast(e.NewValue, ObservableCollectionContentNotifying(Of PlotTrend))
+  '      AddHandler NewCollection.OnCollectionItemChanged, AddressOf LC.CalculatePlotTrends
+  '      AddHandler NewCollection.CollectionChanged, AddressOf LC.CalculatePlotTrends
+  '      'AddHandler LC.Loaded, Sub() LC.ResizeAndPlotPoints(LC)
+  '      'AddHandler LC.SizeChanged, Sub() LC.Resized()
+  '      'AddHandler LC._timer.Tick, Sub() LC.OnTick(LC)
+  '    End If
+
+  '  End Sub
 #End Region
 End Class

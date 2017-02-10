@@ -5,6 +5,8 @@ VisualStudioVersion = 14.0.25420.1
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{F184B08F-C81C-45F6-A57F-5ABD9991F28F}") = "MVVM", "MVVM\MVVM.vbproj", "{850CE063-C01A-478A-BD99-6B8EB59E2C00}"
 EndProject
+Project("{F184B08F-C81C-45F6-A57F-5ABD9991F28F}") = "Controls", "Controls\Controls.vbproj", "{1143271F-C04C-4B55-BE05-36A8D67ACB21}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +17,10 @@ Global
 		{850CE063-C01A-478A-BD99-6B8EB59E2C00}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{850CE063-C01A-478A-BD99-6B8EB59E2C00}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{850CE063-C01A-478A-BD99-6B8EB59E2C00}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1143271F-C04C-4B55-BE05-36A8D67ACB21}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1143271F-C04C-4B55-BE05-36A8D67ACB21}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1143271F-C04C-4B55-BE05-36A8D67ACB21}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1143271F-C04C-4B55-BE05-36A8D67ACB21}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

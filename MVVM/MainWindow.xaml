@@ -4,9 +4,41 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:MVVM"
+        xmlns:cntrls="clr-namespace:Controls;assembly=Controls"
         mc:Ignorable="d"
-        Title="MainWindow" Height="350" Width="525">
-    <Grid>
-        
+        Title="MainWindow" Height="600" Width="800">
+  <Window.Resources>
+    <ResourceDictionary>
+      <ResourceDictionary.MergedDictionaries>
+        <ResourceDictionary Source="pack://application:,,,/Controls;component/styles.xaml" />
+      </ResourceDictionary.MergedDictionaries>
+    </ResourceDictionary>
+  </Window.Resources>
+<Grid>
+      <Grid.RowDefinitions>
+        <RowDefinition Height="*" />
+        <RowDefinition Height="Auto" />
+        <RowDefinition Height="Auto" />
+      </Grid.RowDefinitions>
+      <cntrls:LineChart 
+      Grid.Row ="0"
+      ChartData="{Binding ChartData}"
+      ChartTitle="Test Line Chart"
+      ChartForeground="Wheat"
+      LegendForeground="WhiteSmoke"
+      BackGroundColor="DarkCyan" 
+      BackGroundColorCanvas="White" 
+      BackGroundColorLegend="White"    
+      NumberOfTicks="5"
+      XValueConverter="{x:Static cntrls:Converters.DateToValueConverter}"
+      YValueConverter="{x:Static cntrls:Converters.DecimalConverter}"
+      FontType="Tahoma"
+      />
+    <StackPanel Grid.Row="1">
+      <Label Content="{Binding TestText}" Height="30" Foreground="{StaticResource test}" />
+      <Label Content="{Binding Dt, Converter={x:Static cntrls:Converters.DateFormatConverter}}" />
+    </StackPanel>
+      
+      <Button Grid.Row="2" Command="{Binding TestCommand}" Height="30" Content="Add more lines" />
     </Grid>
 </Window>

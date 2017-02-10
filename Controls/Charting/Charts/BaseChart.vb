@@ -260,7 +260,7 @@ Public MustInherit Class BaseChart
 #End Region
 
   Public Shared Sub ChartDataChanged(d As DependencyObject, e As DependencyPropertyChangedEventArgs)
-    Dim o = DirectCast(d, LineChart)
+    Dim o = DirectCast(d, BaseChart)
 
     If Not IsNothing(e.OldValue) Then
       Dim OldCollection = TryCast(e.OldValue, ObservableCollectionContentNotifying(Of PlotTrend))

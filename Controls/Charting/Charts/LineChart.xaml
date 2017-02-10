@@ -14,8 +14,7 @@
         <RowDefinition Height="Auto"/>
       </Grid.RowDefinitions>
       <TextBlock x:Name="PART_ChartTitle" Grid.Row="0" Text="{Binding ChartTitle}" FontSize="26" HorizontalAlignment="Center" 
-                 Foreground="{Binding ChartForeground}"
-                 FontFamily="{Binding FontType}"
+                 Foreground="{Binding ChartForeground}" FontFamily="{Binding FontType}" Visibility="{Binding ChartTitleVisibility}"
                  />
       <Border Grid.Row="1" BorderThickness="1" BorderBrush="Black" CornerRadius="15" Margin="10" Background="{Binding BackGroundColorCanvas}" >
         <Viewbox x:Name="PART_CanvasBorder" Stretch="Fill" RenderOptions.EdgeMode="Aliased" Margin="15" >
@@ -46,9 +45,10 @@
           </Grid>
         </Viewbox>
       </Border>
-      <TextBlock Grid.Row="2" x:Name="PART_LEGENDTEXT" Text="Legend" FontSize="26" HorizontalAlignment="Center" Foreground="{Binding LegendForeground}" Visibility="Hidden"
-                 FontFamily="{Binding FontType}"/>
-      <Border x:Name="PART_LEGEND" Grid.Row="3" CornerRadius="10"  BorderBrush="Black" BorderThickness="2" Margin="10" Background="{Binding BackGroundColorLegend}">
+      <TextBlock Grid.Row="2" x:Name="PART_LEGENDTEXT" Text="Legend" FontSize="26" HorizontalAlignment="Center" 
+                 Foreground="{Binding LegendForeground}" Visibility="{Binding LegendTextVisibility}" FontFamily="{Binding FontType}"/>
+      <Border x:Name="PART_LEGEND" Grid.Row="3" CornerRadius="10"  BorderBrush="Black" BorderThickness="2" Margin="10" 
+              Background="{Binding BackGroundColorLegend}" Visibility="{Binding LegendVisibility}">
         <ItemsControl ItemsSource="{Binding ChartData}">
           <ItemsControl.ItemTemplate>
             <DataTemplate>

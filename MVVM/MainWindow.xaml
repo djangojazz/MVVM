@@ -20,7 +20,7 @@
         <RowDefinition Height="Auto" />
         <RowDefinition Height="Auto" />
       </Grid.RowDefinitions>
-      <cntrls:LineChart 
+      <cntrls:BarChart 
       Grid.Row ="0"
       ChartData="{Binding ChartData}"
       ChartTitle="Test Line Chart"

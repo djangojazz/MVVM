@@ -83,6 +83,9 @@
     <Compile Include="BaseTest.vb" />
     <Compile Include="BusinessLogic\DelegateCommand.vb" />
     <Compile Include="BusinessLogic\ExtensionMethods.vb" />
+    <Compile Include="Charting\Charts\BarChart.xaml.vb">
+      <DependentUpon>BarChart.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Charting\Charts\BaseChart.vb" />
     <Compile Include="Charting\Charts\LineChart.xaml.vb">
       <DependentUpon>LineChart.xaml</DependentUpon>
@@ -126,6 +129,10 @@
     <Resource Include="Readme.html" />
   </ItemGroup>
   <ItemGroup>
+    <Page Include="Charting\Charts\BarChart.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Charting\Charts\LineChart.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

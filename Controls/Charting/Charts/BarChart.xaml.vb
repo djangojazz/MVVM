@@ -1,7 +1,6 @@
 ﻿Imports System.Windows.Threading
 
-Public NotInheritable Class LineChart
-
+Public NotInheritable Class BarChart
   'VARIABLES
   Private _xType As Type
   Private _xFloor As Decimal = 0

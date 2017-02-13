@@ -280,11 +280,11 @@ Public MustInherit Class BaseChart
   End Sub
 
 
-  Public MustOverride Sub OnTick(o As LineChart)
+  Public MustOverride Sub OnTick(o As Object)
 
   Public MustOverride Sub Resized()
 
-  Public MustOverride Sub ResizeAndPlotPoints(o As LineChart)
+  Public MustOverride Sub ResizeAndPlotPoints(o As Object)
 
   Public MustOverride Sub CalculatePlotTrends()
 #End Region

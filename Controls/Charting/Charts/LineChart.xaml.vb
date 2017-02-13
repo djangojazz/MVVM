@@ -267,6 +267,9 @@ Public NotInheritable Class LineChart
         Dim xFactor = (_viewWidth / (_xCeiling - _xFloor))
         Dim yFactor = (_viewHeight / (_yCeiling - _yFloor))
 
+        xFactor = If(Double.IsNaN(xFactor) OrElse Double.IsInfinity(xFactor), 1, xFactor)
+        yFactor = If(Double.IsNaN(yFactor) OrElse Double.IsInfinity(yFactor), 1, yFactor)
+
         For i As Integer = 1 To t.Points.Count - 1
           Dim toDraw = New Line With {
             .X1 = (t.Points(i - 1).XAsDouble - _xFloor) * xFactor,

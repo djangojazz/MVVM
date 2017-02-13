@@ -57,7 +57,8 @@ Public NotInheritable Class MainWindowViewModel
                                     New PlotPoints(New PlotPoint(Of DateTime)(DateTime.Now.AddDays(-4)), New PlotPoint(Of Double)(720)),
                                     _lastPoints(0)})
 
-    ChartData.ClearAndAddRange({New PlotTrend("First", Brushes.Blue, New Thickness(2), o), New PlotTrend("Second", Brushes.Red, New Thickness(2), o2)})
+    ChartData.ClearAndAddRange({New PlotTrend("First", Brushes.Blue, New Thickness(2), o)})
+    ', New PlotTrend("Second", Brushes.Red, New Thickness(2), o2)})
   End Sub
 
   Private Sub LinePlotAdding()
@@ -69,7 +70,7 @@ Public NotInheritable Class MainWindowViewModel
 
     _lastPoints = newPoints
     ChartData(0).Points.Add(_lastPoints(0))
-    ChartData(1).Points.Add(_lastPoints(1))
+    'ChartData(1).Points.Add(_lastPoints(1))
   End Sub
 
 #End Region

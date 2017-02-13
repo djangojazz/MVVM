@@ -129,7 +129,7 @@ Public NotInheritable Class LineChart
 #End Region
 
 #Region "Drawing Methods"
-  Public Sub DrawXAxis(lineTrends As IList(Of PlotTrend))
+  Private Sub DrawXAxis(lineTrends As IList(Of PlotTrend))
     Dim segment = ((_xCeiling - _xFloor) / NumberOfTicks)
     PART_CanvasXAxisTicks.Children.RemoveRange(0, PART_CanvasXAxisTicks.Children.Count)
     PART_CanvasXAxisLabels.Children.RemoveRange(0, PART_CanvasXAxisLabels.Children.Count)
@@ -198,7 +198,7 @@ Public NotInheritable Class LineChart
     Next
   End Sub
 
-  Public Sub DrawYAxis(lineTrends As IList(Of PlotTrend))
+  Private Sub DrawYAxis(lineTrends As IList(Of PlotTrend))
     Dim segment = ((_yCeiling - _yFloor) / NumberOfTicks)
     PART_CanvasYAxisTicks.Children.RemoveRange(0, PART_CanvasYAxisTicks.Children.Count)
     PART_CanvasYAxisLabels.Children.RemoveRange(0, PART_CanvasYAxisLabels.Children.Count)
@@ -260,7 +260,7 @@ Public NotInheritable Class LineChart
     Next
   End Sub
 
-  Friend Sub DrawTrends(points As IList(Of PlotTrend))
+  Private Sub DrawTrends(points As IList(Of PlotTrend))
 
     For Each t In ChartData
       If t.Points IsNot Nothing Then

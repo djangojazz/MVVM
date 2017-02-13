@@ -50,21 +50,6 @@ Public NotInheritable Class BarChart
     o.CalculatePlotTrends()
   End Sub
 
-  Private Sub SetupHeightAndWidthsOfObjects()
-    PART_CanvasYAxisLabels.Height = _viewHeight
-    PART_CanvasYAxisLabels.Width = _labelWidth
-    PART_CanvasYAxisTicks.Height = _viewHeight
-    PART_CanvasYAxisTicks.Width = _tickWidth
-
-    PART_CanvasXAxisLabels.Height = _labelHeight
-    PART_CanvasXAxisLabels.Width = _viewWidth
-    PART_CanvasXAxisTicks.Height = _tickHeight
-    PART_CanvasXAxisTicks.Width = _viewWidth
-
-    PART_CanvasPoints.Height = _viewHeight
-    PART_CanvasPoints.Width = _viewWidth
-  End Sub
-
   Private Sub SetupInternalHeightAndWidths()
     Dim margin = 0.99
 
@@ -89,9 +74,22 @@ Public NotInheritable Class BarChart
       _labelHeight = SetHeightOrWidth(30, False)
       _labelWidth = 75
     End If
-
   End Sub
 
+  Private Sub SetupHeightAndWidthsOfObjects()
+    PART_CanvasYAxisLabels.Height = _viewHeight
+    PART_CanvasYAxisLabels.Width = _labelWidth
+    PART_CanvasYAxisTicks.Height = _viewHeight
+    PART_CanvasYAxisTicks.Width = _tickWidth
+
+    PART_CanvasXAxisLabels.Height = _labelHeight
+    PART_CanvasXAxisLabels.Width = _viewWidth
+    PART_CanvasXAxisTicks.Height = _tickHeight
+    PART_CanvasXAxisTicks.Width = _viewWidth
+
+    PART_CanvasPoints.Height = _viewHeight
+    PART_CanvasPoints.Width = _viewWidth
+  End Sub
 
   Public Overrides Sub CalculatePlotTrends()
     If Me.PART_CanvasPoints IsNot Nothing AndAlso ChartData IsNot Nothing Then
@@ -115,20 +113,34 @@ Public NotInheritable Class BarChart
       Me._yFloor = ChartData.SelectMany(Function(x) x.Points).Select(Function(x) x.YAsDouble).OrderBy(Function(x) x).FirstOrDefault()
       Me._yCeiling = ChartData.SelectMany(Function(x) x.Points).Select(Function(x) x.YAsDouble).OrderByDescending(Function(x) x).FirstOrDefault()
 
-      Me.PART_CanvasPoints.Children.RemoveRange(0, Me.PART_CanvasPoints.Children.Count)
-      Me.DrawTrends(ChartData)
+      'Bar Chart needs a buffer of space around it to visibly show data without it looking bad.
+      Dim xType As Type = ChartData.SelectMany(Function(x) x.Points).Select(Function(x) x.X).FirstOrDefault().PointType
 
-      If Me.PART_CanvasXAxisTicks IsNot Nothing And Me.PART_CanvasYAxisTicks IsNot Nothing Then
-        If Me.NumberOfTicks = 0 Then Me.NumberOfTicks = 1 'I want at the very least to see a beginning and an end
-        Me.DrawXAxis(ChartData)
-        Me.DrawYAxis(ChartData)
+      If (xType Is GetType(Date) Or xType Is GetType(DateTime)) Then
+        Dim startDate = New DateTime(_xFloor)
+        Dim endDate = New DateTime(_xCeiling)
+
+        Me._xFloor = startDate.AddDays(-1).Ticks
+        Me._xCeiling = endDate.AddDays(1).Ticks
+      Else
+        Me._xFloor *= 1.1
+        Me._xCeiling *= 1.1
       End If
-    End If
+
+      Me.PART_CanvasPoints.Children.RemoveRange(0, Me.PART_CanvasPoints.Children.Count)
+        Me.DrawTrends(ChartData)
+
+        If Me.PART_CanvasXAxisTicks IsNot Nothing And Me.PART_CanvasYAxisTicks IsNot Nothing Then
+          If Me.NumberOfTicks = 0 Then Me.NumberOfTicks = 1 'I want at the very least to see a beginning and an end
+          Me.DrawXAxis(ChartData)
+          Me.DrawYAxis(ChartData)
+        End If
+      End If
   End Sub
 #End Region
 
 #Region "Drawing Methods"
-  Public Sub DrawXAxis(lineTrends As IList(Of PlotTrend))
+  Private Sub DrawXAxis(lineTrends As IList(Of PlotTrend))
     Dim segment = ((_xCeiling - _xFloor) / NumberOfTicks)
     PART_CanvasXAxisTicks.Children.RemoveRange(0, PART_CanvasXAxisTicks.Children.Count)
     PART_CanvasXAxisLabels.Children.RemoveRange(0, PART_CanvasXAxisLabels.Children.Count)
@@ -197,7 +209,7 @@ Public NotInheritable Class BarChart
     Next
   End Sub
 
-  Public Sub DrawYAxis(lineTrends As IList(Of PlotTrend))
+  Private Sub DrawYAxis(lineTrends As IList(Of PlotTrend))
     Dim segment = ((_yCeiling - _yFloor) / NumberOfTicks)
     PART_CanvasYAxisTicks.Children.RemoveRange(0, PART_CanvasYAxisTicks.Children.Count)
     PART_CanvasYAxisLabels.Children.RemoveRange(0, PART_CanvasYAxisLabels.Children.Count)
@@ -259,7 +271,7 @@ Public NotInheritable Class BarChart
     Next
   End Sub
 
-  Friend Sub DrawTrends(points As IList(Of PlotTrend))
+  Private Sub DrawTrends(points As IList(Of PlotTrend))
 
     For Each t In ChartData
       If t.Points IsNot Nothing Then

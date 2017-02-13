@@ -31,7 +31,6 @@ Public NotInheritable Class BarChart
   End Sub
 
 #Region "DataChangedAndTimingEvents"
-
   Public Overrides Sub OnTick(o As Object)
     _timer.Stop()
     o.ResizeAndPlotPoints(o)
@@ -47,7 +46,13 @@ Public NotInheritable Class BarChart
   Public Overrides Sub ResizeAndPlotPoints(o As Object)
     SetupInternalHeightAndWidths()
     SetupHeightAndWidthsOfObjects()
+    ResetTicksForSpecificDateRange()
     o.CalculatePlotTrends()
+  End Sub
+
+  Private Sub ResetTicksForSpecificDateRange()
+    Dim points = ChartData.SelectMany(Function(x) x.Points).Select(Function(x) x.X).Distinct().Count
+    NumberOfTicks = points
   End Sub
 
   Private Sub SetupInternalHeightAndWidths()
@@ -110,38 +115,39 @@ Public NotInheritable Class BarChart
 
       Me._xFloor = ChartData.SelectMany(Function(x) x.Points).Select(Function(x) x.XAsDouble).OrderBy(Function(x) x).FirstOrDefault()
       Me._xCeiling = ChartData.SelectMany(Function(x) x.Points).Select(Function(x) x.XAsDouble).OrderByDescending(Function(x) x).FirstOrDefault()
-      Me._yFloor = ChartData.SelectMany(Function(x) x.Points).Select(Function(x) x.YAsDouble).OrderBy(Function(x) x).FirstOrDefault()
+      Me._yFloor = 0
       Me._yCeiling = ChartData.SelectMany(Function(x) x.Points).Select(Function(x) x.YAsDouble).OrderByDescending(Function(x) x).FirstOrDefault()
 
       'Bar Chart needs a buffer of space around it to visibly show data without it looking bad.
       Dim xType As Type = ChartData.SelectMany(Function(x) x.Points).Select(Function(x) x.X).FirstOrDefault().PointType
 
-      If (xType Is GetType(Date) Or xType Is GetType(DateTime)) Then
-        Dim startDate = New DateTime(_xFloor)
-        Dim endDate = New DateTime(_xCeiling)
+      'If (xType Is GetType(Date) Or xType Is GetType(DateTime)) Then
+      '  Dim startDate = New DateTime(_xFloor)
+      '  Dim endDate = New DateTime(_xCeiling)
 
-        Me._xFloor = startDate.AddDays(-1).Ticks
-        Me._xCeiling = endDate.AddDays(1).Ticks
-      Else
-        Me._xFloor *= 1.1
-        Me._xCeiling *= 1.1
-      End If
+      '  Me._xFloor = startDate.AddDays(-1).Ticks
+      '  Me._xCeiling = endDate.AddDays(1).Ticks
+      'Else
+      '  Me._xFloor *= 1.1
+      '  Me._xCeiling *= 1.1
+      'End If
 
       Me.PART_CanvasPoints.Children.RemoveRange(0, Me.PART_CanvasPoints.Children.Count)
         Me.DrawTrends(ChartData)
 
         If Me.PART_CanvasXAxisTicks IsNot Nothing And Me.PART_CanvasYAxisTicks IsNot Nothing Then
           If Me.NumberOfTicks = 0 Then Me.NumberOfTicks = 1 'I want at the very least to see a beginning and an end
-          Me.DrawXAxis(ChartData)
-          Me.DrawYAxis(ChartData)
-        End If
+        Me.DrawXAxis()
+        Me.DrawYAxis()
+      End If
       End If
   End Sub
 #End Region
 
 #Region "Drawing Methods"
-  Private Sub DrawXAxis(lineTrends As IList(Of PlotTrend))
-    Dim segment = ((_xCeiling - _xFloor) / NumberOfTicks)
+  Private Sub DrawXAxis()
+    Dim explicitTicks = ChartData.SelectMany(Function(x) x.Points).Distinct().Select(Function(x) x.XAsDouble).ToList()
+
     PART_CanvasXAxisTicks.Children.RemoveRange(0, PART_CanvasXAxisTicks.Children.Count)
     PART_CanvasXAxisLabels.Children.RemoveRange(0, PART_CanvasXAxisLabels.Children.Count)
 
@@ -159,35 +165,29 @@ Public NotInheritable Class BarChart
     Dim spacingForText = lastText.Count * 6
     Dim totalLength = spacingForText * NumberOfTicks
     Dim fontSize = 0
-    Dim finalSpacing = 0
-    Dim lastSpaceFactor = 0
+    Dim spacing = 0
 
     Select Case totalLength
       Case <= 200
         fontSize = 30
-        finalSpacing = spacingForText * 1.2
-        lastSpaceFactor = finalSpacing * 2
+        spacing = spacingForText * 1.2
       Case <= 250
         fontSize = 20
-        finalSpacing = spacingForText * 0.9
-        lastSpaceFactor = finalSpacing * 1.75
+        spacing = spacingForText * 0.9
       Case <= 500
         fontSize = 16
-        finalSpacing = spacingForText * 0.6
-        lastSpaceFactor = finalSpacing * 2
+        spacing = spacingForText * 0.6
       Case <= 750
         fontSize = 12
-        finalSpacing = spacingForText * 0.45
-        lastSpaceFactor = finalSpacing * 1.8
+        spacing = spacingForText * 0.45
       Case Else
         fontSize = 8
-        finalSpacing = spacingForText * 0.3
-        lastSpaceFactor = finalSpacing * 2
+        spacing = spacingForText * 0.3
     End Select
 
-    For i As Integer = 0 To NumberOfTicks
-      Dim xSegment = If(i = 0, 0, i * (_viewWidth / NumberOfTicks))
-      Dim xSegmentLabel = If(i = 0, _xFloor, _xFloor + (i * segment))
+    For i As Integer = 0 To NumberOfTicks - 1
+      Dim xSegment = (i * (_viewWidth / NumberOfTicks) + ((_viewWidth / NumberOfTicks) / 2))
+      Dim xSegmentLabel = explicitTicks(i)
       Dim textForLabel = New String(If(XValueConverter Is Nothing, xSegmentLabel.ToString, XValueConverter.Convert(xSegmentLabel, GetType(String), Nothing, Globalization.CultureInfo.InvariantCulture)))
 
       Dim lineSegment = New Line With {
@@ -202,14 +202,14 @@ Public NotInheritable Class BarChart
       Dim labelSegment = New TextBlock With {
         .Text = textForLabel,
         .FontSize = fontSize,
-        .Margin = New Thickness(xSegment - If(i = 0, 0, If(i = NumberOfTicks, lastSpaceFactor, finalSpacing)), 0, 0, 0)
+        .Margin = New Thickness(xSegment - spacing, 0, 0, 0)
       }
 
       PART_CanvasXAxisLabels.Children.Add(labelSegment)
     Next
   End Sub
 
-  Private Sub DrawYAxis(lineTrends As IList(Of PlotTrend))
+  Private Sub DrawYAxis()
     Dim segment = ((_yCeiling - _yFloor) / NumberOfTicks)
     PART_CanvasYAxisTicks.Children.RemoveRange(0, PART_CanvasYAxisTicks.Children.Count)
     PART_CanvasYAxisLabels.Children.RemoveRange(0, PART_CanvasYAxisLabels.Children.Count)
@@ -275,19 +275,23 @@ Public NotInheritable Class BarChart
 
     For Each t In ChartData
       If t.Points IsNot Nothing Then
+        'Dim xSegment = ((i * (_viewWidth / NumberOfTicks) + ((_viewWidth / NumberOfTicks) / 2)))
         Dim xFactor = (_viewWidth / (_xCeiling - _xFloor))
         Dim yFactor = (_viewHeight / (_yCeiling - _yFloor))
 
         xFactor = If(Double.IsNaN(xFactor) OrElse Double.IsInfinity(xFactor), 1, xFactor)
         yFactor = If(Double.IsNaN(yFactor) OrElse Double.IsInfinity(yFactor), 1, yFactor)
 
-        For i As Integer = 1 To t.Points.Count - 1
+        For i As Integer = 0 To t.Points.Count - 1
+          Dim x1 = (t.Points(i).XAsDouble - _xFloor) * xFactor
+          Dim y2 = (t.Points(i).YAsDouble - _yFloor) * yFactor
+
           Dim toDraw = New Line With {
-            .X1 = (t.Points(i - 1).XAsDouble - _xFloor) * xFactor,
-            .Y1 = (t.Points(i - 1).YAsDouble - _yFloor) * yFactor,
+            .X1 = (t.Points(i).XAsDouble - _xFloor) * xFactor,
+            .Y1 = 0,
             .X2 = (t.Points(i).XAsDouble - _xFloor) * xFactor,
             .Y2 = (t.Points(i).YAsDouble - _yFloor) * yFactor,
-            .StrokeThickness = 2,
+            .StrokeThickness = 20,
             .Stroke = t.LineColor}
           PART_CanvasPoints.Children.Add(toDraw)
         Next i

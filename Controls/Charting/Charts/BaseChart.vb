@@ -195,7 +195,7 @@ Public MustInherit Class BaseChart
 #End Region
 
 #Region "NumberOfTicks"
-  Public Shared ReadOnly NumberOfTicksProperty As DependencyProperty = DependencyProperty.Register(NameOf(NumberOfTicks), GetType(Integer), GetType(BaseChart), New UIPropertyMetadata(0, AddressOf NumberOfTicksChanged))
+  Public Shared ReadOnly NumberOfTicksProperty As DependencyProperty = DependencyProperty.Register(NameOf(NumberOfTicks), GetType(Integer), GetType(BaseChart), New UIPropertyMetadata(0))
 
   Public Property NumberOfTicks As Integer
     Get
@@ -205,10 +205,6 @@ Public MustInherit Class BaseChart
       SetValue(NumberOfTicksProperty, Value)
     End Set
   End Property
-
-  Private Shared Sub NumberOfTicksChanged(d As DependencyObject, e As DependencyPropertyChangedEventArgs)
-
-  End Sub
 #End Region
 
 #Region "XValueConverter"

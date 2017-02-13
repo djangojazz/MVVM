@@ -32,7 +32,6 @@ Public NotInheritable Class LineChart
   End Sub
 
 #Region "DataChangedAndTimingEvents"
-
   Public Overrides Sub OnTick(o As Object)
     _timer.Stop()
     o.ResizeAndPlotPoints(o)

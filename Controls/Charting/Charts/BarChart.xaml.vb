@@ -1,11 +1,10 @@
 ﻿Imports System.Windows.Threading
 
 Public NotInheritable Class BarChart
+
   'VARIABLES
-  Private _xType As Type
   Private _xFloor As Decimal = 0
   Private _xCeiling As Decimal = 0
-  Private _yType As Type
   Private _yFloor As Decimal = 0
   Private _yCeiling As Decimal = 0
   Private _viewHeight As Double = 0
@@ -14,8 +13,8 @@ Public NotInheritable Class BarChart
   Private _tickHeight As Double = 0
   Private _labelWidth As Double = 0
   Private _labelHeight As Double = 0
-  Private _timer As New DispatcherTimer
-  Private _defaultTimeSpan As New TimeSpan(1000)
+
+  Private _explicitTicks As IEnumerable(Of Double)
 
   Private ReadOnly Property Ratio As Double
     Get
@@ -25,20 +24,18 @@ Public NotInheritable Class BarChart
 
   Public Sub New()
     InitializeComponent()
-
     Part_Layout.DataContext = Me
-    _timer.Interval = _defaultTimeSpan
   End Sub
 
 #Region "DataChangedAndTimingEvents"
   Public Overrides Sub OnTick(o As Object)
-    _timer.Stop()
+    Timer.Stop()
     o.ResizeAndPlotPoints(o)
   End Sub
 
   Public Overrides Sub Resized()
-    _timer.Stop()
-    _timer.Start()
+    Timer.Stop()
+    Timer.Start()
   End Sub
 #End Region
 
@@ -51,8 +48,8 @@ Public NotInheritable Class BarChart
   End Sub
 
   Private Sub ResetTicksForSpecificDateRange()
-    Dim points = ChartData.SelectMany(Function(x) x.Points).Select(Function(x) x.X).Distinct().Count
-    NumberOfTicks = points
+    _explicitTicks = ChartData.SelectMany(Function(x) x.Points).Select(Function(x) x.XAsDouble).Distinct().OrderBy(Function(x) x).ToList()
+    NumberOfTicks = _explicitTicks.Count
   End Sub
 
   Private Sub SetupInternalHeightAndWidths()
@@ -118,36 +115,20 @@ Public NotInheritable Class BarChart
       Me._yFloor = 0
       Me._yCeiling = ChartData.SelectMany(Function(x) x.Points).Select(Function(x) x.YAsDouble).OrderByDescending(Function(x) x).FirstOrDefault()
 
-      'Bar Chart needs a buffer of space around it to visibly show data without it looking bad.
-      Dim xType As Type = ChartData.SelectMany(Function(x) x.Points).Select(Function(x) x.X).FirstOrDefault().PointType
-
-      'If (xType Is GetType(Date) Or xType Is GetType(DateTime)) Then
-      '  Dim startDate = New DateTime(_xFloor)
-      '  Dim endDate = New DateTime(_xCeiling)
-
-      '  Me._xFloor = startDate.AddDays(-1).Ticks
-      '  Me._xCeiling = endDate.AddDays(1).Ticks
-      'Else
-      '  Me._xFloor *= 1.1
-      '  Me._xCeiling *= 1.1
-      'End If
-
       Me.PART_CanvasPoints.Children.RemoveRange(0, Me.PART_CanvasPoints.Children.Count)
-        Me.DrawTrends(ChartData)
+      Me.DrawTrends()
 
-        If Me.PART_CanvasXAxisTicks IsNot Nothing And Me.PART_CanvasYAxisTicks IsNot Nothing Then
-          If Me.NumberOfTicks = 0 Then Me.NumberOfTicks = 1 'I want at the very least to see a beginning and an end
+      If Me.PART_CanvasXAxisTicks IsNot Nothing And Me.PART_CanvasYAxisTicks IsNot Nothing Then
+        If Me.NumberOfTicks = 0 Then Me.NumberOfTicks = 1 'I want at the very least to see a beginning and an end
         Me.DrawXAxis()
         Me.DrawYAxis()
       End If
-      End If
+    End If
   End Sub
 #End Region
 
 #Region "Drawing Methods"
   Private Sub DrawXAxis()
-    Dim explicitTicks = ChartData.SelectMany(Function(x) x.Points).Distinct().Select(Function(x) x.XAsDouble).ToList()
-
     PART_CanvasXAxisTicks.Children.RemoveRange(0, PART_CanvasXAxisTicks.Children.Count)
     PART_CanvasXAxisLabels.Children.RemoveRange(0, PART_CanvasXAxisLabels.Children.Count)
 
@@ -187,7 +168,7 @@ Public NotInheritable Class BarChart
 
     For i As Integer = 0 To NumberOfTicks - 1
       Dim xSegment = (i * (_viewWidth / NumberOfTicks) + ((_viewWidth / NumberOfTicks) / 2))
-      Dim xSegmentLabel = explicitTicks(i)
+      Dim xSegmentLabel = _explicitTicks(i)
       Dim textForLabel = New String(If(XValueConverter Is Nothing, xSegmentLabel.ToString, XValueConverter.Convert(xSegmentLabel, GetType(String), Nothing, Globalization.CultureInfo.InvariantCulture)))
 
       Dim lineSegment = New Line With {
@@ -271,34 +252,37 @@ Public NotInheritable Class BarChart
     Next
   End Sub
 
-  Private Sub DrawTrends(points As IList(Of PlotTrend))
+  Private Sub DrawTrends()
+    Dim widthOfBar = _viewWidth / ((NumberOfTicks + 2) * ChartData.Count)
+    Dim yFactor = (_viewHeight / (_yCeiling - _yFloor))
 
-    For Each t In ChartData
-      If t.Points IsNot Nothing Then
-        'Dim xSegment = ((i * (_viewWidth / NumberOfTicks) + ((_viewWidth / NumberOfTicks) / 2)))
-        Dim xFactor = (_viewWidth / (_xCeiling - _xFloor))
-        Dim yFactor = (_viewHeight / (_yCeiling - _yFloor))
+    yFactor = If(Double.IsNaN(yFactor) OrElse Double.IsInfinity(yFactor), 1, yFactor)
 
-        xFactor = If(Double.IsNaN(xFactor) OrElse Double.IsInfinity(xFactor), 1, xFactor)
-        yFactor = If(Double.IsNaN(yFactor) OrElse Double.IsInfinity(yFactor), 1, yFactor)
+    For i As Integer = 0 To NumberOfTicks - 1
+      Dim xValue = _explicitTicks(i)
 
-        For i As Integer = 0 To t.Points.Count - 1
-          Dim x1 = (t.Points(i).XAsDouble - _xFloor) * xFactor
-          Dim y2 = (t.Points(i).YAsDouble - _yFloor) * yFactor
+      Dim j = 0
 
-          Dim toDraw = New Line With {
-            .X1 = (t.Points(i).XAsDouble - _xFloor) * xFactor,
+      For Each t In ChartData.SelectMany(Function(x) x.Points).Where(Function(x) x.XAsDouble = xValue)
+        j += 1
+
+        'This magic formula basically determines a segment, so 1000 and 4 sets would be 250, however I want to have ticks never start and always pad
+        'so I then add the same thing back to itself but with a slight buffer of one half
+        Dim segment = (i * _viewWidth / NumberOfTicks + (_viewWidth / NumberOfTicks) / 2)
+        segment = segment + If(j > 1, (j - 1) * widthOfBar, 0)
+        Dim matches = ChartData.Where(Function(x) x.Points.ToList().Exists(Function(y) y.XAsDouble = t.XAsDouble And y.YAsDouble = t.YAsDouble))
+        Dim color = If(matches.Count > 1, matches.Skip(j - 1).Take(1).First().LineColor, matches.First().LineColor)
+
+        Dim toDraw = New Line With {
+            .X1 = segment,
             .Y1 = 0,
-            .X2 = (t.Points(i).XAsDouble - _xFloor) * xFactor,
-            .Y2 = (t.Points(i).YAsDouble - _yFloor) * yFactor,
-            .StrokeThickness = 20,
-            .Stroke = t.LineColor}
-          PART_CanvasPoints.Children.Add(toDraw)
-        Next i
-      End If
-    Next
-
-
+            .X2 = segment,
+            .Y2 = (t.YAsDouble - _yFloor) * yFactor,
+            .StrokeThickness = widthOfBar,
+            .Stroke = color}
+        PART_CanvasPoints.Children.Add(toDraw)
+      Next
+    Next i
   End Sub
 #End Region
 

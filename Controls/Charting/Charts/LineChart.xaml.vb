@@ -3,10 +3,8 @@
 Public NotInheritable Class LineChart
 
   'VARIABLES
-  Private _xType As Type
   Private _xFloor As Decimal = 0
   Private _xCeiling As Decimal = 0
-  Private _yType As Type
   Private _yFloor As Decimal = 0
   Private _yCeiling As Decimal = 0
   Private _viewHeight As Double = 0
@@ -15,8 +13,6 @@ Public NotInheritable Class LineChart
   Private _tickHeight As Double = 0
   Private _labelWidth As Double = 0
   Private _labelHeight As Double = 0
-  Private _timer As New DispatcherTimer
-  Private _defaultTimeSpan As New TimeSpan(1000)
 
   Private ReadOnly Property Ratio As Double
     Get
@@ -26,20 +22,18 @@ Public NotInheritable Class LineChart
 
   Public Sub New()
     InitializeComponent()
-
     Part_Layout.DataContext = Me
-    _timer.Interval = _defaultTimeSpan
   End Sub
 
 #Region "DataChangedAndTimingEvents"
   Public Overrides Sub OnTick(o As Object)
-    _timer.Stop()
+    Timer.Stop()
     o.ResizeAndPlotPoints(o)
   End Sub
 
   Public Overrides Sub Resized()
-    _timer.Stop()
-    _timer.Start()
+    Timer.Stop()
+    Timer.Start()
   End Sub
 #End Region
 

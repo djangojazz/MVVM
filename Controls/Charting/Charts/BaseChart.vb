@@ -3,23 +3,12 @@
 Public MustInherit Class BaseChart
   Inherits UserControl
 
-  Private _xType As Type
-  Private _xFloor As Decimal = 0
-  Private _xCeiling As Decimal = 0
-  Private _yType As Type
-  Private _yFloor As Decimal = 0
-  Private _yCeiling As Decimal = 0
-  Private _viewHeight As Double = 0
-  Private _viewWidth As Double = 0
-  Private _tickWidth As Double = 0
-  Private _tickHeight As Double = 0
-  Private _labelWidth As Double = 0
-  Private _labelHeight As Double = 0
-  Private _timer As New DispatcherTimer
   Private _defaultTimeSpan As New TimeSpan(1000)
 
+  Friend Timer As New DispatcherTimer
+
   Public Sub New()
-    _timer.Interval = _defaultTimeSpan
+    Timer.Interval = _defaultTimeSpan
   End Sub
 
 #Region "Dependent Properties"
@@ -274,7 +263,7 @@ Public MustInherit Class BaseChart
       AddHandler NewCollection.CollectionChanged, AddressOf o.CalculatePlotTrends
       AddHandler o.Loaded, Sub() o.ResizeAndPlotPoints(o)
       AddHandler o.SizeChanged, Sub() o.Resized()
-      AddHandler o._timer.Tick, Sub() o.OnTick(o)
+      AddHandler o.Timer.Tick, Sub() o.OnTick(o)
     End If
 
   End Sub

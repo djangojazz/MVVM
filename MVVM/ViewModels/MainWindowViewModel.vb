@@ -47,18 +47,25 @@ Public NotInheritable Class MainWindowViewModel
 
 #Region "Line Graph parts"
   Private Sub AddingLinesForLineChart()
-    _lastPoints = New List(Of PlotPoints)({New PlotPoints(New PlotPoint(Of DateTime)(New DateTime(2017, 2, 12)), New PlotPoint(Of Double)(1200)), New PlotPoints(New PlotPoint(Of DateTime)(New DateTime(2017, 2, 12)), New PlotPoint(Of Double)(950))})
+    _lastPoints = New List(Of PlotPoints)({New PlotPoints(New PlotPoint(Of DateTime)(New DateTime(2017, 2, 12)), New PlotPoint(Of Double)(1200)),
+                                          New PlotPoints(New PlotPoint(Of DateTime)(New DateTime(2017, 2, 12)), New PlotPoint(Of Double)(1200)),
+                                          New PlotPoints(New PlotPoint(Of DateTime)(New DateTime(2017, 2, 10)), New PlotPoint(Of Double)(950))})
 
-    Dim o = New ObservableCollection(Of PlotPoints)({New PlotPoints(New PlotPoint(Of DateTime)(New DateTime(2017, 2, 10)), New PlotPoint(Of Double)(400)),
+    Dim o = New ObservableCollection(Of PlotPoints)({New PlotPoints(New PlotPoint(Of DateTime)(New DateTime(2017, 2, 5)), New PlotPoint(Of Double)(400)),
                                                                               New PlotPoints(New PlotPoint(Of DateTime)(New DateTime(2017, 2, 11)), New PlotPoint(Of Double)(800)),
                                                                               _lastPoints(0)})
 
-    'Dim o2 = New List(Of PlotPoints)({New PlotPoints(New PlotPoint(Of DateTime)(DateTime.Now.AddDays(-8)), New PlotPoint(Of Double)(600)),
-    '                                New PlotPoints(New PlotPoint(Of DateTime)(DateTime.Now.AddDays(-4)), New PlotPoint(Of Double)(720)),
-    '                                _lastPoints(0)})
+    Dim o2 = New List(Of PlotPoints)({New PlotPoints(New PlotPoint(Of DateTime)(New DateTime(2017, 2, 4)), New PlotPoint(Of Double)(150)),
+                                    New PlotPoints(New PlotPoint(Of DateTime)(New DateTime(2017, 2, 11)), New PlotPoint(Of Double)(720)),
+                                    _lastPoints(1)})
 
-    ChartData.ClearAndAddRange({New PlotTrend("First", Brushes.Blue, New Thickness(2), o)})
-    ', New PlotTrend("Second", Brushes.Red, New Thickness(2), o2)})
+    Dim o3 = New List(Of PlotPoints)({New PlotPoints(New PlotPoint(Of DateTime)(New DateTime(2017, 2, 1)), New PlotPoint(Of Double)(300)),
+                                    New PlotPoints(New PlotPoint(Of DateTime)(New DateTime(2017, 2, 5)), New PlotPoint(Of Double)(1720)),
+                                    New PlotPoints(New PlotPoint(Of DateTime)(New DateTime(2017, 2, 7)), New PlotPoint(Of Double)(420)),
+                                    New PlotPoints(New PlotPoint(Of DateTime)(New DateTime(2017, 2, 8)), New PlotPoint(Of Double)(920)),
+                                    _lastPoints(2)})
+
+    ChartData.ClearAndAddRange({New PlotTrend("First", Brushes.Blue, New Thickness(2), o), New PlotTrend("Second", Brushes.Red, New Thickness(2), o2), New PlotTrend("Third", Brushes.Purple, New Thickness(2), o3)})
   End Sub
 
   Private Sub LinePlotAdding()
@@ -70,7 +77,7 @@ Public NotInheritable Class MainWindowViewModel
 
     _lastPoints = newPoints
     ChartData(0).Points.Add(_lastPoints(0))
-    'ChartData(1).Points.Add(_lastPoints(1))
+    ChartData(1).Points.Add(_lastPoints(1))
   End Sub
 
 #End Region

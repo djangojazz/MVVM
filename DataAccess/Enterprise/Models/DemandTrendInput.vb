@@ -12,4 +12,12 @@ Public Class DemandTrendInput
   Public Property DemandPlans As List(Of Integer)
 
   Public Property DemandLocations As List(Of Integer)
+
+  Public Sub New(fiKey As Integer, startDate As Date, endDate As Date, demandPlans As List(Of Integer), demandLocations As List(Of Integer))
+    Me.FIKey = fiKey
+    Me.StartDate = startDate
+    Me.EndDate = endDate
+    Me.DemandPlans = demandPlans
+    Me.DemandLocations = demandLocations
+  End Sub
 End Class

@@ -29,7 +29,7 @@
       BackGroundColor="DarkCyan" 
       BackGroundColorCanvas="White" 
       BackGroundColorLegend="White"    
-      NumberOfTicks="5"
+      YNumberOfTicks="4"
       XValueConverter="{x:Static cntrls:Converters.DateToValueConverter}"
       YValueConverter="{x:Static cntrls:Converters.DecimalConverter}"
       FontType="Tahoma"

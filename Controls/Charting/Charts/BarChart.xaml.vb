@@ -13,6 +13,7 @@ Public NotInheritable Class BarChart
   Private _tickHeight As Double = 0
   Private _labelWidth As Double = 0
   Private _labelHeight As Double = 0
+  Private _xNumberOfTicks As Double = 0
 
   Private _explicitTicks As IEnumerable(Of Double)
 
@@ -49,7 +50,7 @@ Public NotInheritable Class BarChart
 
   Private Sub ResetTicksForSpecificDateRange()
     _explicitTicks = ChartData.SelectMany(Function(x) x.Points).Select(Function(x) x.XAsDouble).Distinct().OrderBy(Function(x) x).ToList()
-    NumberOfTicks = _explicitTicks.Count
+    _xNumberOfTicks = _explicitTicks.Count
   End Sub
 
   Private Sub SetupInternalHeightAndWidths()
@@ -96,6 +97,7 @@ Public NotInheritable Class BarChart
   Public Overrides Sub CalculatePlotTrends()
     If Me.PART_CanvasPoints IsNot Nothing AndAlso ChartData IsNot Nothing Then
       If ChartData.Count > 1 Then
+        ResetTicksForSpecificDateRange()
 
         'Uniformity check of X and Y types.  EG: You cannot have a DateTime and a Number for different X axis or Y axis sets.
         If ChartData.ToList().Select(Function(x) x.Points(0).X.GetType).Distinct.GroupBy(Function(x) x).Count > 1 Or ChartData.ToList().Select(Function(x) x.Points(0).Y.GetType).Distinct.GroupBy(Function(x) x).Count > 1 Then
@@ -119,7 +121,7 @@ Public NotInheritable Class BarChart
       Me.DrawTrends()
 
       If Me.PART_CanvasXAxisTicks IsNot Nothing And Me.PART_CanvasYAxisTicks IsNot Nothing Then
-        If Me.NumberOfTicks = 0 Then Me.NumberOfTicks = 1 'I want at the very least to see a beginning and an end
+        If Me._xNumberOfTicks = 0 Then Me._xNumberOfTicks = 1 'I want at the very least to see a beginning and an end
         Me.DrawXAxis()
         Me.DrawYAxis()
       End If
@@ -144,7 +146,7 @@ Public NotInheritable Class BarChart
     'Sizing should be done from the ceiling
     Dim lastText = New String(If(XValueConverter Is Nothing, _xCeiling.ToString, XValueConverter.Convert(_xCeiling, GetType(String), Nothing, Globalization.CultureInfo.InvariantCulture)))
     Dim spacingForText = lastText.Count * 6
-    Dim totalLength = spacingForText * NumberOfTicks
+    Dim totalLength = spacingForText * _xNumberOfTicks
     Dim fontSize = 0
     Dim spacing = 0
 
@@ -166,8 +168,8 @@ Public NotInheritable Class BarChart
         spacing = spacingForText * 0.3
     End Select
 
-    For i As Integer = 0 To NumberOfTicks - 1
-      Dim xSegment = (i * (_viewWidth / NumberOfTicks) + ((_viewWidth / NumberOfTicks) / 2))
+    For i As Integer = 0 To _xNumberOfTicks - 1
+      Dim xSegment = (i * (_viewWidth / _xNumberOfTicks) + ((_viewWidth / _xNumberOfTicks) / 2))
       Dim xSegmentLabel = _explicitTicks(i)
       Dim textForLabel = New String(If(XValueConverter Is Nothing, xSegmentLabel.ToString, XValueConverter.Convert(xSegmentLabel, GetType(String), Nothing, Globalization.CultureInfo.InvariantCulture)))
 
@@ -191,7 +193,7 @@ Public NotInheritable Class BarChart
   End Sub
 
   Private Sub DrawYAxis()
-    Dim segment = ((_yCeiling - _yFloor) / NumberOfTicks)
+    Dim segment = ((_yCeiling - _yFloor) / YNumberOfTicks)
     PART_CanvasYAxisTicks.Children.RemoveRange(0, PART_CanvasYAxisTicks.Children.Count)
     PART_CanvasYAxisLabels.Children.RemoveRange(0, PART_CanvasYAxisLabels.Children.Count)
 
@@ -208,7 +210,7 @@ Public NotInheritable Class BarChart
     'Sizing should be done from the ceiling
     Dim lastText = New String(If(YValueConverter Is Nothing, _yCeiling.ToString, YValueConverter.Convert(_yCeiling, GetType(String), Nothing, Globalization.CultureInfo.InvariantCulture)))
     Dim spacingForText = lastText.Count * 5
-    Dim totalLength = spacingForText * NumberOfTicks
+    Dim totalLength = spacingForText * YNumberOfTicks
     Dim fontSize = 0
     Dim finalSpacing = 0
     Dim lastSpaceFactor = 0
@@ -228,8 +230,8 @@ Public NotInheritable Class BarChart
         lastSpaceFactor = finalSpacing * 1
     End Select
 
-    For i As Integer = 0 To NumberOfTicks
-      Dim ySegment = If(i = 0, 0, i * (_viewHeight / NumberOfTicks))
+    For i As Integer = 0 To YNumberOfTicks
+      Dim ySegment = If(i = 0, 0, i * (_viewHeight / YNumberOfTicks))
       Dim ySegmentLabel = If(i = 0, _yFloor, _yFloor + (i * segment))
       Dim textForLabel = New String(If(YValueConverter Is Nothing, ySegmentLabel.ToString, YValueConverter.Convert(ySegmentLabel, GetType(String), Nothing, Globalization.CultureInfo.InvariantCulture)))
 
@@ -245,7 +247,7 @@ Public NotInheritable Class BarChart
       Dim labelSegment = New TextBlock With {
         .Text = textForLabel,
         .FontSize = fontSize,
-        .Margin = New Thickness(0, _viewHeight - 20 - (ySegment - If(i = 0, 0, If(i = NumberOfTicks, lastSpaceFactor, finalSpacing))), 0, 0)
+        .Margin = New Thickness(0, _viewHeight - 20 - (ySegment - If(i = 0, 0, If(i = YNumberOfTicks, lastSpaceFactor, finalSpacing))), 0, 0)
       }
 
       PART_CanvasYAxisLabels.Children.Add(labelSegment)
@@ -253,36 +255,44 @@ Public NotInheritable Class BarChart
   End Sub
 
   Private Sub DrawTrends()
-    Dim widthOfBar = _viewWidth / ((NumberOfTicks + 2) * ChartData.Count)
+    Dim widthOfBar = _viewWidth / ((_xNumberOfTicks + 2) * ChartData.Count)
     Dim yFactor = (_viewHeight / (_yCeiling - _yFloor))
 
     yFactor = If(Double.IsNaN(yFactor) OrElse Double.IsInfinity(yFactor), 1, yFactor)
 
-    For i As Integer = 0 To NumberOfTicks - 1
+    For i As Integer = 0 To _xNumberOfTicks - 1
       Dim xValue = _explicitTicks(i)
 
-      Dim j = 0
-
-      For Each t In ChartData.SelectMany(Function(x) x.Points).Where(Function(x) x.XAsDouble = xValue)
-        j += 1
-
-        'This magic formula basically determines a segment, so 1000 and 4 sets would be 250, however I want to have ticks never start and always pad
-        'so I then add the same thing back to itself but with a slight buffer of one half
-        Dim segment = (i * _viewWidth / NumberOfTicks + (_viewWidth / NumberOfTicks) / 2)
-        segment = segment + If(j > 1, (j - 1) * widthOfBar, 0)
-        Dim matches = ChartData.Where(Function(x) x.Points.ToList().Exists(Function(y) y.XAsDouble = t.XAsDouble And y.YAsDouble = t.YAsDouble))
-        Dim color = If(matches.Count > 1, matches.Skip(j - 1).Take(1).First().LineColor, matches.First().LineColor)
-
-        Dim toDraw = New Line With {
-            .X1 = segment,
-            .Y1 = 0,
-            .X2 = segment,
-            .Y2 = (t.YAsDouble - _yFloor) * yFactor,
-            .StrokeThickness = widthOfBar,
-            .Stroke = color}
-        PART_CanvasPoints.Children.Add(toDraw)
-      Next
+      DrawTrendsFromDate(xValue, widthOfBar, yFactor, i)
     Next i
+  End Sub
+
+  Private Sub DrawTrendsFromDate(xSegmentValue As Double, widthOfBar As Double, yFactor As Double, segmentIndex As Integer)
+    ChartData.SelectMany(Function(x) x.Points) _
+                      .Where(Function(x) x.XAsDouble = xSegmentValue) _
+                      .Select(Function(pnt, ind) New With {.YAsDouble = pnt.YAsDouble, .XAsDouble = pnt.XAsDouble, .Index = ind}) _
+                      .ToList() _
+                      .ForEach(Sub(t)
+
+                                 'This magic formula basically determines a segment, so 1000 and 4 sets would be 250, however I want to have ticks never start and always pad
+                                 'so I then add the same thing back to itself but with a slight buffer of one half
+                                 Dim segment = (segmentIndex * _viewWidth / _xNumberOfTicks + (_viewWidth / _xNumberOfTicks) / 2)
+
+                                 'If I have two sets or more on the same day I need to see that
+                                 segment = segment + If(t.Index > 0, (t.Index) * widthOfBar, 0)
+
+                                 Dim matches = ChartData.Where(Function(x, ind) x.Points.ToList().Exists(Function(y) y.XAsDouble = t.XAsDouble And y.YAsDouble = t.YAsDouble))
+                                 Dim color =  If(matches.Count > 1, matches.Skip(t.Index).Take(1).First.LineColor, matches.First.LineColor)
+
+                                 Dim toDraw = New Line With {
+                                                    .X1 = segment,
+                                                    .Y1 = 0,
+                                                    .X2 = segment,
+                                                    .Y2 = (t.YAsDouble - _yFloor) * yFactor,
+                                                    .StrokeThickness = widthOfBar,
+                                                    .Stroke = color}
+                                 PART_CanvasPoints.Children.Add(toDraw)
+                               End Sub)
   End Sub
 #End Region
 

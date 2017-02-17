@@ -1,5 +1,7 @@
 ﻿Imports System.Windows.Threading
 
+
+
 Public MustInherit Class BaseChart
   Inherits UserControl
 
@@ -9,6 +11,7 @@ Public MustInherit Class BaseChart
 
   Public Sub New()
     Timer.Interval = _defaultTimeSpan
+    FontType = If(FontType IsNot Nothing, FontType, New Windows.Media.FontFamily("Segoe UI"))
   End Sub
 
 #Region "Dependent Properties"
@@ -183,15 +186,15 @@ Public MustInherit Class BaseChart
   End Sub
 #End Region
 
-#Region "NumberOfTicks"
-  Public Shared ReadOnly NumberOfTicksProperty As DependencyProperty = DependencyProperty.Register(NameOf(NumberOfTicks), GetType(Integer), GetType(BaseChart), New UIPropertyMetadata(0))
+#Region "YNumberOfTicks"
+  Public Shared ReadOnly YNumberOfTicksProperty As DependencyProperty = DependencyProperty.Register(NameOf(YNumberOfTicks), GetType(Integer), GetType(BaseChart), New UIPropertyMetadata(0))
 
-  Public Property NumberOfTicks As Integer
+  Public Property YNumberOfTicks As Integer
     Get
-      Return DirectCast(GetValue(NumberOfTicksProperty), Integer)
+      Return DirectCast(GetValue(YNumberOfTicksProperty), Integer)
     End Get
     Set
-      SetValue(NumberOfTicksProperty, Value)
+      SetValue(YNumberOfTicksProperty, Value)
     End Set
   End Property
 #End Region
@@ -265,7 +268,6 @@ Public MustInherit Class BaseChart
       AddHandler o.SizeChanged, Sub() o.Resized()
       AddHandler o.Timer.Tick, Sub() o.OnTick(o)
     End If
-
   End Sub
 
 

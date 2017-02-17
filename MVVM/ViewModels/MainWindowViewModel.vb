@@ -33,6 +33,8 @@ Public NotInheritable Class MainWindowViewModel
   Public Sub New()
     TestText = "Hello there"
     AddingLinesForLineChart()
+
+
     Dt = New DateTime(2017, 2, 12)
   End Sub
 
@@ -55,7 +57,7 @@ Public NotInheritable Class MainWindowViewModel
                                                                               New PlotPoints(New PlotPoint(Of DateTime)(New DateTime(2017, 2, 11)), New PlotPoint(Of Double)(800)),
                                                                               _lastPoints(0)})
 
-    Dim o2 = New List(Of PlotPoints)({New PlotPoints(New PlotPoint(Of DateTime)(New DateTime(2017, 2, 4)), New PlotPoint(Of Double)(150)),
+    Dim o2 = New List(Of PlotPoints)({New PlotPoints(New PlotPoint(Of DateTime)(New DateTime(2017, 2, 5)), New PlotPoint(Of Double)(150)),
                                     New PlotPoints(New PlotPoint(Of DateTime)(New DateTime(2017, 2, 11)), New PlotPoint(Of Double)(720)),
                                     _lastPoints(1)})
 
@@ -65,7 +67,13 @@ Public NotInheritable Class MainWindowViewModel
                                     New PlotPoints(New PlotPoint(Of DateTime)(New DateTime(2017, 2, 8)), New PlotPoint(Of Double)(920)),
                                     _lastPoints(2)})
 
-    ChartData.ClearAndAddRange({New PlotTrend("First", Brushes.Blue, New Thickness(2), o), New PlotTrend("Second", Brushes.Red, New Thickness(2), o2), New PlotTrend("Third", Brushes.Purple, New Thickness(2), o3)})
+    Dim o4 = New List(Of PlotPoints)({New PlotPoints(New PlotPoint(Of DateTime)(New DateTime(2017, 2, 5)), New PlotPoint(Of Double)(1920))})
+
+    Dim o5 = New List(Of PlotPoints)({New PlotPoints(New PlotPoint(Of DateTime)(New DateTime(2017, 2, 5)), New PlotPoint(Of Double)(2920))})
+
+    ChartData.ClearAndAddRange({New PlotTrend("First", Brushes.Blue, New Thickness(2), o), New PlotTrend("Second", Brushes.Red, New Thickness(2), o2),
+                               New PlotTrend("Third", Brushes.Purple, New Thickness(2), o3), New PlotTrend("Fourth", Brushes.Orange, New Thickness(2), o4), 
+                               New PlotTrend("Fifth", Brushes.Brown, New Thickness(2), o5) })
   End Sub
 
   Private Sub LinePlotAdding()

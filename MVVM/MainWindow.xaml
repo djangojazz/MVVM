@@ -12,6 +12,8 @@
       <ResourceDictionary.MergedDictionaries>
         <ResourceDictionary Source="pack://application:,,,/Controls;component/styles.xaml" />
       </ResourceDictionary.MergedDictionaries>
+      <cntrls:DecimalConverter x:Key="DecimalConverter" DecimalPositions="0" />
+      <cntrls:ChartAdditionalInfoAndPointMultiConverter x:Key="ChartAdditionalInfoAndPointMultiConverter" />
     </ResourceDictionary>
   </Window.Resources>
 <Grid>
@@ -20,7 +22,7 @@
         <RowDefinition Height="Auto" />
         <RowDefinition Height="Auto" />
       </Grid.RowDefinitions>
-      <cntrls:BarChart 
+    <cntrls:LineChart 
       Grid.Row ="0"
       ChartData="{Binding ChartData}"
       ChartTitle="Test Line Chart"
@@ -30,10 +32,12 @@
       BackGroundColorCanvas="White" 
       BackGroundColorLegend="White"    
       YNumberOfTicks="4"
-      XValueConverter="{x:Static cntrls:Converters.DateToValueConverter}"
+      XNumberOfTicks="{Binding GetXTicks}"
+      XValueMultiConverter="{DynamicResource ChartAdditionalInfoAndPointMultiConverter}"
       YValueConverter="{x:Static cntrls:Converters.DecimalConverter}"
       FontType="Tahoma"
       />
+    <!--XValueConverter="{x:Static cntrls:Converters.DateToValueConverter}"-->
     <StackPanel Grid.Row="1">
       <Label Content="{Binding TestText}" Height="30" Foreground="{StaticResource test}" />
       <Label Content="{Binding Dt, Converter={x:Static cntrls:Converters.DateFormatConverter}}" />

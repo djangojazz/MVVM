@@ -1,8 +1,7 @@
 ﻿Public Class DemandTrendOutput
-  Public Property DemandPlanId As Integer
-  Public Property DemandLocationId As Integer
-  Public Property FIKey As Integer
-  Public Property DemandDate As Integer
-  Public Property DemandQty As Integer
-  Public Property DemandAdQty As Integer
+  Public Property GroupingName As String
+  Public Property Grouping As Integer
+  Public Property GroupingStartDate As Date
+  Public Property DemandQty As Decimal
+  Public Property DemandAdQty As Decimal
 End Class

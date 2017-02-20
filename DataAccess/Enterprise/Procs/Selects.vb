@@ -3,7 +3,7 @@
 Public Module Selects
 
 
-  Public Function RunQuery(proc As String, Optional parms As List(Of SqlParameter) = Nothing) As DataTable
+  Public Function RunQuery(Of T)(proc As String, Optional parms As List(Of SqlParameter) = Nothing) As List(Of T)
     Using cn = New SqlConnection(GetEnterpriseTestDatabase)
       Using cmd = New SqlCommand(proc, cn)
         cmd.CommandType = CommandType.StoredProcedure
@@ -19,19 +19,16 @@ Public Module Selects
             adapter.Fill(table)
             cn.Close()
 
-            Return table
+            Return DataConverter.ConvertTo(Of T)(table)
           End Using
         End Using
       End Using
     End Using
   End Function
 
-  Public Function GetDemandTrends() As List(Of DemandTrendOutput)
-    Dim data = New DemandTrendInput(2278, New Date(2017, 1, 1), New Date(2017, 5, 1), New List(Of Integer)({24, 26}), New List(Of Integer)({2, 25}))
+  Public Function GetDemandTrends(data As DemandTrendInput) As List(Of DemandTrendOutput)
     Dim serialized = data.SerializeToXml()
     Dim params = New List(Of SqlParameter)({New SqlParameter("@Input", serialized)})
-    Dim items = RunQuery("vis.SelectDemandTrendDetails", params)
-
-    Return DataConverter.ConvertTo(Of DemandTrendOutput)(items)
+    Return RunQuery(Of DemandTrendOutput)("vis.SelectDemandTrendDetails", params)
   End Function
 End Module

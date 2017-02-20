@@ -7,4 +7,6 @@
   Public Shared DateFormatConverter As New DateFormatConverter
 
   Public Shared DecimalConverter As New DecimalConverter
+
+  Public Shared ChartMetaAndPointMultiConverter As New ChartAdditionalInfoAndPointMultiConverter
 End Class

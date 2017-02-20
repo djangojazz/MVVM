@@ -184,7 +184,9 @@
     For i As Integer = 0 To XNumberOfTicks
       Dim xSegment = If(i = 0, 0, i * (_viewWidth / XNumberOfTicks))
       Dim xSegmentLabel = If(i = 0, _xFloor, _xFloor + (i * segment))
-      Dim textForLabel = New String(If(XValueConverter Is Nothing, xSegmentLabel.ToString, XValueConverter.Convert(xSegmentLabel, GetType(String), Nothing, Globalization.CultureInfo.InvariantCulture)))
+      Dim textForLabel = If(XValueMultiConverter IsNot Nothing,
+                    XValueMultiConverter.Convert(New Object() {ChartData.SelectMany(Function(x) x.AdditionalSeriesInfo).First, xSegmentLabel}, GetType(String), Nothing, Globalization.CultureInfo.InvariantCulture),
+                        If(XValueConverter IsNot Nothing, XValueConverter.Convert(xSegmentLabel, GetType(String), Nothing, Globalization.CultureInfo.InvariantCulture), xSegmentLabel.ToString))
 
       Dim lineSegment = New Line With {
           .X1 = xSegment,

@@ -37,24 +37,25 @@ Public NotInheritable Class PlotTrend
     End Set
   End Property
 
-  Private _additionalSeriesInfo As String
-  Public Property AdditionalSeriesInfo As String
-    Get
-      Return _additionalSeriesInfo
-    End Get
-    Set(ByVal value As String)
-      _additionalSeriesInfo = value
-    End Set
-  End Property
+  'Private _additionalSeriesInfo As String
+  'Public Property AdditionalSeriesInfo As String
+  '  Get
+  '    Return _additionalSeriesInfo
+  '  End Get
+  '  Set(ByVal value As String)
+  '    _additionalSeriesInfo = value
+  '  End Set
+  'End Property
 
   Public ReadOnly Property Points As New ObservableCollection(Of PlotPoints)
 
-  Public Sub New(seriesName As String, lineColor As Brush, pointThickness As Thickness, points As IEnumerable(Of PlotPoints), Optional additionalSeriesInfo As String = Nothing)
+  Public Sub New(seriesName As String, lineColor As Brush, pointThickness As Thickness, points As IEnumerable(Of PlotPoints))
+    ', Optional additionalSeriesInfo As String = Nothing)
     Me.SeriesName = seriesName
     Me.LineColor = lineColor
     Me.PointThickness = pointThickness
     Me.Points.ClearAndAddRange(points)
-    Me.AdditionalSeriesInfo = additionalSeriesInfo
+    'If AdditionalSeriesInfo IsNot Nothing Then Me.AdditionalSeriesInfo = AdditionalSeriesInfo
 
     AddHandler Me.Points.CollectionChanged, AddressOf NotifyChangedCollection
   End Sub

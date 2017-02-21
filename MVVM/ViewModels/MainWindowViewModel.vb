@@ -7,8 +7,6 @@ Public NotInheritable Class MainWindowViewModel
 
   Private _lastPoints As New List(Of PlotPoints)
   Private _testText As String
-  Private _demands As New List(Of DemandTrendOutput)
-  Private _grouping As String
 
   Public Property TestText As String
     Get
@@ -16,48 +14,20 @@ Public NotInheritable Class MainWindowViewModel
     End Get
     Set(ByVal value As String)
       _testText = value
+      If DecimalConverter IsNot Nothing Then DecimalConverter.OptionalHeader = TestText
+      UpdateChartData()
       OnPropertyChanged(NameOf(TestText))
-    End Set
-  End Property
-
-  Private _dt As DateTime
-  Public Property Dt As DateTime
-    Get
-      Return _dt
-    End Get
-    Set(ByVal value As DateTime)
-      _dt = value
-    End Set
-  End Property
-
-  Private _array As New ObservableCollection(Of String)({"Day", "Month", "Year"})
-  Public Property Array As ObservableCollection(Of String)
-    Get
-      Return _array
-    End Get
-    Set(ByVal value As ObservableCollection(Of String))
-      _array = value
-      OnPropertyChanged(NameOf(Array))
+      UpdateChartData()
     End Set
   End Property
 
 
-  Private _theItem As String
-  Public Property TheItem As String
-    Get
-      Return _theItem
-    End Get
-    Set(ByVal value As String)
-      _theItem = value
-      If MyConverter IsNot Nothing Then MyConverter.OptionalHeader = value
-      OnPropertyChanged(NameOf(TheItem))
-    End Set
-  End Property
+  Public ReadOnly Property Array As New ObservableCollection(Of String)({"Day", "Month", "Year"})
 
-  Public ReadOnly Property MyConverter As New DecimalConverter
-
-
+  Public ReadOnly Property DecimalConverter As New DecimalConverter
+  
   Public ReadOnly Property ChartData As New ObservableCollectionContentNotifying(Of PlotTrend)
+
 
   Public Enum TrendChoices
     FiscalYear
@@ -72,13 +42,7 @@ Public NotInheritable Class MainWindowViewModel
   End Enum
 
   Public Sub New()
-    TheItem = "Month"
-    MyConverter.OptionalHeader = TheItem
-    TestText = TrendChoices.Month.ToString
-    _grouping = TrendChoices.Month.ToString
-
-    _demands = Selects.GetDemandTrends(New DemandTrendInput(2278, New Date(2017, 3, 10), New Date(2017, 5, 20), _grouping, New List(Of Integer)({24, 26}), New List(Of Integer)({2, 25})))
-    AddingLinesForLineChart()
+    TestText = "Month"
   End Sub
 
   Public ReadOnly Property TestCommand As New DelegateCommand(Of Object)(AddressOf TestCommandExecute)
@@ -92,7 +56,7 @@ Public NotInheritable Class MainWindowViewModel
 
   Public Property XTicks As Integer
     Get
-      Return (ChartData.SelectMany(Function(x) x.Points).Select(Function(x) x.XAsDouble).Distinct.Count - 1)
+      Return _xTicks
     End Get
     Set(value As Integer)
       _xTicks = value
@@ -102,13 +66,20 @@ Public NotInheritable Class MainWindowViewModel
 
 
 #Region "Line Graph parts"
-  Private Sub AddingLinesForLineChart()
-    Dim demand = _demands.Select(Function(x) New PlotPoints(New PlotPoint(Of Double)(x.Grouping), New PlotPoint(Of Double)(x.DemandQty)))
-    Dim ad = _demands.Select(Function(x) New PlotPoints(New PlotPoint(Of Double)(x.Grouping), New PlotPoint(Of Double)(x.DemandAdQty)))
+  Public Sub UpdateChartData()
+    Dim demands = Selects.GetDemandTrends(New DemandTrendInput(2278, New Date(2017, 3, 25), New Date(2017, 4, 1), TestText, New List(Of Integer)({24, 26}), New List(Of Integer)({2, 25})))
+
+    Dim demand = demands.Select(Function(x) New PlotPoints(New PlotPoint(Of Double)(x.Grouping), New PlotPoint(Of Double)(x.DemandQty)))
+    Dim ad = demands.Select(Function(x) New PlotPoints(New PlotPoint(Of Double)(x.Grouping), New PlotPoint(Of Double)(x.DemandAdQty)))
 
     _lastPoints = New List(Of PlotPoints)({demand.Last, ad.Last})
 
-    ChartData.ClearAndAddRange({New PlotTrend("Demand", Brushes.Blue, New Thickness(2), demand, _grouping), New PlotTrend("Ad", Brushes.Red, New Thickness(2), ad, _grouping)})
+    ChartData.ClearAndAddRange({New PlotTrend("Demand", Brushes.Blue, New Thickness(2), demand), New PlotTrend("Ad", Brushes.Red, New Thickness(2), ad)})
+    Dim distinctCounts = (ChartData.SelectMany(Function(x) x.Points).Select(Function(x) x.XAsDouble).Distinct.Count - 1)
+    XTicks = If(distinctCounts > 0, distinctCounts, 1)
+  End Sub
+
+  Private Sub AddingLinesForLineChart()
 
     '_lastPoints = New List(Of PlotPoints)({New PlotPoints(New PlotPoint(Of DateTime)(New DateTime(2017, 2, 12)), New PlotPoint(Of Double)(1200)),
     '                                      New PlotPoints(New PlotPoint(Of DateTime)(New DateTime(2017, 2, 12)), New PlotPoint(Of Double)(1200)),
@@ -142,14 +113,13 @@ Public NotInheritable Class MainWindowViewModel
 
     For i = 1 To _lastPoints.Count
       newPoints.Add(New PlotPoints(New PlotPoint(Of Double)((DirectCast(_lastPoints(i - 1).X, PlotPoint(Of Double)).Point + 1)), New PlotPoint(Of Double)(DirectCast(_lastPoints(i - 1).Y, PlotPoint(Of Double)).Point * 1.95)))
-      XTicks = (ChartData.SelectMany(Function(x) x.Points).Select(Function(x) x.XAsDouble).Distinct.Count - 1)
     Next
 
     _lastPoints = newPoints
-    ChartData(0).AdditionalSeriesInfo = "Day"
+    'ChartData(0).AdditionalSeriesInfo = "Day"
     ChartData(0).Points.Add(_lastPoints(0))
     ChartData(1).Points.Add(_lastPoints(1))
-    ChartData(1).AdditionalSeriesInfo = "Day"
+    'ChartData(1).AdditionalSeriesInfo = "Day"
   End Sub
 
 #End Region

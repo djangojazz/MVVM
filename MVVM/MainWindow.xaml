@@ -24,7 +24,7 @@
       <RowDefinition Height="Auto" />
     </Grid.RowDefinitions>
 
-    <ComboBox ItemsSource="{Binding Array}" SelectedItem="{Binding TheItem}" />
+    <ComboBox ItemsSource="{Binding Array}" SelectedItem="{Binding TestText}" />
     <cntrls:LineChart Grid.Row="1"
       ChartData="{Binding ChartData}"
       ChartTitle="Test Line Chart"
@@ -35,7 +35,7 @@
       BackGroundColorLegend="White"    
       YNumberOfTicks="4"
       XNumberOfTicks="{Binding XTicks}"
-      XValueMultiConverter="{DynamicResource ChartAdditionalInfoAndPointMultiConverter}"
+      XValueConverter="{Binding DecimalConverter}"
       YValueConverter="{x:Static cntrls:Converters.DecimalConverter}"
       FontType="Tahoma"
       />

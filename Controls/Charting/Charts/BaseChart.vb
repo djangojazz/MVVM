@@ -296,11 +296,11 @@ Public MustInherit Class BaseChart
 
   Protected Function GetXSegmentText(input As String) As String
 
+    Return If(XValueConverter IsNot Nothing, XValueConverter.Convert(input, GetType(String), Nothing, Globalization.CultureInfo.InvariantCulture), input.ToString)
 
-
-    Return If(XValueMultiConverter IsNot Nothing,
-                    XValueMultiConverter.Convert(New Object() {ChartData.Select(Function(x) x.AdditionalSeriesInfo).First, input}, GetType(String), Nothing, Globalization.CultureInfo.InvariantCulture),
-                        If(XValueConverter IsNot Nothing, XValueConverter.Convert(input, GetType(String), Nothing, Globalization.CultureInfo.InvariantCulture), input.ToString))
+    'Return If(XValueMultiConverter IsNot Nothing,
+    '                XValueMultiConverter.Convert(New Object() {ChartData.Select(Function(x) x.AdditionalSeriesInfo).First, input}, GetType(String), Nothing, Globalization.CultureInfo.InvariantCulture),
+    '                    If(XValueConverter IsNot Nothing, XValueConverter.Convert(input, GetType(String), Nothing, Globalization.CultureInfo.InvariantCulture), input.ToString))
 
   End Function
 

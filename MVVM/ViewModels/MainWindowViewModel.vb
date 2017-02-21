@@ -14,8 +14,8 @@ Public NotInheritable Class MainWindowViewModel
     End Get
     Set(ByVal value As String)
       _testText = value
-      If DecimalConverter IsNot Nothing Then DecimalConverter.OptionalHeader = TestText
       UpdateChartData()
+      If DecimalConverter IsNot Nothing Then DecimalConverter.OptionalHeader = TestText : DecimalConverter.FirstPosition = ChartData.SelectMany(Function(x) x.Points).Select(Function(x) x.XAsDouble).First
       OnPropertyChanged(NameOf(TestText))
       UpdateChartData()
     End Set
@@ -24,8 +24,8 @@ Public NotInheritable Class MainWindowViewModel
 
   Public ReadOnly Property Array As New ObservableCollection(Of String)({"Day", "Month", "Year"})
 
-  Public ReadOnly Property DecimalConverter As New DecimalConverter
-  
+  Public ReadOnly Property DecimalConverter As New InstanceInSetToStringConverter
+
   Public ReadOnly Property ChartData As New ObservableCollectionContentNotifying(Of PlotTrend)
 
 
@@ -81,31 +81,31 @@ Public NotInheritable Class MainWindowViewModel
 
   Private Sub AddingLinesForLineChart()
 
-    '_lastPoints = New List(Of PlotPoints)({New PlotPoints(New PlotPoint(Of DateTime)(New DateTime(2017, 2, 12)), New PlotPoint(Of Double)(1200)),
-    '                                      New PlotPoints(New PlotPoint(Of DateTime)(New DateTime(2017, 2, 12)), New PlotPoint(Of Double)(1200)),
-    '                                      New PlotPoints(New PlotPoint(Of DateTime)(New DateTime(2017, 2, 10)), New PlotPoint(Of Double)(950))})
+    _lastPoints = New List(Of PlotPoints)({New PlotPoints(New PlotPoint(Of DateTime)(New DateTime(2017, 2, 12)), New PlotPoint(Of Double)(1200)),
+                                          New PlotPoints(New PlotPoint(Of DateTime)(New DateTime(2017, 2, 12)), New PlotPoint(Of Double)(1200)),
+                                          New PlotPoints(New PlotPoint(Of DateTime)(New DateTime(2017, 2, 10)), New PlotPoint(Of Double)(950))})
 
-    'Dim o = New ObservableCollection(Of PlotPoints)({New PlotPoints(New PlotPoint(Of DateTime)(New DateTime(2017, 2, 5)), New PlotPoint(Of Double)(400)),
-    '                                                                          New PlotPoints(New PlotPoint(Of DateTime)(New DateTime(2017, 2, 11)), New PlotPoint(Of Double)(800)),
-    '                                                                          _lastPoints(0)})
+    Dim o = New ObservableCollection(Of PlotPoints)({New PlotPoints(New PlotPoint(Of DateTime)(New DateTime(2017, 2, 5)), New PlotPoint(Of Double)(400)),
+                                                                              New PlotPoints(New PlotPoint(Of DateTime)(New DateTime(2017, 2, 11)), New PlotPoint(Of Double)(800)),
+                                                                              _lastPoints(0)})
 
-    'Dim o2 = New List(Of PlotPoints)({New PlotPoints(New PlotPoint(Of DateTime)(New DateTime(2017, 2, 5)), New PlotPoint(Of Double)(150)),
-    '                                New PlotPoints(New PlotPoint(Of DateTime)(New DateTime(2017, 2, 11)), New PlotPoint(Of Double)(720)),
-    '                                _lastPoints(1)})
+    Dim o2 = New List(Of PlotPoints)({New PlotPoints(New PlotPoint(Of DateTime)(New DateTime(2017, 2, 5)), New PlotPoint(Of Double)(150)),
+                                    New PlotPoints(New PlotPoint(Of DateTime)(New DateTime(2017, 2, 11)), New PlotPoint(Of Double)(720)),
+                                    _lastPoints(1)})
 
-    'Dim o3 = New List(Of PlotPoints)({New PlotPoints(New PlotPoint(Of DateTime)(New DateTime(2017, 2, 1)), New PlotPoint(Of Double)(300)),
-    '                                New PlotPoints(New PlotPoint(Of DateTime)(New DateTime(2017, 2, 5)), New PlotPoint(Of Double)(1720)),
-    '                                New PlotPoints(New PlotPoint(Of DateTime)(New DateTime(2017, 2, 7)), New PlotPoint(Of Double)(420)),
-    '                                New PlotPoints(New PlotPoint(Of DateTime)(New DateTime(2017, 2, 8)), New PlotPoint(Of Double)(920)),
-    '                                _lastPoints(2)})
+    Dim o3 = New List(Of PlotPoints)({New PlotPoints(New PlotPoint(Of DateTime)(New DateTime(2017, 2, 1)), New PlotPoint(Of Double)(300)),
+                                    New PlotPoints(New PlotPoint(Of DateTime)(New DateTime(2017, 2, 5)), New PlotPoint(Of Double)(1720)),
+                                    New PlotPoints(New PlotPoint(Of DateTime)(New DateTime(2017, 2, 7)), New PlotPoint(Of Double)(420)),
+                                    New PlotPoints(New PlotPoint(Of DateTime)(New DateTime(2017, 2, 8)), New PlotPoint(Of Double)(920)),
+                                    _lastPoints(2)})
 
-    'Dim o4 = New List(Of PlotPoints)({New PlotPoints(New PlotPoint(Of DateTime)(New DateTime(2017, 2, 5)), New PlotPoint(Of Double)(1920))})
+    Dim o4 = New List(Of PlotPoints)({New PlotPoints(New PlotPoint(Of DateTime)(New DateTime(2017, 2, 5)), New PlotPoint(Of Double)(1920))})
 
-    'Dim o5 = New List(Of PlotPoints)({New PlotPoints(New PlotPoint(Of DateTime)(New DateTime(2017, 2, 5)), New PlotPoint(Of Double)(2920))})
+    Dim o5 = New List(Of PlotPoints)({New PlotPoints(New PlotPoint(Of DateTime)(New DateTime(2017, 2, 5)), New PlotPoint(Of Double)(2920))})
 
-    'ChartData.ClearAndAddRange({New PlotTrend("First", Brushes.Blue, New Thickness(2), o), New PlotTrend("Second", Brushes.Red, New Thickness(2), o2),
-    '                           New PlotTrend("Third", Brushes.Purple, New Thickness(2), o3), New PlotTrend("Fourth", Brushes.Orange, New Thickness(2), o4),
-    '                           New PlotTrend("Fifth", Brushes.Brown, New Thickness(2), o5)})
+    ChartData.ClearAndAddRange({New PlotTrend("First", Brushes.Blue, New Thickness(2), o), New PlotTrend("Second", Brushes.Red, New Thickness(2), o2),
+                               New PlotTrend("Third", Brushes.Purple, New Thickness(2), o3), New PlotTrend("Fourth", Brushes.Orange, New Thickness(2), o4),
+                               New PlotTrend("Fifth", Brushes.Brown, New Thickness(2), o5)})
   End Sub
 
   Private Sub LinePlotAdding()
@@ -116,10 +116,8 @@ Public NotInheritable Class MainWindowViewModel
     Next
 
     _lastPoints = newPoints
-    'ChartData(0).AdditionalSeriesInfo = "Day"
     ChartData(0).Points.Add(_lastPoints(0))
     ChartData(1).Points.Add(_lastPoints(1))
-    'ChartData(1).AdditionalSeriesInfo = "Day"
   End Sub
 
 #End Region

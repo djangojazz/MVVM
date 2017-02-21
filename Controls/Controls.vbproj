@@ -98,6 +98,7 @@
     <Compile Include="Converters\DateToValueConverter.vb" />
     <Compile Include="Converters\ChartAdditionalInfoAndPointMultiConverter.vb" />
     <Compile Include="Converters\DecimalConverter.vb" />
+    <Compile Include="Converters\InstanceInSetToStringConverter.vb" />
     <Compile Include="My Project\AssemblyInfo.vb">
       <SubType>Code</SubType>
     </Compile>

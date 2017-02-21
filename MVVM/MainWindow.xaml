@@ -12,7 +12,6 @@
       <ResourceDictionary.MergedDictionaries>
         <ResourceDictionary Source="pack://application:,,,/Controls;component/styles.xaml" />
       </ResourceDictionary.MergedDictionaries>
-      <cntrls:ChartAdditionalInfoAndPointMultiConverter x:Key="ChartAdditionalInfoAndPointMultiConverter" />
     </ResourceDictionary>
   </Window.Resources>
   <Grid>

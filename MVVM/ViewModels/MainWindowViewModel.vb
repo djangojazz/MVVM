@@ -8,6 +8,7 @@ Public NotInheritable Class MainWindowViewModel
   Private _lastPoints As New List(Of PlotPoints)
   Private _testText As String
   Private _demands As New List(Of DemandTrendOutput)
+  Private _grouping As String
 
   Public Property TestText As String
     Get
@@ -29,12 +30,54 @@ Public NotInheritable Class MainWindowViewModel
     End Set
   End Property
 
+  Private _array As New ObservableCollection(Of String)({"Day", "Month", "Year"})
+  Public Property Array As ObservableCollection(Of String)
+    Get
+      Return _array
+    End Get
+    Set(ByVal value As ObservableCollection(Of String))
+      _array = value
+      OnPropertyChanged(NameOf(Array))
+    End Set
+  End Property
+
+
+  Private _theItem As String
+  Public Property TheItem As String
+    Get
+      Return _theItem
+    End Get
+    Set(ByVal value As String)
+      _theItem = value
+      If MyConverter IsNot Nothing Then MyConverter.OptionalHeader = value
+      OnPropertyChanged(NameOf(TheItem))
+    End Set
+  End Property
+
+  Public ReadOnly Property MyConverter As New DecimalConverter
+
+
   Public ReadOnly Property ChartData As New ObservableCollectionContentNotifying(Of PlotTrend)
 
-  Public Sub New()
-    TestText = "Hello there"
+  Public Enum TrendChoices
+    FiscalYear
+    FiscalWeek
+    FiscalPeriod
+    FiscalQuarter
+    Year
+    Quarter
+    Month
+    Week
+    Day
+  End Enum
 
-    _demands = Selects.GetDemandTrends(New DemandTrendInput(2278, New Date(2017, 3, 10), New Date(2017, 3, 20), "FiscalWeek", New List(Of Integer)({24, 26}), New List(Of Integer)({2, 25})))
+  Public Sub New()
+    TheItem = "Month"
+    MyConverter.OptionalHeader = TheItem
+    TestText = TrendChoices.Month.ToString
+    _grouping = TrendChoices.Month.ToString
+
+    _demands = Selects.GetDemandTrends(New DemandTrendInput(2278, New Date(2017, 3, 10), New Date(2017, 5, 20), _grouping, New List(Of Integer)({24, 26}), New List(Of Integer)({2, 25})))
     AddingLinesForLineChart()
   End Sub
 
@@ -45,10 +88,16 @@ Public NotInheritable Class MainWindowViewModel
     TestText = "Line Chart Hello there" + DateTime.Now.ToLongTimeString
   End Sub
 
-  Public ReadOnly Property GetXTicks
+  Private _xTicks As Integer
+
+  Public Property XTicks As Integer
     Get
       Return (ChartData.SelectMany(Function(x) x.Points).Select(Function(x) x.XAsDouble).Distinct.Count - 1)
     End Get
+    Set(value As Integer)
+      _xTicks = value
+      OnPropertyChanged(NameOf(XTicks))
+    End Set
   End Property
 
 
@@ -59,7 +108,7 @@ Public NotInheritable Class MainWindowViewModel
 
     _lastPoints = New List(Of PlotPoints)({demand.Last, ad.Last})
 
-    ChartData.ClearAndAddRange({New PlotTrend("Demand", Brushes.Blue, New Thickness(2), demand, "FiscalWeek"), New PlotTrend("Ad", Brushes.Red, New Thickness(2), ad, "FiscalWeek")})
+    ChartData.ClearAndAddRange({New PlotTrend("Demand", Brushes.Blue, New Thickness(2), demand, _grouping), New PlotTrend("Ad", Brushes.Red, New Thickness(2), ad, _grouping)})
 
     '_lastPoints = New List(Of PlotPoints)({New PlotPoints(New PlotPoint(Of DateTime)(New DateTime(2017, 2, 12)), New PlotPoint(Of Double)(1200)),
     '                                      New PlotPoints(New PlotPoint(Of DateTime)(New DateTime(2017, 2, 12)), New PlotPoint(Of Double)(1200)),
@@ -92,12 +141,15 @@ Public NotInheritable Class MainWindowViewModel
     Dim newPoints = New List(Of PlotPoints)
 
     For i = 1 To _lastPoints.Count
-      newPoints.Add(New PlotPoints(New PlotPoint(Of DateTime)((DirectCast(_lastPoints(i - 1).X, PlotPoint(Of DateTime)).Point).AddDays(1)), New PlotPoint(Of Double)(DirectCast(_lastPoints(i - 1).Y, PlotPoint(Of Double)).Point * 1.95)))
+      newPoints.Add(New PlotPoints(New PlotPoint(Of Double)((DirectCast(_lastPoints(i - 1).X, PlotPoint(Of Double)).Point + 1)), New PlotPoint(Of Double)(DirectCast(_lastPoints(i - 1).Y, PlotPoint(Of Double)).Point * 1.95)))
+      XTicks = (ChartData.SelectMany(Function(x) x.Points).Select(Function(x) x.XAsDouble).Distinct.Count - 1)
     Next
 
     _lastPoints = newPoints
+    ChartData(0).AdditionalSeriesInfo = "Day"
     ChartData(0).Points.Add(_lastPoints(0))
     ChartData(1).Points.Add(_lastPoints(1))
+    ChartData(1).AdditionalSeriesInfo = "Day"
   End Sub
 
 #End Region

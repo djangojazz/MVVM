@@ -263,7 +263,9 @@ Public MustInherit Class BaseChart
     End Set
   End Property
 #End Region
+#End Region
 
+#Region "Override Methods"
   Public Shared Sub ChartDataChanged(d As DependencyObject, e As DependencyPropertyChangedEventArgs)
     Dim o = DirectCast(d, BaseChart)
 
@@ -283,7 +285,6 @@ Public MustInherit Class BaseChart
     End If
   End Sub
 
-
   Public MustOverride Sub OnTick(o As Object)
 
   Public MustOverride Sub Resized()
@@ -292,4 +293,16 @@ Public MustInherit Class BaseChart
 
   Public MustOverride Sub CalculatePlotTrends()
 #End Region
+
+  Protected Function GetXSegmentText(input As String) As String
+
+
+
+    Return If(XValueMultiConverter IsNot Nothing,
+                    XValueMultiConverter.Convert(New Object() {ChartData.Select(Function(x) x.AdditionalSeriesInfo).First, input}, GetType(String), Nothing, Globalization.CultureInfo.InvariantCulture),
+                        If(XValueConverter IsNot Nothing, XValueConverter.Convert(input, GetType(String), Nothing, Globalization.CultureInfo.InvariantCulture), input.ToString))
+
+  End Function
+
+
 End Class

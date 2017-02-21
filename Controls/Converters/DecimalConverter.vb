@@ -7,6 +7,7 @@ Public NotInheritable Class DecimalConverter
 
   Public Property DecimalPositions As Integer = 2
   Public Property IncludeComma As Boolean = True
+  Public Property OptionalHeader As String = String.Empty
 
 
   Public Function Convert(value As Object, targetType As Type, parameter As Object, culture As CultureInfo) As Object Implements IValueConverter.Convert
@@ -15,7 +16,7 @@ Public NotInheritable Class DecimalConverter
     Dim FormatString As String = If(IncludeComma, "#,##0", "0")
     If DecimalPositions > 0 Then FormatString &= "." & StrDup(DecimalPositions, "0"c)
 
-    Return CType(value, Decimal).ToString(FormatString)
+    Return $"{OptionalHeader} {CType(value, Decimal).ToString(FormatString)}"
 
   End Function
 

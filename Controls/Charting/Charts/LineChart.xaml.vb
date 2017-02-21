@@ -151,7 +151,8 @@
                                    })
 
     'Sizing should be done from the ceiling
-    Dim lastText = New String(If(XValueConverter Is Nothing, _xCeiling.ToString, XValueConverter.Convert(_xCeiling, GetType(String), Nothing, Globalization.CultureInfo.InvariantCulture)))
+    Dim lastText = GetXSegmentText(_xCeiling.ToString)
+
     Dim spacingForText = lastText.Count * 6
     Dim totalLength = spacingForText * XNumberOfTicks
     Dim fontSize = 0
@@ -184,9 +185,7 @@
     For i As Integer = 0 To XNumberOfTicks
       Dim xSegment = If(i = 0, 0, i * (_viewWidth / XNumberOfTicks))
       Dim xSegmentLabel = If(i = 0, _xFloor, _xFloor + (i * segment))
-      Dim textForLabel = If(XValueMultiConverter IsNot Nothing,
-                    XValueMultiConverter.Convert(New Object() {ChartData.SelectMany(Function(x) x.AdditionalSeriesInfo).First, xSegmentLabel}, GetType(String), Nothing, Globalization.CultureInfo.InvariantCulture),
-                        If(XValueConverter IsNot Nothing, XValueConverter.Convert(xSegmentLabel, GetType(String), Nothing, Globalization.CultureInfo.InvariantCulture), xSegmentLabel.ToString))
+      Dim textForLabel = GetXSegmentText(xSegmentLabel)
 
       Dim lineSegment = New Line With {
           .X1 = xSegment,

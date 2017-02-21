@@ -9,10 +9,9 @@ Public NotInheritable Class ChartAdditionalInfoAndPointMultiConverter
   Public Property IncludeComma As Boolean = True
 
   Public Function Convert(values() As Object, targetType As Type, parameter As Object, culture As CultureInfo) As Object Implements IMultiValueConverter.Convert
+    If values.Count <> 2 Then Return 0
 
-    'If values.Count <> 2 Then Return 0
-
-    'Return values(0) + " " + values(1)
+    Return $"{values(0)} {values(1)}"
   End Function
 
   Public Function ConvertBack(value As Object, targetTypes() As Type, parameter As Object, culture As CultureInfo) As Object() Implements IMultiValueConverter.ConvertBack

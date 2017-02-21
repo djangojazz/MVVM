@@ -12,18 +12,20 @@
       <ResourceDictionary.MergedDictionaries>
         <ResourceDictionary Source="pack://application:,,,/Controls;component/styles.xaml" />
       </ResourceDictionary.MergedDictionaries>
-      <cntrls:DecimalConverter x:Key="DecimalConverter" DecimalPositions="0" />
       <cntrls:ChartAdditionalInfoAndPointMultiConverter x:Key="ChartAdditionalInfoAndPointMultiConverter" />
     </ResourceDictionary>
   </Window.Resources>
-<Grid>
-      <Grid.RowDefinitions>
-        <RowDefinition Height="*" />
-        <RowDefinition Height="Auto" />
-        <RowDefinition Height="Auto" />
-      </Grid.RowDefinitions>
-    <cntrls:LineChart 
-      Grid.Row ="0"
+  <Grid>
+    <Grid.RowDefinitions>
+      <RowDefinition Height="Auto" />
+      <RowDefinition Height="*" />
+
+      <RowDefinition Height="Auto" />
+      <RowDefinition Height="Auto" />
+    </Grid.RowDefinitions>
+
+    <ComboBox ItemsSource="{Binding Array}" SelectedItem="{Binding TheItem}" />
+    <cntrls:LineChart Grid.Row="1"
       ChartData="{Binding ChartData}"
       ChartTitle="Test Line Chart"
       ChartForeground="Wheat"
@@ -32,17 +34,17 @@
       BackGroundColorCanvas="White" 
       BackGroundColorLegend="White"    
       YNumberOfTicks="4"
-      XNumberOfTicks="{Binding GetXTicks}"
+      XNumberOfTicks="{Binding XTicks}"
       XValueMultiConverter="{DynamicResource ChartAdditionalInfoAndPointMultiConverter}"
       YValueConverter="{x:Static cntrls:Converters.DecimalConverter}"
       FontType="Tahoma"
       />
     <!--XValueConverter="{x:Static cntrls:Converters.DateToValueConverter}"-->
-    <StackPanel Grid.Row="1">
+    <StackPanel Grid.Row="2">
       <Label Content="{Binding TestText}" Height="30" Foreground="{StaticResource test}" />
       <Label Content="{Binding Dt, Converter={x:Static cntrls:Converters.DateFormatConverter}}" />
     </StackPanel>
-      
-      <Button Grid.Row="2" Command="{Binding TestCommand}" Height="30" Content="Add more lines" />
-    </Grid>
+
+    <Button Grid.Row="3" Command="{Binding TestCommand}" Height="30" Content="Add more lines" />
+  </Grid>
 </Window>

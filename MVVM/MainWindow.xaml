@@ -24,7 +24,26 @@
     </Grid.RowDefinitions>
 
     <ComboBox ItemsSource="{Binding Array}" SelectedItem="{Binding TestText}" />
-    <cntrls:LineChart Grid.Row="1"
+    <Expander Grid.Column="1" Style="{StaticResource StretchExander}" ExpandDirection="Down" IsExpanded="True">
+      <Expander.Header>
+        <TextBlock TextAlignment="Left" HorizontalAlignment="Center" VerticalAlignment="Center" Text="LOCATIONS" FontWeight="Bold"/>
+      </Expander.Header>
+      <Grid>
+        <ItemsControl ItemsSource="{Binding LocationCollection}">
+          <ItemsControl.ItemTemplate>
+            <DataTemplate>
+              <CheckBox Margin="5" IsChecked="{Binding IsUsed}"
+                          Command="{Binding ElementName=DemandPlanInquiryView, Path=DataContext.CommandSelectLocation}"
+                          CommandParameter="{Binding}"
+                          Content="{Binding}">
+              </CheckBox>
+            </DataTemplate>
+          </ItemsControl.ItemTemplate>
+        </ItemsControl>
+      </Grid>
+      
+    </Expander>
+    <!--<cntrls:LineChart Grid.Row="1"
       ChartData="{Binding ChartData}"
       ChartTitle="Test Line Chart"
       ChartForeground="Wheat"
@@ -37,8 +56,7 @@
       XValueConverter="{Binding DecimalConverter}"
       YValueConverter="{x:Static cntrls:Converters.DecimalConverter}"
       FontType="Tahoma"
-      />
-    <!--XValueConverter="{x:Static cntrls:Converters.DateToValueConverter}"-->
+      />-->
     <StackPanel Grid.Row="2">
       <Label Content="{Binding TestText}" Height="30" Foreground="{StaticResource test}" />
       <Label Content="{Binding Dt, Converter={x:Static cntrls:Converters.DateFormatConverter}}" />

@@ -31,4 +31,9 @@ Public Module Selects
     Dim params = New List(Of SqlParameter)({New SqlParameter("@Input", serialized)})
     Return RunQuery(Of DemandTrendOutput)("vis.SelectDemandTrendDetails", params)
   End Function
+
+  Public Function GetDemandLocations() As List(Of DemandLocation)
+    Dim items = RunQuery(Of DemandLocationDb)("vis.ListLocations")
+    Return items.Select(Function(x) New DemandLocation(x.GDKEY, x.Company, x.Division, x.Branch, x.Name)).ToList()
+  End Function
 End Module

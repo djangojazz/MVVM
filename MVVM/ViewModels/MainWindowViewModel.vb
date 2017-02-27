@@ -22,11 +22,12 @@ Public NotInheritable Class MainWindowViewModel
   End Property
 
 
-  Public ReadOnly Property Array As New ObservableCollection(Of String)({"Day", "Month", "Year"})
+  Public ReadOnly Property Array As New ObservableCollection(Of String)({"Day", "Month", "Year", "FiscalPeriod"})
 
   Public ReadOnly Property DecimalConverter As New InstanceInSetToStringConverter
 
   Public ReadOnly Property ChartData As New ObservableCollectionContentNotifying(Of PlotTrend)
+  Public ReadOnly Property LocationCollection As New ObservableCollection(Of DemandLocation)
 
 
   Public Enum TrendChoices
@@ -42,7 +43,8 @@ Public NotInheritable Class MainWindowViewModel
   End Enum
 
   Public Sub New()
-    TestText = "Month"
+    LocationCollection.ClearAndAddRange(Selects.GetDemandLocations())
+    'TestText = "Month"
   End Sub
 
   Public ReadOnly Property TestCommand As New DelegateCommand(Of Object)(AddressOf TestCommandExecute)
@@ -67,7 +69,7 @@ Public NotInheritable Class MainWindowViewModel
 
 #Region "Line Graph parts"
   Public Sub UpdateChartData()
-    Dim demands = Selects.GetDemandTrends(New DemandTrendInput(2278, New Date(2017, 3, 25), New Date(2017, 4, 1), TestText, New List(Of Integer)({24, 26}), New List(Of Integer)({2, 25})))
+    Dim demands = Selects.GetDemandTrends(New DemandTrendInput(2278, New Date(2017, 2, 25), New Date(2017, 5, 1), TestText, New List(Of Integer)({24, 26}), New List(Of Integer)({2, 25})))
 
     Dim demand = demands.Select(Function(x) New PlotPoints(New PlotPoint(Of Double)(x.Grouping), New PlotPoint(Of Double)(x.DemandQty)))
     Dim ad = demands.Select(Function(x) New PlotPoints(New PlotPoint(Of Double)(x.Grouping), New PlotPoint(Of Double)(x.DemandAdQty)))

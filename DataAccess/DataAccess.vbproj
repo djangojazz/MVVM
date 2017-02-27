@@ -65,6 +65,8 @@
   <ItemGroup>
     <Compile Include="DatabaseAccess.vb" />
     <Compile Include="DataConverter.vb" />
+    <Compile Include="Enterprise\Models\DemandLocation.vb" />
+    <Compile Include="Enterprise\Models\DemandLocationDb.vb" />
     <Compile Include="Enterprise\Models\DemandTrendInput.vb" />
     <Compile Include="Enterprise\Models\DemandTrendOutput.vb" />
     <Compile Include="Enterprise\Procs\Selects.vb" />

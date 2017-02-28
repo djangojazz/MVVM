@@ -18,31 +18,28 @@
     <Grid.RowDefinitions>
       <RowDefinition Height="Auto" />
       <RowDefinition Height="*" />
-
-      <RowDefinition Height="Auto" />
-      <RowDefinition Height="Auto" />
     </Grid.RowDefinitions>
 
-    <ComboBox ItemsSource="{Binding Array}" SelectedItem="{Binding TestText}" />
-    <Expander Grid.Column="1" Style="{StaticResource StretchExander}" ExpandDirection="Down" IsExpanded="True">
+    <Grid>
+      <Expander ExpandDirection="Down" IsExpanded="True" HorizontalAlignment="Stretch">
       <Expander.Header>
         <TextBlock TextAlignment="Left" HorizontalAlignment="Center" VerticalAlignment="Center" Text="LOCATIONS" FontWeight="Bold"/>
       </Expander.Header>
-      <Grid>
-        <ItemsControl ItemsSource="{Binding LocationCollection}">
-          <ItemsControl.ItemTemplate>
-            <DataTemplate>
-              <CheckBox Margin="5" IsChecked="{Binding IsUsed}"
-                          Command="{Binding ElementName=DemandPlanInquiryView, Path=DataContext.CommandSelectLocation}"
-                          CommandParameter="{Binding}"
-                          Content="{Binding}">
-              </CheckBox>
-            </DataTemplate>
-          </ItemsControl.ItemTemplate>
-        </ItemsControl>
-      </Grid>
-      
+      <Expander.Content>
+
+    <ScrollViewer ScrollViewer.VerticalScrollBarVisibility="Auto" Height="300" HorizontalAlignment="Stretch">
+      <ItemsControl ItemsSource="{Binding Locs}" >
+        <ItemsControl.ItemTemplate>
+          <DataTemplate>
+            <CheckBox Margin="5" Content="{Binding}" />
+          </DataTemplate>
+        </ItemsControl.ItemTemplate>
+      </ItemsControl>
+    </ScrollViewer>
+    </Expander.Content>
     </Expander>
+    </Grid>
+    <Label Grid.Row="1" Height="100" Content="Test Content" FontSize="32" />
     <!--<cntrls:LineChart Grid.Row="1"
       ChartData="{Binding ChartData}"
       ChartTitle="Test Line Chart"
@@ -56,12 +53,13 @@
       XValueConverter="{Binding DecimalConverter}"
       YValueConverter="{x:Static cntrls:Converters.DecimalConverter}"
       FontType="Tahoma"
-      />-->
+      />
+    <ComboBox Grid.Row="1" ItemsSource="{Binding Array}" SelectedItem="{Binding TestText}" />
     <StackPanel Grid.Row="2">
       <Label Content="{Binding TestText}" Height="30" Foreground="{StaticResource test}" />
       <Label Content="{Binding Dt, Converter={x:Static cntrls:Converters.DateFormatConverter}}" />
     </StackPanel>
 
-    <Button Grid.Row="3" Command="{Binding TestCommand}" Height="30" Content="Add more lines" />
+    <Button Grid.Row="3" Command="{Binding TestCommand}" Height="30" Content="Add more lines" />-->
   </Grid>
 </Window>

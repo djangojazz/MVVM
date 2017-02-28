@@ -29,6 +29,7 @@ Public NotInheritable Class MainWindowViewModel
   Public ReadOnly Property ChartData As New ObservableCollectionContentNotifying(Of PlotTrend)
   Public ReadOnly Property LocationCollection As New ObservableCollection(Of DemandLocation)
 
+  Public ReadOnly Property Locs As New ObservableCollection(Of String)
 
   Public Enum TrendChoices
     FiscalYear
@@ -43,7 +44,12 @@ Public NotInheritable Class MainWindowViewModel
   End Enum
 
   Public Sub New()
-    LocationCollection.ClearAndAddRange(Selects.GetDemandLocations())
+    For i = 1 To 30
+      Locs.Add($"Item {i}")
+    Next
+
+
+    'LocationCollection.ClearAndAddRange(Selects.GetDemandLocations())
     'TestText = "Month"
   End Sub
 

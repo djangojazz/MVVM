@@ -17,29 +17,27 @@
   <Grid>
     <Grid.RowDefinitions>
       <RowDefinition Height="Auto" />
-      <RowDefinition Height="*" />
+      <RowDefinition Height="Auto" />
     </Grid.RowDefinitions>
+    <cntrls:MultiCheckBoxCollapsable Header="Test" ItemsCollection="{Binding LocationCollection}" />
 
-    <Grid>
-      <Expander ExpandDirection="Down" IsExpanded="True" HorizontalAlignment="Stretch">
-      <Expander.Header>
-        <TextBlock TextAlignment="Left" HorizontalAlignment="Center" VerticalAlignment="Center" Text="LOCATIONS" FontWeight="Bold"/>
-      </Expander.Header>
-      <Expander.Content>
+    <cntrls:SearchCombo Grid.Row="1" Padding="2"
+                        CompleteCollection="{Binding LocationCollection}" 
+                        Selected="{Binding SelectedLocation}" 
+                        SelectCommand="{Binding CommandSelectedLocation}"
+                        MaxResults="100"  />
+    <!--<Grid>
+        
+          <ItemsControl ItemsSource="{Binding LocationCollection}">
+            <ItemsControl.ItemTemplate>
+              <DataTemplate>
+                <CheckBox Margin="5" IsChecked="{Binding IsChecked}" Content="{Binding}" />
+              </DataTemplate>
+            </ItemsControl.ItemTemplate>
+          </ItemsControl>
 
-    <ScrollViewer ScrollViewer.VerticalScrollBarVisibility="Auto" Height="300" HorizontalAlignment="Stretch">
-      <ItemsControl ItemsSource="{Binding Locs}" >
-        <ItemsControl.ItemTemplate>
-          <DataTemplate>
-            <CheckBox Margin="5" Content="{Binding}" />
-          </DataTemplate>
-        </ItemsControl.ItemTemplate>
-      </ItemsControl>
-    </ScrollViewer>
-    </Expander.Content>
-    </Expander>
-    </Grid>
-    <Label Grid.Row="1" Height="100" Content="Test Content" FontSize="32" />
+      </Grid>
+    </Label>-->
     <!--<cntrls:LineChart Grid.Row="1"
       ChartData="{Binding ChartData}"
       ChartTitle="Test Line Chart"

@@ -8,6 +8,17 @@ Public NotInheritable Class MainWindowViewModel
   Private _lastPoints As New List(Of PlotPoints)
   Private _testText As String
 
+  Public Enum TrendChoices
+    FiscalYear
+    FiscalWeek
+    FiscalPeriod
+    FiscalQuarter
+    Year
+    Quarter
+    Month
+    Week
+    Day
+  End Enum
   Public Property TestText As String
     Get
       Return _testText
@@ -31,34 +42,16 @@ Public NotInheritable Class MainWindowViewModel
 
   Public ReadOnly Property Locs As New ObservableCollection(Of String)
 
-  Public Enum TrendChoices
-    FiscalYear
-    FiscalWeek
-    FiscalPeriod
-    FiscalQuarter
-    Year
-    Quarter
-    Month
-    Week
-    Day
-  End Enum
-
-  Public Sub New()
-    For i = 1 To 30
-      Locs.Add($"Item {i}")
-    Next
-
-
-    'LocationCollection.ClearAndAddRange(Selects.GetDemandLocations())
-    'TestText = "Month"
-  End Sub
-
-  Public ReadOnly Property TestCommand As New DelegateCommand(Of Object)(AddressOf TestCommandExecute)
-
-  Private Sub TestCommandExecute()
-    LinePlotAdding()
-    TestText = "Line Chart Hello there" + DateTime.Now.ToLongTimeString
-  End Sub
+  Private _selectedLocation As DemandLocation
+  Public Property SelectedLocation As DemandLocation
+    Get
+      Return _selectedLocation
+    End Get
+    Set(ByVal value As DemandLocation)
+      _selectedLocation = value
+      OnPropertyChanged(NameOf(SelectedLocation))
+    End Set
+  End Property
 
   Private _xTicks As Integer
 
@@ -71,6 +64,31 @@ Public NotInheritable Class MainWindowViewModel
       OnPropertyChanged(NameOf(XTicks))
     End Set
   End Property
+
+
+  Public Sub New()
+    For i = 1 To 30
+      Locs.Add($"Item {i}")
+    Next
+
+    LocationCollection.ClearAndAddRange(Selects.GetDemandLocations())
+    'TestText = "Month"
+  End Sub
+
+  Public ReadOnly Property CommandSelectedLocation As New DelegateCommand(Of DemandLocation)(AddressOf CommandSelectedLocationExecute)
+
+  Private Sub CommandSelectedLocationExecute(obj As DemandLocation)
+    SelectedLocation = obj
+  End Sub
+
+  Public ReadOnly Property TestCommand As New DelegateCommand(Of Object)(AddressOf TestCommandExecute)
+
+  Private Sub TestCommandExecute()
+    LinePlotAdding()
+    TestText = "Line Chart Hello there" + DateTime.Now.ToLongTimeString
+  End Sub
+
+
 
 
 #Region "Line Graph parts"

@@ -1,5 +1,6 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:sys="clr-namespace:System;assembly=mscorlib"
     xmlns:local="clr-namespace:Controls">
   <LinearGradientBrush x:Key="test" EndPoint="0.5,1" StartPoint="0.5,0">
     <GradientStop Color="#FFE8E8E8" Offset="1"/>
@@ -7,6 +8,30 @@
     <GradientStop Color="#FFCB9D3B" Offset="0.837"/>
     <GradientStop Color="#E5AAA986"/>
   </LinearGradientBrush>
+
+  <!--FONTS-->
+  <FontFamily x:Key="FontCaption">Cambria</FontFamily>
+  <FontFamily x:Key="FontEntry">Verdana</FontFamily>
+  <FontFamily x:Key="ListViewFont">Cambria</FontFamily>
+
+  <!--FONT SIZES-->
+  <sys:Double x:Key="FontSizeLarge">18</sys:Double>
+  <sys:Double x:Key="FontSizeMed">16</sys:Double>
+  <sys:Double x:Key="FontSizeSm">14</sys:Double>
+
+  <!--MARGINS-->
+  <sys:Double x:Key="MarginNone">0</sys:Double>
+  <sys:Double x:Key="MarginStandard">2</sys:Double>
+  <sys:Double x:Key="MarginThick">4</sys:Double>
+  <sys:Double x:Key="MarginHuge">8</sys:Double>
+
+  <Thickness x:Key="ThicknessNone" Left="{StaticResource MarginNone}" Top="{StaticResource MarginNone}" Right="{StaticResource MarginNone}" Bottom="{StaticResource MarginNone}" />
+  <Thickness x:Key="ThicknessStandard" Left="{StaticResource MarginStandard}" Top="{StaticResource MarginStandard}" Right="{StaticResource MarginStandard}" Bottom="{StaticResource MarginStandard}" />
+  <Thickness x:Key="Thickness.Standard.NoBottomMargin" Left="{StaticResource MarginStandard}" Top="{StaticResource MarginStandard}" Right="{StaticResource MarginStandard}" Bottom="0" />
+  <Thickness x:Key="Thickness.Standard.NoTopMargin" Left="{StaticResource MarginStandard}" Top="0" Right="{StaticResource MarginStandard}" Bottom="{StaticResource MarginStandard}" />
+  <Thickness x:Key="ThicknessLarge"  Left="{StaticResource MarginThick}" Top="{StaticResource MarginThick}" Right="{StaticResource MarginThick}" Bottom="{StaticResource MarginThick}" />
+  <Thickness x:Key="ThicknessHuge"  Left="{StaticResource MarginHuge}" Top="{StaticResource MarginHuge}" Right="{StaticResource MarginHuge}" Bottom="{StaticResource MarginHuge}" />
+  <Thickness x:Key="Thickness.Padding.DetailControl"  Left="{StaticResource MarginThick}" Top="{StaticResource MarginThick}" Right="{StaticResource MarginThick}" Bottom="{StaticResource MarginThick}" />
 
   <!--BRUSHES-->
   <SolidColorBrush x:Key="Brush.Expander.MouseOver.Circle.Stroke" Color="#FF5593FF"/>
@@ -29,7 +54,48 @@
   <SolidColorBrush x:Key="Brush.Jobs.SectionElement" Color="#1047A9" />
   <SolidColorBrush x:Key="Brush.Jobs.ElementItem" Color="#00675C" />
   <SolidColorBrush x:Key="Brush.Jobs.FolderItem" Color="#A64600" />
+
+  <!--VISUAL BRUSH-->
+  <VisualBrush     x:Key="Brush.FilterTo" TileMode="None" Opacity="0.4" Stretch="None" AlignmentX="Center">
+    <VisualBrush.Visual>
+      <TextBlock Margin="5" FontFamily="{StaticResource FontCaption}" FontStyle="Italic" xml:space="preserve" Text=" Filter To" />
+    </VisualBrush.Visual>
+  </VisualBrush>
   
+  <!--CORNER RADIUS-->
+  <CornerRadius x:Key="CornerRadius">4</CornerRadius>
+  <CornerRadius x:Key="CornerRadius.Border">5</CornerRadius>
+
+  <Style x:Key="Border.Round.Standard" TargetType="{x:Type Border}">
+    <Setter Property="BorderBrush" Value="{StaticResource Brush.Border.Standard}" />
+    <Setter Property="CornerRadius" Value="{StaticResource CornerRadius.Border}" />
+    <Setter Property="BorderThickness" Value="1" />
+  </Style>
+
+  <Style x:Key="Border.Round.Thick" TargetType="Border">
+    <Setter Property="BorderBrush" Value="{StaticResource Brush.Border.Standard}" />
+    <Setter Property="CornerRadius" Value="{StaticResource CornerRadius.Border}" />
+    <Setter Property="BorderThickness" Value="2" />
+  </Style>
+
+  <!--Filter Box Style-->
+  <Style x:Key="FilterBox"  TargetType="TextBox">
+    <Setter Property="VerticalContentAlignment" Value="Center"/>
+    <Setter Property="Margin" Value="{StaticResource ThicknessStandard}"/>
+    <Style.Triggers>
+      <Trigger   Property="Text" Value="{x:Null}">
+        <Setter Property="Background" Value="{StaticResource Brush.FilterTo }" />
+      </Trigger>
+      <Trigger Property="Text" Value="">
+        <Setter Property="Background" Value="{StaticResource Brush.FilterTo }" />
+      </Trigger>
+      <!--Last One Wins -->
+      <Trigger Property="IsKeyboardFocusWithin" Value="true">
+        <Setter Property="Background" Value="{StaticResource Brush.TextBox.Background}"/>
+      </Trigger>
+    </Style.Triggers>
+  </Style>
+
   <!--Full Stretch Expander-->
   <Style x:Key="ExpanderRightHeaderStyle" TargetType="{x:Type ToggleButton}">
     <Setter Property="Template">

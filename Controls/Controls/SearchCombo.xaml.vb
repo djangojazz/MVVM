@@ -128,7 +128,7 @@ Public Class SearchCombo
   End Sub
 
   Private Sub CloseControl(o As Object)
-    If IsExpanded Then Part_Button.Focus()
+    If IsExpanded Then FocusButton()
   End Sub
 
   Public Shared Sub ExpandChanged(d As DependencyObject, e As DependencyPropertyChangedEventArgs)

@@ -8,6 +8,19 @@ Public NotInheritable Class MainWindowViewModel
   Private _lastPoints As New List(Of PlotPoints)
   Private _testText As String
 
+  Public Sub New()
+    For i = 1 To 30
+      Locs.Add($"Item {i}")
+    Next
+    LocationCollection.ClearAndAddRange(Selects.GetDemandLocations().Take(2))
+    AddHandler LocationCollection.OnCollectionItemChanged, AddressOf UpdateHeader
+    'TestText = "Month"
+  End Sub
+
+  Private Function UpdateHeader() As ObservableCollectionContentNotifying(Of DemandLocation).OnCollectionItemChangedEventHandler
+
+  End Function
+
   Public Enum TrendChoices
     FiscalYear
     FiscalWeek
@@ -33,12 +46,25 @@ Public NotInheritable Class MainWindowViewModel
   End Property
 
 
+  Private _LocationHeader As String
+  Public Property LocationHeader As String
+    Get
+      Return _LocationHeader
+    End Get
+    Set(ByVal value As String)
+      _LocationHeader = value
+      OnPropertyChanged(NameOf(LocationHeader))
+    End Set
+  End Property
+
   Public ReadOnly Property Array As New ObservableCollection(Of String)({"Day", "Month", "Year", "FiscalPeriod"})
 
   Public ReadOnly Property DecimalConverter As New InstanceInSetToStringConverter
 
   Public ReadOnly Property ChartData As New ObservableCollectionContentNotifying(Of PlotTrend)
-  Public ReadOnly Property LocationCollection As New ObservableCollection(Of DemandLocation)
+  Public ReadOnly Property LocationCollection As New ObservableCollectionContentNotifying(Of DemandLocation)
+  'Dictionary(Of String, Boolean)
+  'ObservableCollection(Of DemandLocation)
 
   Public ReadOnly Property Locs As New ObservableCollection(Of String)
 
@@ -66,15 +92,6 @@ Public NotInheritable Class MainWindowViewModel
   End Property
 
 
-  Public Sub New()
-    For i = 1 To 30
-      Locs.Add($"Item {i}")
-    Next
-
-    LocationCollection.ClearAndAddRange(Selects.GetDemandLocations())
-    'TestText = "Month"
-  End Sub
-
   Public ReadOnly Property CommandSelectedLocation As New DelegateCommand(Of DemandLocation)(AddressOf CommandSelectedLocationExecute)
 
   Private Sub CommandSelectedLocationExecute(obj As DemandLocation)
@@ -84,11 +101,12 @@ Public NotInheritable Class MainWindowViewModel
   Public ReadOnly Property TestCommand As New DelegateCommand(Of Object)(AddressOf TestCommandExecute)
 
   Private Sub TestCommandExecute()
-    LinePlotAdding()
-    TestText = "Line Chart Hello there" + DateTime.Now.ToLongTimeString
+    'LinePlotAdding()
+    'TestText = "Line Chart Hello there" + DateTime.Now.ToLongTimeString
+    'Dim items = .ToDictionary(Function(x) x.ToString, Function(x) x.IsUsed)
+    LocationCollection.ClearAndAddRange(Selects.GetDemandLocations().Take(5))
+    'LocationCollection.ClearAndAddRange(Selects.GetDemandLocations().Take(5))
   End Sub
-
-
 
 
 #Region "Line Graph parts"
@@ -147,5 +165,4 @@ Public NotInheritable Class MainWindowViewModel
   End Sub
 
 #End Region
-
 End Class

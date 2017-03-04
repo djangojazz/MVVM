@@ -126,8 +126,8 @@
     <Compile Include="Charting\Models\PlotPoints.vb" />
     <Compile Include="Charting\Models\PlotTrend.vb" />
     <Compile Include="Controls\KeyboardPopup.vb" />
-    <Compile Include="Controls\MultiCheckBoxCollapsable.xaml.vb">
-      <DependentUpon>MultiCheckBoxCollapsable.xaml</DependentUpon>
+    <Compile Include="Controls\MultiCheckBoxPopup.xaml.vb">
+      <DependentUpon>MultiCheckBoxPopup.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\SearchCombo.xaml.vb">
       <DependentUpon>SearchCombo.xaml</DependentUpon>
@@ -186,7 +186,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Controls\MultiCheckBoxCollapsable.xaml">
+    <Page Include="Controls\MultiCheckBoxPopup.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

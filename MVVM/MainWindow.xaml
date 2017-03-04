@@ -19,25 +19,8 @@
       <RowDefinition Height="Auto" />
       <RowDefinition Height="Auto" />
     </Grid.RowDefinitions>
-    <cntrls:MultiCheckBoxCollapsable Header="Test" ItemsCollection="{Binding LocationCollection}" />
+    <cntrls:MultiCheckBoxPopup ItemsCollection="{Binding LocationCollection}" ScrollingHeight="300" />
 
-    <cntrls:SearchCombo Grid.Row="1" Padding="2"
-                        CompleteCollection="{Binding LocationCollection}" 
-                        Selected="{Binding SelectedLocation}" 
-                        SelectCommand="{Binding CommandSelectedLocation}"
-                        MaxResults="100"  />
-    <!--<Grid>
-        
-          <ItemsControl ItemsSource="{Binding LocationCollection}">
-            <ItemsControl.ItemTemplate>
-              <DataTemplate>
-                <CheckBox Margin="5" IsChecked="{Binding IsChecked}" Content="{Binding}" />
-              </DataTemplate>
-            </ItemsControl.ItemTemplate>
-          </ItemsControl>
-
-      </Grid>
-    </Label>-->
     <!--<cntrls:LineChart Grid.Row="1"
       ChartData="{Binding ChartData}"
       ChartTitle="Test Line Chart"
@@ -56,8 +39,8 @@
     <StackPanel Grid.Row="2">
       <Label Content="{Binding TestText}" Height="30" Foreground="{StaticResource test}" />
       <Label Content="{Binding Dt, Converter={x:Static cntrls:Converters.DateFormatConverter}}" />
-    </StackPanel>
+    </StackPanel>-->
 
-    <Button Grid.Row="3" Command="{Binding TestCommand}" Height="30" Content="Add more lines" />-->
+    <Button Grid.Row="1" Command="{Binding TestCommand}" Height="30" Content="Try It" />
   </Grid>
 </Window>

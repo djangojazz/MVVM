@@ -1,4 +1,8 @@
-﻿Public NotInheritable Class DemandLocation
+﻿Imports System.ComponentModel
+Imports Controls
+
+Public NotInheritable Class DemandLocation
+  Implements INotifyPropertyChanged
 
   'CONSTRUCTOR
   Public Sub New()
@@ -23,8 +27,17 @@
 
   Public Property BranchName As String = String.Empty
 
-  Public Property IsUsed As Boolean
+  Private _isUsed As Boolean
+  Public Event PropertyChanged As PropertyChangedEventHandler Implements INotifyPropertyChanged.PropertyChanged
 
+  Public Property IsUsed As Boolean
+    Get
+      Return _isUsed
+    End Get
+    Set(ByVal value As Boolean)
+      _isUsed = value
+    End Set
+  End Property
 
   'METHODS
   Public Overrides Function ToString() As String

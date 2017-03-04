@@ -12,6 +12,14 @@ Public Module ExtensionMethods
   End Sub
 
   <Extension>
+  Public Sub ClearAndAddRange(Of T, T2)(input As IDictionary(Of T, T2), dict As IDictionary(Of T, T2))
+    input.Clear()
+    For Each o In dict
+      input.Add(o)
+    Next
+  End Sub
+
+  <Extension>
   Public Function ContainsInvariant(input As String, contains As String) As Boolean
     Return input.ToUpper.Trim.Contains(contains.ToUpper.Trim)
   End Function

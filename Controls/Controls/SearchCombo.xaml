@@ -15,7 +15,7 @@
     </ResourceDictionary>
   </UserControl.Resources>
   <Grid x:Name="Part_Layout" Focusable="False">
-    <Border Grid.Row="4" Margin="0" Padding="2" Style="{StaticResource Border.Round.Standard}" Focusable="False">
+    <Border Margin="0" Padding="2" Style="{StaticResource Border.Round.Standard}" Focusable="False">
       <ToggleButton x:Name="Part_Button" IsChecked="{Binding IsExpanded}" Focusable="True" ClickMode="Press"
         Content="{Binding Selected, NotifyOnValidationError=True, ValidatesOnDataErrors=True, ValidatesOnExceptions=True}" 
         Style="{StaticResource ExpanderDownHeaderStyle}"/>

@@ -261,7 +261,6 @@
       </Setter.Value>
     </Setter>
   </Style>
-
   <Style x:Key="ExpanderDownHeaderStyle" TargetType="{x:Type ToggleButton}">
     <Setter Property="Template">
       <Setter.Value>
@@ -351,5 +350,19 @@
         </ControlTemplate>
       </Setter.Value>
     </Setter>
+  </Style>
+
+  <Style x:Key="TextBlock.List.Ellipsis" TargetType="TextBlock">
+    <Setter Property="Margin" Value="{StaticResource ThicknessNone}"/>
+    <Setter Property="FontFamily" Value="{StaticResource ListViewFont}"/>
+    <Setter Property="FontSize" Value="{StaticResource FontSizeSm}" />
+    <Setter Property="FontWeight" Value="Normal"/>
+    <Setter Property="Foreground" Value="Black"/>
+    <Setter Property="TextAlignment" Value="Left"/>
+    <Setter Property="HorizontalAlignment" Value="Stretch"/>
+    <Setter Property="VerticalAlignment" Value="Center"/>
+    <Setter Property="TextTrimming" Value="CharacterEllipsis"/>
+    <Setter Property="TextWrapping" Value="NoWrap"/>
+
   </Style>
 </ResourceDictionary>

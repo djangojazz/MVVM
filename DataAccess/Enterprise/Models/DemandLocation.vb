@@ -28,7 +28,6 @@ Public NotInheritable Class DemandLocation
   Public Property BranchName As String = String.Empty
 
   Private _isUsed As Boolean
-  Public Event PropertyChanged As PropertyChangedEventHandler Implements INotifyPropertyChanged.PropertyChanged
 
   Public Property IsUsed As Boolean
     Get
@@ -36,6 +35,7 @@ Public NotInheritable Class DemandLocation
     End Get
     Set(ByVal value As Boolean)
       _isUsed = value
+      OnPropertyChanged(NameOf(IsUsed))
     End Set
   End Property
 
@@ -57,5 +57,11 @@ Public NotInheritable Class DemandLocation
   Public Overrides Function GetHashCode() As Integer
     Return LocationID.GetHashCode
   End Function
+
+  Public Event PropertyChanged As PropertyChangedEventHandler Implements INotifyPropertyChanged.PropertyChanged
+
+  Public Sub OnPropertyChanged(ByVal info As String)
+    RaiseEvent PropertyChanged(Me, New PropertyChangedEventArgs(info))
+  End Sub
 
 End Class

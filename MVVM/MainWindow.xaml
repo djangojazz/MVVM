@@ -19,7 +19,9 @@
       <RowDefinition Height="Auto" />
       <RowDefinition Height="Auto" />
     </Grid.RowDefinitions>
-    <cntrls:MultiCheckBoxPopup ItemsCollection="{Binding LocationCollection}" ScrollingHeight="300" />
+    <cntrls:MultiCheckBoxPopup ItemsCollection="{Binding LocationCollection}" 
+                               Header="{Binding LocationHeader}"
+                               ScrollingHeight="300" />
 
     <!--<cntrls:LineChart Grid.Row="1"
       ChartData="{Binding ChartData}"

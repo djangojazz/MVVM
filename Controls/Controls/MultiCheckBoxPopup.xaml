@@ -15,9 +15,11 @@
   </UserControl.Resources>
   <Grid x:Name="PART_Main">
     <Border Margin="0" Padding="2" Style="{StaticResource Border.Round.Standard}" Focusable="False">
-      <ToggleButton  Height="20" x:Name="Part_Toggle" IsChecked="True" Focusable="True" ClickMode="Press" Content="{Binding Header}" Style="{StaticResource ExpanderDownHeaderStyle}"/>
+      <ToggleButton  Height="20" x:Name="Part_Toggle" IsChecked="True" Focusable="True" ClickMode="Press" Style="{StaticResource ExpanderDownHeaderStyle}">
+        <TextBlock Text="{Binding Header}" Style="{StaticResource TextBlock.List.Ellipsis}" />
+      </ToggleButton>
     </Border>
-    <local:KeyboardPopup  AllowsTransparency="True" Placement="{Binding Placement}" PlacementTarget="{Binding ElementName=Part_Toggle}" 
+    <local:KeyboardPopup AllowsTransparency="True" Placement="{Binding Placement}" PlacementTarget="{Binding ElementName=Part_Toggle}" 
                          IsOpen="{Binding IsChecked, ElementName=Part_Toggle}">
       <Border BorderBrush="Black" BorderThickness="1" CornerRadius="5" >
         <Grid Width="{Binding ActualWidth, ElementName=Part_Toggle}" Background="White" Margin="0,3,0,3">
@@ -25,11 +27,7 @@
             <ItemsControl  ItemsSource="{Binding ItemsCollection}">
               <ItemsControl.ItemTemplate>
                 <DataTemplate>
-                  <CheckBox Margin="5" 
-                            Command="{Binding ElementName=PART_Main, Path=DataContext.CommandUpdateHeader}"
-                            IsChecked="{Binding IsUsed}"
-                            CommandParameter="{Binding}"  
-                            Content="{Binding}" />
+                  <CheckBox Margin="5" IsChecked="{Binding IsUsed}" Content="{Binding}" />
                 </DataTemplate>
               </ItemsControl.ItemTemplate>
             </ItemsControl>

@@ -13,13 +13,20 @@ Public NotInheritable Class MainWindowViewModel
       Locs.Add($"Item {i}")
     Next
     LocationCollection.ClearAndAddRange(Selects.GetDemandLocations().Take(2))
+    UpdateHeader()
     AddHandler LocationCollection.OnCollectionItemChanged, AddressOf UpdateHeader
     'TestText = "Month"
   End Sub
 
-  Private Function UpdateHeader() As ObservableCollectionContentNotifying(Of DemandLocation).OnCollectionItemChangedEventHandler
+  Private Sub UpdateHeader(sender As Object, e As ObservableCollectionContentChangedArgs)
+    UpdateHeader()
+  End Sub
 
-  End Function
+  Private Sub UpdateHeader()
+    Dim itemsSelected = LocationCollection.Where(Function(x) x.IsUsed = True).Select(Function(x) x.ToString)
+    Dim headerUpdated = If(itemsSelected.Any, String.Join(", ", itemsSelected), "No Items")
+    LocationHeader = headerUpdated
+  End Sub
 
   Public Enum TrendChoices
     FiscalYear

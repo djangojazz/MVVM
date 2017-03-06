@@ -19,7 +19,7 @@
         <TextBlock Text="{Binding Header}" Style="{StaticResource TextBlock.List.Ellipsis}" />
       </ToggleButton>
     </Border>
-    <local:KeyboardPopup AllowsTransparency="True" Placement="{Binding Placement}" PlacementTarget="{Binding ElementName=Part_Toggle}" 
+    <local:KeyboardPopup AllowsTransparency="True" PlacementTarget="{Binding ElementName=Part_Toggle}" 
                          IsOpen="{Binding IsChecked, ElementName=Part_Toggle}">
       <Border BorderBrush="Black" BorderThickness="1" CornerRadius="5" >
         <Grid Width="{Binding ActualWidth, ElementName=Part_Toggle}" Background="White" Margin="0,3,0,3">

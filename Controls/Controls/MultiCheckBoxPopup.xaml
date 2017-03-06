@@ -15,12 +15,11 @@
   </UserControl.Resources>
   <Grid x:Name="PART_Main">
     <Border Margin="0" Padding="2" Style="{StaticResource Border.Round.Standard}" Focusable="False">
-      <ToggleButton  Height="20" x:Name="Part_Toggle" IsChecked="True" Focusable="True" ClickMode="Press" Style="{StaticResource ExpanderDownHeaderStyle}">
+      <ToggleButton  Height="20" x:Name="Part_Toggle" Focusable="True" ClickMode="Press" Style="{StaticResource ExpanderDownHeaderStyle}">
         <TextBlock Text="{Binding Header}" Style="{StaticResource TextBlock.List.Ellipsis}" />
       </ToggleButton>
     </Border>
-    <local:KeyboardPopup AllowsTransparency="True" PlacementTarget="{Binding ElementName=Part_Toggle}" 
-                         IsOpen="{Binding IsChecked, ElementName=Part_Toggle}">
+    <Popup AllowsTransparency="True" PlacementTarget="{Binding ElementName=Part_Toggle}" IsOpen="{Binding IsChecked, ElementName=Part_Toggle}">
       <Border BorderBrush="Black" BorderThickness="1" CornerRadius="5" >
         <Grid Width="{Binding ActualWidth, ElementName=Part_Toggle}" Background="White" Margin="0,3,0,3">
           <ScrollViewer Background="White" Height="{Binding ScrollingHeight}" >
@@ -34,6 +33,6 @@
           </ScrollViewer>
         </Grid>
       </Border>
-    </local:KeyboardPopup>
+    </Popup>
   </Grid>
 </UserControl>

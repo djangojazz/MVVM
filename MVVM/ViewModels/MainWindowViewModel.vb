@@ -144,7 +144,8 @@ Public NotInheritable Class MainWindowViewModel
 
     Dim o5 = New List(Of PlotPoints)({New PlotPoints(New PlotPoint(Of DateTime)(New DateTime(2017, 2, 5)), New PlotPoint(Of Double)(2920))})
 
-    ChartData.ClearAndAddRange({New PlotTrend("First", Brushes.Blue, New Thickness(2), o), New PlotTrend("Second", Brushes.Red, New Thickness(2), o2)})
+    ChartData.ClearAndAddRange({New PlotTrend("First", Brushes.Blue, New Thickness(2), o), New PlotTrend("Second", Brushes.Red, New Thickness(2), o2),
+                               New PlotTrend("Thrid", Brushes.Purple, New Thickness(2), o3), New PlotTrend("Fourth", Brushes.Brown, New Thickness(2), o4)})
     Dim distinctCounts = (ChartData.SelectMany(Function(x) x.Points).Select(Function(x) x.XAsDouble).Distinct.Count - 1)
     XTicks = If(distinctCounts > 0, distinctCounts, 1)
   End Sub
@@ -153,7 +154,7 @@ Public NotInheritable Class MainWindowViewModel
     Dim newPoints = New List(Of PlotPoints)
 
     For i = 1 To _lastPoints.Count
-      newPoints.Add(New PlotPoints(New PlotPoint(Of DateTime)((DirectCast(_lastPoints(i - 1).X, PlotPoint(Of DateTime)).Point).AddDays(1)), New PlotPoint(Of Double)(DirectCast(_lastPoints(i - 1).Y, PlotPoint(Of Double)).Point * 1.95)))
+      newPoints.Add(New PlotPoints(New PlotPoint(Of DateTime)((DirectCast(_lastPoints(i - 1).X, PlotPoint(Of DateTime)).Point).AddDays(1)), New PlotPoint(Of Double)(DirectCast(_lastPoints(i - 1).Y, PlotPoint(Of Double)).Point * 1.05)))
     Next
 
     _lastPoints = newPoints

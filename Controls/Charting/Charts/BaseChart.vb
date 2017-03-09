@@ -1,7 +1,5 @@
 ﻿Imports System.Windows.Threading
 
-
-
 Public MustInherit Class BaseChart
   Inherits UserControl
 
@@ -298,7 +296,6 @@ Public MustInherit Class BaseChart
     Return If(XValueConverter IsNot Nothing, XValueConverter.Convert(input, GetType(String), Nothing, Globalization.CultureInfo.InvariantCulture), input.ToString)
   End Function
 
-
   Protected Overridable Sub DrawYAxis(partCanvasYTicks As Canvas, partCanvasYLabels As Canvas, yCeiling As Double, yFloor As Double, viewHeight As Double, labelHeight As Double)
     Dim segment = ((yCeiling - yFloor) / YNumberOfTicks)
     partCanvasYTicks.Children.RemoveRange(0, partCanvasYTicks.Children.Count)
@@ -437,4 +434,6 @@ Public MustInherit Class BaseChart
       partCanvasXLabels.Children.Add(labelSegment)
     Next
   End Sub
+
+
 End Class

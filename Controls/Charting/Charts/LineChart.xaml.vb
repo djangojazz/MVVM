@@ -123,7 +123,7 @@
       Me._yCeiling = ChartData.SelectMany(Function(x) x.Points).Select(Function(x) x.YAsDouble).OrderByDescending(Function(x) x).FirstOrDefault()
 
       Me.PART_CanvasPoints.Children.RemoveRange(0, Me.PART_CanvasPoints.Children.Count)
-      Me.DrawTrends(ChartData)
+      Me.DrawTrends()
 
       If Me.PART_CanvasXAxisTicks IsNot Nothing And Me.PART_CanvasYAxisTicks IsNot Nothing Then
         If Me.XNumberOfTicks = 0 Then Me.XNumberOfTicks = 1 'I want at the very least to see a beginning and an end
@@ -135,9 +135,7 @@
 #End Region
 
 #Region "Drawing Methods"
-
-  Private Sub DrawTrends(points As IList(Of PlotTrend))
-
+  Private Sub DrawTrends()
     For Each t In ChartData
       If t.Points IsNot Nothing Then
         Dim xFactor = (_viewWidth / (_xCeiling - _xFloor))

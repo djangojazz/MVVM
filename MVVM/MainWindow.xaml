@@ -25,7 +25,7 @@
 
 
     <!--<ComboBox ItemsSource="{Binding Array}" SelectedItem="{Binding TestText}" />-->
-    <cntrls:LineChart Grid.Row="1"
+    <cntrls:BarChart Grid.Row="1"
       ChartData="{Binding ChartData}"
       ChartTitle="Test Line Chart"
       ChartForeground="Wheat"
@@ -34,11 +34,12 @@
       BackGroundColorCanvas="White" 
       BackGroundColorLegend="White"    
       YNumberOfTicks="3"
-      XNumberOfTicks="4"
+      
       XValueConverter="{x:Static cntrls:Converters.DateToValueConverter}"
       YValueConverter="{x:Static cntrls:Converters.DecimalConverter}"
       FontType="Tahoma"
       />
+    <!--XNumberOfTicks="4"-->
     <!--XValueConverter="{x:Static cntrls:Converters.DateToValueConverter}"-->
     <StackPanel Grid.Row="2">
       <Label Content="{Binding TestText}" Height="30" Foreground="{StaticResource test}" />

@@ -15,11 +15,18 @@ Public NotInheritable Class BarChart
   Private _labelHeight As Double = 0
   Private _xNumberOfTicks As Double = 0
 
+
   Private _explicitTicks As IEnumerable(Of Double)
 
   Private ReadOnly Property Ratio As Double
     Get
       Return PART_CanvasBorder.ActualHeight / PART_CanvasBorder.ActualWidth
+    End Get
+  End Property
+
+  Private ReadOnly Property SegmentLength As Double
+    Get
+      Return _viewWidth / _xNumberOfTicks
     End Get
   End Property
 
@@ -168,13 +175,14 @@ Public NotInheritable Class BarChart
     End Select
 
     For i As Integer = 0 To xTicks - 1
-      Dim xSegment = (i * (viewWidth / xTicks) + ((viewWidth / xTicks) / 2))
+      Dim segment = GetSegment(i)
+
       Dim xSegmentLabel = _explicitTicks(i)
       Dim textForLabel = New String(If(XValueConverter Is Nothing, xSegmentLabel.ToString, XValueConverter.Convert(xSegmentLabel, GetType(String), Nothing, Globalization.CultureInfo.InvariantCulture)))
 
       Dim lineSegment = New Line With {
-          .X1 = xSegment,
-          .X2 = xSegment,
+          .X1 = segment,
+          .X2 = segment,
           .Y1 = 0,
           .Y2 = labelHeight,
           .StrokeThickness = 2,
@@ -184,7 +192,7 @@ Public NotInheritable Class BarChart
       Dim labelSegment = New TextBlock With {
         .Text = textForLabel,
         .FontSize = fontSize,
-        .Margin = New Thickness(xSegment - spacing, 0, 0, 0)
+        .Margin = New Thickness(segment - spacing, 0, 0, 0)
       }
 
       partCanvasXLabels.Children.Add(labelSegment)
@@ -210,10 +218,7 @@ Public NotInheritable Class BarChart
                       .Select(Function(pnt, ind) New With {.YAsDouble = pnt.YAsDouble, .XAsDouble = pnt.XAsDouble, .Index = ind}) _
                       .ToList() _
                       .ForEach(Sub(t)
-
-                                 'This magic formula basically determines a segment, so 1000 and 4 sets would be 250, however I want to have ticks never start and always pad
-                                 'so I then add the same thing back to itself but with a slight buffer of one half
-                                 Dim segment = (segmentIndex * _viewWidth / _xNumberOfTicks + (_viewWidth / _xNumberOfTicks) / 2)
+                                 Dim segment = GetSegment(segmentIndex)
 
                                  'If I have two sets or more on the same day I need to see that
                                  segment = segment + If(t.Index > 0, (t.Index) * widthOfBar, 0)
@@ -231,6 +236,11 @@ Public NotInheritable Class BarChart
                                  PART_CanvasPoints.Children.Add(toDraw)
                                End Sub)
   End Sub
+
+  Private Function GetSegment(index As Integer) As Double
+    Return (index * SegmentLength) + (SegmentLength / 2)
+  End Function
+
 #End Region
 
 End Class

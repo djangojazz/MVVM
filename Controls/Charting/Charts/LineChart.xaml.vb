@@ -100,7 +100,6 @@
 
   End Sub
 
-
   Public Overrides Sub CalculatePlotTrends()
     If Me.PART_CanvasPoints IsNot Nothing AndAlso ChartData IsNot Nothing Then
       If ChartData.Count > 1 Then
@@ -128,145 +127,14 @@
 
       If Me.PART_CanvasXAxisTicks IsNot Nothing And Me.PART_CanvasYAxisTicks IsNot Nothing Then
         If Me.XNumberOfTicks = 0 Then Me.XNumberOfTicks = 1 'I want at the very least to see a beginning and an end
-        Me.DrawXAxis(ChartData)
-        Me.DrawYAxis(ChartData)
+        Me.DrawXAxis(PART_CanvasXAxisTicks, PART_CanvasXAxisLabels, _xCeiling, _xFloor, XNumberOfTicks, _viewWidth, _labelHeight)
+        Me.DrawYAxis(PART_CanvasYAxisTicks, PART_CanvasYAxisLabels, _yCeiling, _yFloor, _viewHeight, _labelHeight)
       End If
     End If
   End Sub
 #End Region
 
 #Region "Drawing Methods"
-  Private Sub DrawXAxis(lineTrends As IList(Of PlotTrend))
-    Dim segment = ((_xCeiling - _xFloor) / XNumberOfTicks)
-    PART_CanvasXAxisTicks.Children.RemoveRange(0, PART_CanvasXAxisTicks.Children.Count)
-    PART_CanvasXAxisLabels.Children.RemoveRange(0, PART_CanvasXAxisLabels.Children.Count)
-
-    PART_CanvasXAxisTicks.Children.Add(New Line With {
-                                   .X1 = 0,
-                                   .X2 = _viewWidth,
-                                   .Y1 = 0,
-                                   .Y2 = 0,
-                                   .StrokeThickness = 2,
-                                   .Stroke = Brushes.Black
-                                   })
-
-    'Sizing should be done from the ceiling
-    Dim lastText = GetXSegmentText(_xCeiling.ToString)
-
-    Dim spacingForText = lastText.Count * 6
-    Dim totalLength = spacingForText * XNumberOfTicks
-    Dim fontSize = 0
-    Dim finalSpacing = 0
-    Dim lastSpaceFactor = 0
-
-    Select Case totalLength
-      Case <= 200
-        fontSize = 30
-        finalSpacing = spacingForText * 1.2
-        lastSpaceFactor = finalSpacing * 2
-      Case <= 250
-        fontSize = 20
-        finalSpacing = spacingForText * 0.9
-        lastSpaceFactor = finalSpacing * 1.75
-      Case <= 500
-        fontSize = 16
-        finalSpacing = spacingForText * 0.6
-        lastSpaceFactor = finalSpacing * 2
-      Case <= 750
-        fontSize = 12
-        finalSpacing = spacingForText * 0.45
-        lastSpaceFactor = finalSpacing * 1.8
-      Case Else
-        fontSize = 8
-        finalSpacing = spacingForText * 0.3
-        lastSpaceFactor = finalSpacing * 2
-    End Select
-
-    For i As Integer = 0 To XNumberOfTicks
-      Dim xSegment = If(i = 0, 0, i * (_viewWidth / XNumberOfTicks))
-      Dim xSegmentLabel = If(i = 0, _xFloor, _xFloor + (i * segment))
-      Dim textForLabel = GetXSegmentText(xSegmentLabel)
-
-      Dim lineSegment = New Line With {
-          .X1 = xSegment,
-          .X2 = xSegment,
-          .Y1 = 0,
-          .Y2 = _labelHeight,
-          .StrokeThickness = 2,
-          .Stroke = Brushes.Black}
-      PART_CanvasXAxisTicks.Children.Add(lineSegment)
-
-      Dim labelSegment = New TextBlock With {
-        .Text = textForLabel,
-        .FontSize = fontSize,
-        .Margin = New Thickness(xSegment - If(i = 0, 0, If(i = XNumberOfTicks, lastSpaceFactor, finalSpacing)), 0, 0, 0)
-      }
-
-      PART_CanvasXAxisLabels.Children.Add(labelSegment)
-    Next
-  End Sub
-
-  Private Sub DrawYAxis(lineTrends As IList(Of PlotTrend))
-    Dim segment = ((_yCeiling - _yFloor) / YNumberOfTicks)
-    PART_CanvasYAxisTicks.Children.RemoveRange(0, PART_CanvasYAxisTicks.Children.Count)
-    PART_CanvasYAxisLabels.Children.RemoveRange(0, PART_CanvasYAxisLabels.Children.Count)
-
-    PART_CanvasYAxisTicks.Children.Add(New Line With {
-                                   .X1 = 0,
-                                   .X2 = 0,
-                                   .Y1 = 0,
-                                   .Y2 = _viewHeight,
-                                   .StrokeThickness = 2,
-                                   .Stroke = Brushes.Black
-                                   })
-
-
-    'Sizing should be done from the ceiling
-    Dim lastText = New String(If(YValueConverter Is Nothing, _yCeiling.ToString, YValueConverter.Convert(_yCeiling, GetType(String), Nothing, Globalization.CultureInfo.InvariantCulture)))
-    Dim spacingForText = lastText.Count * 5
-    Dim totalLength = spacingForText * YNumberOfTicks
-    Dim fontSize = 0
-    Dim finalSpacing = 0
-    Dim lastSpaceFactor = 0
-
-    Select Case totalLength
-      Case <= 200
-        fontSize = 30
-        finalSpacing = spacingForText * 0.5
-        lastSpaceFactor = finalSpacing * 1.9
-      Case <= 250
-        fontSize = 20
-        finalSpacing = spacingForText * 0.5
-        lastSpaceFactor = finalSpacing * 1.5
-      Case Else
-        fontSize = 16
-        finalSpacing = spacingForText * 0.25
-        lastSpaceFactor = finalSpacing * 1
-    End Select
-
-    For i As Integer = 0 To YNumberOfTicks
-      Dim ySegment = If(i = 0, 0, i * (_viewHeight / YNumberOfTicks))
-      Dim ySegmentLabel = If(i = 0, _yFloor, _yFloor + (i * segment))
-      Dim textForLabel = New String(If(YValueConverter Is Nothing, ySegmentLabel.ToString, YValueConverter.Convert(ySegmentLabel, GetType(String), Nothing, Globalization.CultureInfo.InvariantCulture)))
-
-      Dim lineSegment = New Line With {
-          .X1 = 0,
-          .X2 = _labelHeight,
-          .Y1 = ySegment,
-          .Y2 = ySegment,
-          .StrokeThickness = 2,
-          .Stroke = Brushes.Black}
-      PART_CanvasYAxisTicks.Children.Add(lineSegment)
-
-      Dim labelSegment = New TextBlock With {
-        .Text = textForLabel,
-        .FontSize = fontSize,
-        .Margin = New Thickness(0, _viewHeight - 20 - (ySegment - If(i = 0, 0, If(i = YNumberOfTicks, lastSpaceFactor, finalSpacing))), 0, 0)
-      }
-
-      PART_CanvasYAxisLabels.Children.Add(labelSegment)
-    Next
-  End Sub
 
   Private Sub DrawTrends(points As IList(Of PlotTrend))
 

@@ -122,19 +122,18 @@ Public NotInheritable Class BarChart
 
       If Me.PART_CanvasXAxisTicks IsNot Nothing And Me.PART_CanvasYAxisTicks IsNot Nothing Then
         If Me._xNumberOfTicks = 0 Then Me._xNumberOfTicks = 1 'I want at the very least to see a beginning and an end
-        Me.DrawXAxis()
-        Me.DrawYAxis()
+        Me.DrawXAxis(PART_CanvasXAxisTicks, PART_CanvasXAxisLabels, _xCeiling, 0, _xNumberOfTicks, _viewWidth, _labelHeight)
+        Me.DrawYAxis(PART_CanvasYAxisTicks, PART_CanvasYAxisLabels, _yCeiling, _yFloor, _viewHeight, _labelHeight)
       End If
     End If
   End Sub
 #End Region
-
 #Region "Drawing Methods"
-  Private Sub DrawXAxis()
-    PART_CanvasXAxisTicks.Children.RemoveRange(0, PART_CanvasXAxisTicks.Children.Count)
-    PART_CanvasXAxisLabels.Children.RemoveRange(0, PART_CanvasXAxisLabels.Children.Count)
+  Protected Overrides Sub DrawXAxis(partCanvasXTicks As Canvas, partCanvasXLabels As Canvas, xCeiling As Double, xFloor As Double, xTicks As Integer, viewWidth As Double, labelHeight As Double)
+    partCanvasXTicks.Children.RemoveRange(0, partCanvasXTicks.Children.Count)
+    partCanvasXLabels.Children.RemoveRange(0, partCanvasXLabels.Children.Count)
 
-    PART_CanvasXAxisTicks.Children.Add(New Line With {
+    partCanvasXTicks.Children.Add(New Line With {
                                    .X1 = 0,
                                    .X2 = _viewWidth,
                                    .Y1 = 0,
@@ -144,9 +143,9 @@ Public NotInheritable Class BarChart
                                    })
 
     'Sizing should be done from the ceiling
-    Dim lastText = New String(If(XValueConverter Is Nothing, _xCeiling.ToString, XValueConverter.Convert(_xCeiling, GetType(String), Nothing, Globalization.CultureInfo.InvariantCulture)))
+    Dim lastText = New String(If(XValueConverter Is Nothing, xCeiling.ToString, XValueConverter.Convert(xCeiling, GetType(String), Nothing, Globalization.CultureInfo.InvariantCulture)))
     Dim spacingForText = lastText.Count * 6
-    Dim totalLength = spacingForText * _xNumberOfTicks
+    Dim totalLength = spacingForText * xTicks
     Dim fontSize = 0
     Dim spacing = 0
 
@@ -168,8 +167,8 @@ Public NotInheritable Class BarChart
         spacing = spacingForText * 0.3
     End Select
 
-    For i As Integer = 0 To _xNumberOfTicks - 1
-      Dim xSegment = (i * (_viewWidth / _xNumberOfTicks) + ((_viewWidth / _xNumberOfTicks) / 2))
+    For i As Integer = 0 To xTicks - 1
+      Dim xSegment = (i * (viewWidth / xTicks) + ((viewWidth / xTicks) / 2))
       Dim xSegmentLabel = _explicitTicks(i)
       Dim textForLabel = New String(If(XValueConverter Is Nothing, xSegmentLabel.ToString, XValueConverter.Convert(xSegmentLabel, GetType(String), Nothing, Globalization.CultureInfo.InvariantCulture)))
 
@@ -177,10 +176,10 @@ Public NotInheritable Class BarChart
           .X1 = xSegment,
           .X2 = xSegment,
           .Y1 = 0,
-          .Y2 = _labelHeight,
+          .Y2 = labelHeight,
           .StrokeThickness = 2,
           .Stroke = Brushes.Black}
-      PART_CanvasXAxisTicks.Children.Add(lineSegment)
+      partCanvasXTicks.Children.Add(lineSegment)
 
       Dim labelSegment = New TextBlock With {
         .Text = textForLabel,
@@ -188,69 +187,7 @@ Public NotInheritable Class BarChart
         .Margin = New Thickness(xSegment - spacing, 0, 0, 0)
       }
 
-      PART_CanvasXAxisLabels.Children.Add(labelSegment)
-    Next
-  End Sub
-
-  Private Sub DrawYAxis()
-    Dim segment = ((_yCeiling - _yFloor) / YNumberOfTicks)
-    PART_CanvasYAxisTicks.Children.RemoveRange(0, PART_CanvasYAxisTicks.Children.Count)
-    PART_CanvasYAxisLabels.Children.RemoveRange(0, PART_CanvasYAxisLabels.Children.Count)
-
-    PART_CanvasYAxisTicks.Children.Add(New Line With {
-                                   .X1 = 0,
-                                   .X2 = 0,
-                                   .Y1 = 0,
-                                   .Y2 = _viewHeight,
-                                   .StrokeThickness = 2,
-                                   .Stroke = Brushes.Black
-                                   })
-
-
-    'Sizing should be done from the ceiling
-    Dim lastText = New String(If(YValueConverter Is Nothing, _yCeiling.ToString, YValueConverter.Convert(_yCeiling, GetType(String), Nothing, Globalization.CultureInfo.InvariantCulture)))
-    Dim spacingForText = lastText.Count * 5
-    Dim totalLength = spacingForText * YNumberOfTicks
-    Dim fontSize = 0
-    Dim finalSpacing = 0
-    Dim lastSpaceFactor = 0
-
-    Select Case totalLength
-      Case <= 200
-        fontSize = 30
-        finalSpacing = spacingForText * 0.5
-        lastSpaceFactor = finalSpacing * 1.9
-      Case <= 250
-        fontSize = 20
-        finalSpacing = spacingForText * 0.5
-        lastSpaceFactor = finalSpacing * 1.5
-      Case Else
-        fontSize = 16
-        finalSpacing = spacingForText * 0.25
-        lastSpaceFactor = finalSpacing * 1
-    End Select
-
-    For i As Integer = 0 To YNumberOfTicks
-      Dim ySegment = If(i = 0, 0, i * (_viewHeight / YNumberOfTicks))
-      Dim ySegmentLabel = If(i = 0, _yFloor, _yFloor + (i * segment))
-      Dim textForLabel = New String(If(YValueConverter Is Nothing, ySegmentLabel.ToString, YValueConverter.Convert(ySegmentLabel, GetType(String), Nothing, Globalization.CultureInfo.InvariantCulture)))
-
-      Dim lineSegment = New Line With {
-          .X1 = 0,
-          .X2 = _labelHeight,
-          .Y1 = ySegment,
-          .Y2 = ySegment,
-          .StrokeThickness = 2,
-          .Stroke = Brushes.Black}
-      PART_CanvasYAxisTicks.Children.Add(lineSegment)
-
-      Dim labelSegment = New TextBlock With {
-        .Text = textForLabel,
-        .FontSize = fontSize,
-        .Margin = New Thickness(0, _viewHeight - 20 - (ySegment - If(i = 0, 0, If(i = YNumberOfTicks, lastSpaceFactor, finalSpacing))), 0, 0)
-      }
-
-      PART_CanvasYAxisLabels.Children.Add(labelSegment)
+      partCanvasXLabels.Children.Add(labelSegment)
     Next
   End Sub
 
@@ -282,7 +219,7 @@ Public NotInheritable Class BarChart
                                  segment = segment + If(t.Index > 0, (t.Index) * widthOfBar, 0)
 
                                  Dim matches = ChartData.Where(Function(x, ind) x.Points.ToList().Exists(Function(y) y.XAsDouble = t.XAsDouble And y.YAsDouble = t.YAsDouble))
-                                 Dim color =  If(matches.Count > 1, matches.Skip(t.Index).Take(1).First.LineColor, matches.First.LineColor)
+                                 Dim color = If(matches.Count > 1, matches.Skip(t.Index).Take(1).First.LineColor, matches.First.LineColor)
 
                                  Dim toDraw = New Line With {
                                                     .X1 = segment,

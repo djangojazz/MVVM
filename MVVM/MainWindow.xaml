@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:MVVM"
         xmlns:cntrls="clr-namespace:Controls;assembly=Controls"
         mc:Ignorable="d"
-        Title="MainWindow" Height="600" Width="800">
+        Title="MainWindow" Height="400" Width="800">
   <Window.Resources>
     <ResourceDictionary>
       <ResourceDictionary.MergedDictionaries>
@@ -17,13 +17,15 @@
   <Grid>
     <Grid.RowDefinitions>
       <RowDefinition Height="Auto" />
+      <RowDefinition Height="*" />
+
+      <RowDefinition Height="Auto" />
       <RowDefinition Height="Auto" />
     </Grid.RowDefinitions>
-    <cntrls:MultiCheckBoxPopup ItemsCollection="{Binding LocationCollection}" 
-                               Header="{Binding LocationHeader}"
-                               ScrollingHeight="300" />
 
-    <!--<cntrls:LineChart Grid.Row="1"
+
+    <!--<ComboBox ItemsSource="{Binding Array}" SelectedItem="{Binding TestText}" />-->
+    <cntrls:LineChart Grid.Row="1"
       ChartData="{Binding ChartData}"
       ChartTitle="Test Line Chart"
       ChartForeground="Wheat"
@@ -31,18 +33,18 @@
       BackGroundColor="DarkCyan" 
       BackGroundColorCanvas="White" 
       BackGroundColorLegend="White"    
-      YNumberOfTicks="4"
-      XNumberOfTicks="{Binding XTicks}"
-      XValueConverter="{Binding DecimalConverter}"
+      YNumberOfTicks="3"
+      XNumberOfTicks="4"
+      XValueConverter="{x:Static cntrls:Converters.DateToValueConverter}"
       YValueConverter="{x:Static cntrls:Converters.DecimalConverter}"
       FontType="Tahoma"
       />
-    <ComboBox Grid.Row="1" ItemsSource="{Binding Array}" SelectedItem="{Binding TestText}" />
+    <!--XValueConverter="{x:Static cntrls:Converters.DateToValueConverter}"-->
     <StackPanel Grid.Row="2">
       <Label Content="{Binding TestText}" Height="30" Foreground="{StaticResource test}" />
       <Label Content="{Binding Dt, Converter={x:Static cntrls:Converters.DateFormatConverter}}" />
-    </StackPanel>-->
+    </StackPanel>
 
-    <Button Grid.Row="1" Command="{Binding TestCommand}" Height="30" Content="Try It" />
+    <Button Grid.Row="3" Command="{Binding TestCommand}" Height="30" Content="Add more lines" />
   </Grid>
 </Window>

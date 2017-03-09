@@ -9,13 +9,7 @@ Public NotInheritable Class MainWindowViewModel
   Private _testText As String
 
   Public Sub New()
-    For i = 1 To 30
-      Locs.Add($"Item {i}")
-    Next
-    LocationCollection.ClearAndAddRange(Selects.GetDemandLocations().Take(2))
-    UpdateHeader()
-    AddHandler LocationCollection.OnCollectionItemChanged, AddressOf UpdateHeader
-    'TestText = "Month"
+    AddingLinesForLineChart()
   End Sub
 
   Private Sub UpdateHeader(sender As Object, e As ObservableCollectionContentChangedArgs)
@@ -108,11 +102,7 @@ Public NotInheritable Class MainWindowViewModel
   Public ReadOnly Property TestCommand As New DelegateCommand(Of Object)(AddressOf TestCommandExecute)
 
   Private Sub TestCommandExecute()
-    'LinePlotAdding()
-    'TestText = "Line Chart Hello there" + DateTime.Now.ToLongTimeString
-    'Dim items = .ToDictionary(Function(x) x.ToString, Function(x) x.IsUsed)
-    LocationCollection.ClearAndAddRange(Selects.GetDemandLocations().Take(5))
-    'LocationCollection.ClearAndAddRange(Selects.GetDemandLocations().Take(5))
+    LinePlotAdding()
   End Sub
 
 
@@ -154,21 +144,24 @@ Public NotInheritable Class MainWindowViewModel
 
     Dim o5 = New List(Of PlotPoints)({New PlotPoints(New PlotPoint(Of DateTime)(New DateTime(2017, 2, 5)), New PlotPoint(Of Double)(2920))})
 
-    ChartData.ClearAndAddRange({New PlotTrend("First", Brushes.Blue, New Thickness(2), o), New PlotTrend("Second", Brushes.Red, New Thickness(2), o2),
-                               New PlotTrend("Third", Brushes.Purple, New Thickness(2), o3), New PlotTrend("Fourth", Brushes.Orange, New Thickness(2), o4),
-                               New PlotTrend("Fifth", Brushes.Brown, New Thickness(2), o5)})
+    ChartData.ClearAndAddRange({New PlotTrend("First", Brushes.Blue, New Thickness(2), o), New PlotTrend("Second", Brushes.Red, New Thickness(2), o2)})
+    Dim distinctCounts = (ChartData.SelectMany(Function(x) x.Points).Select(Function(x) x.XAsDouble).Distinct.Count - 1)
+    XTicks = If(distinctCounts > 0, distinctCounts, 1)
   End Sub
 
   Private Sub LinePlotAdding()
     Dim newPoints = New List(Of PlotPoints)
 
     For i = 1 To _lastPoints.Count
-      newPoints.Add(New PlotPoints(New PlotPoint(Of Double)((DirectCast(_lastPoints(i - 1).X, PlotPoint(Of Double)).Point + 1)), New PlotPoint(Of Double)(DirectCast(_lastPoints(i - 1).Y, PlotPoint(Of Double)).Point * 1.95)))
+      newPoints.Add(New PlotPoints(New PlotPoint(Of DateTime)((DirectCast(_lastPoints(i - 1).X, PlotPoint(Of DateTime)).Point).AddDays(1)), New PlotPoint(Of Double)(DirectCast(_lastPoints(i - 1).Y, PlotPoint(Of Double)).Point * 1.95)))
     Next
 
     _lastPoints = newPoints
     ChartData(0).Points.Add(_lastPoints(0))
     ChartData(1).Points.Add(_lastPoints(1))
+
+    Dim distinctCounts = (ChartData.SelectMany(Function(x) x.Points).Select(Function(x) x.XAsDouble).Distinct.Count - 1)
+    XTicks = If(distinctCounts > 0, distinctCounts, 1)
   End Sub
 
 #End Region

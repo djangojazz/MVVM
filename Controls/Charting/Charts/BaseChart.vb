@@ -295,14 +295,146 @@ Public MustInherit Class BaseChart
 #End Region
 
   Protected Function GetXSegmentText(input As String) As String
-
     Return If(XValueConverter IsNot Nothing, XValueConverter.Convert(input, GetType(String), Nothing, Globalization.CultureInfo.InvariantCulture), input.ToString)
-
-    'Return If(XValueMultiConverter IsNot Nothing,
-    '                XValueMultiConverter.Convert(New Object() {ChartData.Select(Function(x) x.AdditionalSeriesInfo).First, input}, GetType(String), Nothing, Globalization.CultureInfo.InvariantCulture),
-    '                    If(XValueConverter IsNot Nothing, XValueConverter.Convert(input, GetType(String), Nothing, Globalization.CultureInfo.InvariantCulture), input.ToString))
-
   End Function
 
 
+  Protected Overridable Sub DrawYAxis(partCanvasYTicks As Canvas, partCanvasYLabels As Canvas, yCeiling As Double, yFloor As Double, viewHeight As Double, labelHeight As Double)
+    Dim segment = ((yCeiling - yFloor) / YNumberOfTicks)
+    partCanvasYTicks.Children.RemoveRange(0, partCanvasYTicks.Children.Count)
+    partCanvasYLabels.Children.RemoveRange(0, partCanvasYLabels.Children.Count)
+
+    partCanvasYTicks.Children.Add(New Line With {
+                                   .X1 = 0,
+                                   .X2 = 0,
+                                   .Y1 = 0,
+                                   .Y2 = viewHeight,
+                                   .StrokeThickness = 2,
+                                   .Stroke = Brushes.Black
+                                   })
+
+
+    'Sizing should be done from the ceiling
+    Dim lastText = New String(If(YValueConverter Is Nothing, yCeiling.ToString, YValueConverter.Convert(yCeiling, GetType(String), Nothing, Globalization.CultureInfo.InvariantCulture)))
+    Dim spacingForText = lastText.Count
+    Dim fontSize = 0
+    Dim finalSpacing = 0
+    Dim lastSpaceFactor = 0
+
+    Select Case spacingForText
+      Case <= 7
+        fontSize = 30
+        finalSpacing = spacingForText * 0.3
+        lastSpaceFactor = finalSpacing * 1.2
+      Case <= 9
+        fontSize = 24
+        finalSpacing = spacingForText * 0.5
+        lastSpaceFactor = finalSpacing * 1.5
+      Case <= 11
+        fontSize = 18
+        finalSpacing = spacingForText * 0.68
+        lastSpaceFactor = finalSpacing * 1.45
+      Case <= 13
+        fontSize = 16
+        finalSpacing = spacingForText * 0.7
+        lastSpaceFactor = finalSpacing * 1.44
+      Case Else
+        fontSize = 14
+        finalSpacing = spacingForText * 0.7
+        lastSpaceFactor = finalSpacing * 1.44
+    End Select
+
+    For i As Integer = 0 To YNumberOfTicks
+      Dim ySegment = If(i = 0, 0, i * (viewHeight / YNumberOfTicks))
+      Dim ySegmentLabel = If(i = 0, yFloor, yFloor + (i * segment))
+      Dim textForLabel = New String(If(YValueConverter Is Nothing, ySegmentLabel.ToString, YValueConverter.Convert(ySegmentLabel, GetType(String), Nothing, Globalization.CultureInfo.InvariantCulture)))
+
+      Dim lineSegment = New Line With {
+          .X1 = 0,
+          .X2 = labelHeight,
+          .Y1 = ySegment,
+          .Y2 = ySegment,
+          .StrokeThickness = 2,
+          .Stroke = Brushes.Black}
+      partCanvasYTicks.Children.Add(lineSegment)
+
+      Dim labelSegment = New TextBlock With {
+        .Text = textForLabel,
+        .FontSize = fontSize,
+        .Margin = New Thickness(0, viewHeight - 20 - (ySegment - If(i = 0, 0, If(i = YNumberOfTicks, lastSpaceFactor, finalSpacing))), 0, 0)
+      }
+
+      partCanvasYLabels.Children.Add(labelSegment)
+    Next
+  End Sub
+
+  Protected Overridable Sub DrawXAxis(partCanvasXTicks As Canvas, partCanvasXLabels As Canvas, xCeiling As Double, xFloor As Double, xTicks As Integer, viewWidth As Double, labelHeight As Double)
+    Dim segment = ((xCeiling - xFloor) / xTicks)
+    partCanvasXTicks.Children.RemoveRange(0, partCanvasXTicks.Children.Count)
+    partCanvasXLabels.Children.RemoveRange(0, partCanvasXLabels.Children.Count)
+
+    partCanvasXTicks.Children.Add(New Line With {
+                                   .X1 = 0,
+                                   .X2 = viewWidth,
+                                   .Y1 = 0,
+                                   .Y2 = 0,
+                                   .StrokeThickness = 2,
+                                   .Stroke = Brushes.Black
+                                   })
+
+    'Sizing should be done from the ceiling
+    Dim lastText = GetXSegmentText(xCeiling.ToString)
+
+    Dim spacingForText = lastText.Count * 6
+    Dim totalLength = spacingForText * xTicks
+    Dim fontSize = 0
+    Dim finalSpacing = 0
+    Dim lastSpaceFactor = 0
+
+    Select Case totalLength
+      Case <= 200
+        fontSize = 30
+        finalSpacing = spacingForText * 1.2
+        lastSpaceFactor = finalSpacing * 2
+      Case <= 250
+        fontSize = 20
+        finalSpacing = spacingForText * 0.9
+        lastSpaceFactor = finalSpacing * 1.75
+      Case <= 500
+        fontSize = 16
+        finalSpacing = spacingForText * 0.6
+        lastSpaceFactor = finalSpacing * 2
+      Case <= 750
+        fontSize = 12
+        finalSpacing = spacingForText * 0.45
+        lastSpaceFactor = finalSpacing * 1.8
+      Case Else
+        fontSize = 8
+        finalSpacing = spacingForText * 0.3
+        lastSpaceFactor = finalSpacing * 2
+    End Select
+
+    For i As Integer = 0 To xTicks
+      Dim xSegment = If(i = 0, 0, i * (viewWidth / xTicks))
+      Dim xSegmentLabel = If(i = 0, xFloor, xFloor + (i * segment))
+      Dim textForLabel = GetXSegmentText(xSegmentLabel)
+
+      Dim lineSegment = New Line With {
+          .X1 = xSegment,
+          .X2 = xSegment,
+          .Y1 = 0,
+          .Y2 = labelHeight,
+          .StrokeThickness = 2,
+          .Stroke = Brushes.Black}
+      partCanvasXTicks.Children.Add(lineSegment)
+
+      Dim labelSegment = New TextBlock With {
+        .Text = textForLabel,
+        .FontSize = fontSize,
+        .Margin = New Thickness(xSegment - If(i = 0, 0, If(i = xTicks, lastSpaceFactor, finalSpacing)), 0, 0, 0)
+      }
+
+      partCanvasXLabels.Children.Add(labelSegment)
+    Next
+  End Sub
 End Class

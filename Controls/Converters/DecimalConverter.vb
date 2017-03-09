@@ -5,7 +5,7 @@ Public NotInheritable Class DecimalConverter
   Inherits Control
   Implements IValueConverter
 
-  Public Property DecimalPositions As Integer = 2
+  Public Property DecimalPositions As Integer = 0
   Public Property IncludeComma As Boolean = True
   Public Property OptionalHeader As String = String.Empty
 

@@ -130,29 +130,4 @@
     End If
   End Sub
 #End Region
-
-#Region "Drawing Methods"
-  'Private Sub DrawTrends()
-  '  For Each t In ChartData
-  '    If t.Points IsNot Nothing Then
-  '      Dim xFactor = (_viewWidth / (_xCeiling - _xFloor))
-  '      Dim yFactor = (_viewHeight / (_yCeiling - _yFloor))
-
-  '      xFactor = If(Double.IsNaN(xFactor) OrElse Double.IsInfinity(xFactor), 1, xFactor)
-  '      yFactor = If(Double.IsNaN(yFactor) OrElse Double.IsInfinity(yFactor), 1, yFactor)
-
-  '      For i As Integer = 1 To t.Points.Count - 1
-  '        Dim toDraw = New Line With {
-  '          .X1 = (t.Points(i - 1).XAsDouble - _xFloor) * xFactor,
-  '          .Y1 = (t.Points(i - 1).YAsDouble - _yFloor) * yFactor,
-  '          .X2 = (t.Points(i).XAsDouble - _xFloor) * xFactor,
-  '          .Y2 = (t.Points(i).YAsDouble - _yFloor) * yFactor,
-  '          .StrokeThickness = 2,
-  '          .Stroke = t.LineColor}
-  '        PART_CanvasPoints.Children.Add(toDraw)
-  '      Next i
-  '    End If
-  '  Next
-  'End Sub
-#End Region
 End Class

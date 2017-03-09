@@ -292,6 +292,7 @@ Public MustInherit Class BaseChart
   Public MustOverride Sub CalculatePlotTrends()
 #End Region
 
+#Region "Protected Methods to be used by inheriting classes"
   Protected Function GetXSegmentText(input As String) As String
     Return If(XValueConverter IsNot Nothing, XValueConverter.Convert(input, GetType(String), Nothing, Globalization.CultureInfo.InvariantCulture), input.ToString)
   End Function
@@ -435,5 +436,28 @@ Public MustInherit Class BaseChart
     Next
   End Sub
 
+  Protected Overridable Sub DrawTrends(partCanvas As Canvas, viewWidth As Double, viewHeight As Double, xCeiling As Double, xFloor As Double, yCeiling As Double, yFloor As Double)
+    For Each t In ChartData
+      If t.Points IsNot Nothing Then
+        Dim xFactor = (viewWidth / (xCeiling - xFloor))
+        Dim yFactor = (viewHeight / (yCeiling - yFloor))
+
+        xFactor = If(Double.IsNaN(xFactor) OrElse Double.IsInfinity(xFactor), 1, xFactor)
+        yFactor = If(Double.IsNaN(yFactor) OrElse Double.IsInfinity(yFactor), 1, yFactor)
+
+        For i As Integer = 1 To t.Points.Count - 1
+          Dim toDraw = New Line With {
+            .X1 = (t.Points(i - 1).XAsDouble - xFloor) * xFactor,
+            .Y1 = (t.Points(i - 1).YAsDouble - yFloor) * yFactor,
+            .X2 = (t.Points(i).XAsDouble - xFloor) * xFactor,
+            .Y2 = (t.Points(i).YAsDouble - yFloor) * yFactor,
+            .StrokeThickness = 2,
+            .Stroke = t.LineColor}
+          partCanvas.Children.Add(toDraw)
+        Next i
+      End If
+    Next
+  End Sub
+#End Region
 
 End Class

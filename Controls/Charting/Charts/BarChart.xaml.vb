@@ -125,7 +125,7 @@ Public NotInheritable Class BarChart
       Me._yCeiling = ChartData.SelectMany(Function(x) x.Points).Select(Function(x) x.YAsDouble).OrderByDescending(Function(x) x).FirstOrDefault()
 
       Me.PART_CanvasPoints.Children.RemoveRange(0, Me.PART_CanvasPoints.Children.Count)
-      Me.DrawTrends()
+      Me.DrawTrends(PART_CanvasPoints, _viewWidth, _viewHeight, _xCeiling, _xFloor, _yCeiling, _yFloor)
 
       If Me.PART_CanvasXAxisTicks IsNot Nothing And Me.PART_CanvasYAxisTicks IsNot Nothing Then
         If Me._xNumberOfTicks = 0 Then Me._xNumberOfTicks = 1 'I want at the very least to see a beginning and an end
@@ -199,9 +199,9 @@ Public NotInheritable Class BarChart
     Next
   End Sub
 
-  Private Sub DrawTrends()
-    Dim widthOfBar = _viewWidth / ((_xNumberOfTicks + 2) * ChartData.Count)
-    Dim yFactor = (_viewHeight / (_yCeiling - _yFloor))
+  Protected Overrides Sub DrawTrends(partCanvas As Canvas, viewWidth As Double, viewHeight As Double, xCeiling As Double, xFloor As Double, yCeiling As Double, yFloor As Double)
+    Dim widthOfBar = viewWidth / ((_xNumberOfTicks + 2) * ChartData.Count)
+    Dim yFactor = (viewHeight / (yCeiling - yFloor))
 
     yFactor = If(Double.IsNaN(yFactor) OrElse Double.IsInfinity(yFactor), 1, yFactor)
 

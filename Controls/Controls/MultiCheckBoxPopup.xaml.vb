@@ -7,6 +7,28 @@ Public Class MultiCheckBoxPopup
     PART_Main.DataContext = Me
   End Sub
 
+#Region "IsMultiCheckBoxOpen"
+  Public Shared ReadOnly IsMultiCheckBoxOpenProperty As DependencyProperty = DependencyProperty.Register("IsMultiCheckBoxOpen", GetType(Boolean), GetType(MultiCheckBoxPopup), New PropertyMetadata(False, AddressOf Test))
+
+  Private Shared Sub Test(d As DependencyObject, e As DependencyPropertyChangedEventArgs)
+    Dim o = DirectCast(d, MultiCheckBoxPopup)
+
+    If Not o.IsMultiCheckBoxOpen Then
+      MessageBox.Show("I was changed")
+    End If
+
+  End Sub
+
+  Public Property IsMultiCheckBoxOpen As Boolean
+    Get
+      Return GetValue(IsMultiCheckBoxOpenProperty)
+    End Get
+    Set(ByVal value As Boolean)
+      SetValue(IsMultiCheckBoxOpenProperty, value)
+    End Set
+  End Property
+#End Region
+
 #Region "ScrollingHeight"
   Public Shared ReadOnly ScrollingHeightProperty As DependencyProperty = DependencyProperty.Register("ScrollingHeight", GetType(Integer), GetType(MultiCheckBoxPopup), New PropertyMetadata(400))
 

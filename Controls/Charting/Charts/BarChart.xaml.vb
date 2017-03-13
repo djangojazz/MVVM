@@ -135,6 +135,7 @@ Public NotInheritable Class BarChart
     End If
   End Sub
 #End Region
+
 #Region "Drawing Methods"
   Protected Overrides Sub DrawXAxis(partCanvasXTicks As Canvas, partCanvasXLabels As Canvas, xCeiling As Double, xFloor As Double, xTicks As Integer, viewWidth As Double, labelHeight As Double)
     partCanvasXTicks.Children.RemoveRange(0, partCanvasXTicks.Children.Count)

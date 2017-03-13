@@ -9,7 +9,12 @@ Public NotInheritable Class MainWindowViewModel
   Private _testText As String
 
   Public Sub New()
-    AddingLinesForLineChart()
+    For i = 1 To 30
+      Locs.Add($"Item {i}")
+    Next
+    LocationCollection.ClearAndAddRange(Selects.GetDemandLocations().Take(2))
+    UpdateHeader()
+    AddHandler LocationCollection.OnCollectionItemChanged, AddressOf UpdateHeader
   End Sub
 
   Private Sub UpdateHeader(sender As Object, e As ObservableCollectionContentChangedArgs)
@@ -102,13 +107,14 @@ Public NotInheritable Class MainWindowViewModel
   Public ReadOnly Property TestCommand As New DelegateCommand(Of Object)(AddressOf TestCommandExecute)
 
   Private Sub TestCommandExecute()
-    LinePlotAdding()
+    'LinePlotAdding()
+    LocationCollection.ClearAndAddRange(Selects.GetDemandLocations().Take(5))
   End Sub
 
 
 #Region "Line Graph parts"
   Public Sub UpdateChartData()
-    Dim demands = Selects.GetDemandTrends(New DemandTrendInput(2278, New Date(2017, 2, 25), New Date(2017, 5, 1), TestText, New List(Of Integer)({24, 26}), New List(Of Integer)({2, 25})))
+    Dim demands = Selects.GetDemandTrends(New DemandTrendInput(2278, New Date(2017, 2, 25), New Date(2017, 5, 1), TestText, New List(Of Integer)({2, 25})))
 
     Dim demand = demands.Select(Function(x) New PlotPoints(New PlotPoint(Of Double)(x.Grouping), New PlotPoint(Of Double)(x.DemandQty)))
     Dim ad = demands.Select(Function(x) New PlotPoints(New PlotPoint(Of Double)(x.Grouping), New PlotPoint(Of Double)(x.DemandAdQty)))
@@ -154,7 +160,7 @@ Public NotInheritable Class MainWindowViewModel
     Dim newPoints = New List(Of PlotPoints)
 
     For i = 1 To _lastPoints.Count
-      newPoints.Add(New PlotPoints(New PlotPoint(Of DateTime)((DirectCast(_lastPoints(i - 1).X, PlotPoint(Of DateTime)).Point).AddDays(1)), New PlotPoint(Of Double)(DirectCast(_lastPoints(i - 1).Y, PlotPoint(Of Double)).Point * 1.05)))
+      newPoints.Add(New PlotPoints(New PlotPoint(Of DateTime)((DirectCast(_lastPoints(i - 1).X, PlotPoint(Of DateTime)).Point).AddDays(1)), New PlotPoint(Of Double)(DirectCast(_lastPoints(i - 1).Y, PlotPoint(Of Double)).Point * 1.95)))
     Next
 
     _lastPoints = newPoints

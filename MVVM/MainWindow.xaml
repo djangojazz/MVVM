@@ -17,45 +17,13 @@
   <Grid>
     <Grid.RowDefinitions>
       <RowDefinition Height="Auto" />
-      <RowDefinition Height="*" />
-
-      <RowDefinition Height="*" />
       <RowDefinition Height="Auto" />
     </Grid.RowDefinitions>
-
-
-    <!--<ComboBox ItemsSource="{Binding Array}" SelectedItem="{Binding TestText}" />-->
-    <cntrls:BarChart Grid.Row="1"
-      ChartData="{Binding ChartData}"
-      ChartTitle="Test Bar Chart"
-      ChartForeground="Wheat"
-      LegendForeground="WhiteSmoke"
-      BackGroundColor="DarkCyan" 
-      BackGroundColorCanvas="White" 
-      BackGroundColorLegend="White"    
-      YNumberOfTicks="3"
-      
-      XValueConverter="{x:Static cntrls:Converters.DateToValueConverter}"
-      YValueConverter="{x:Static cntrls:Converters.DecimalConverter}"
-      FontType="Tahoma"
-      />
-    
-    <!--XValueConverter="{x:Static cntrls:Converters.DateToValueConverter}"-->
-    <cntrls:LineChart Grid.Row="2"
-      ChartData="{Binding ChartData}"
-      ChartTitle="Test Line Chart"
-      ChartForeground="Wheat"
-      LegendForeground="WhiteSmoke"
-      BackGroundColor="DarkCyan" 
-      BackGroundColorCanvas="White" 
-      BackGroundColorLegend="White"    
-      YNumberOfTicks="3"
-      XNumberOfTicks="4"
-      XValueConverter="{x:Static cntrls:Converters.DateToValueConverter}"
-      YValueConverter="{x:Static cntrls:Converters.DecimalConverter}"
-      FontType="Tahoma"
-      />
-
-    <Button Grid.Row="3" Command="{Binding TestCommand}" Height="30" Content="Add more lines" />
+    <cntrls:MultiCheckBoxPopup ItemsCollection="{Binding LocationCollection}" 
+                               Header="{Binding LocationHeader}"
+                               ScrollingHeight="300"
+                               
+                               />
+    <Button Grid.Row="1" Command="{Binding TestCommand}" Height="30" Content="Try It" />
   </Grid>
 </Window>

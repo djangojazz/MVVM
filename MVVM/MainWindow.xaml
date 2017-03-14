@@ -18,11 +18,14 @@
     <Grid.RowDefinitions>
       <RowDefinition Height="Auto" />
       <RowDefinition Height="Auto" />
+      <RowDefinition Height="Auto" />
     </Grid.RowDefinitions>
-    <cntrls:MultiCheckBoxPopup ItemsCollection="{Binding LocationCollection}" 
+    <ComboBox ItemsSource="{Binding Array}" SelectedItem="{Binding SelectedItem}" />
+    <cntrls:MultiCheckBoxPopup Grid.Row="1" ItemsCollection="{Binding LocationCollection}" 
                                Header="{Binding LocationHeader}"
                                ScrollingHeight="300"
+                               IsMultiCheckBoxOpen="{Binding Open, Mode=OneWayToSource}"
                                />
-    <Button Grid.Row="1" Command="{Binding TestCommand}" Height="30" Content="Try It" />
+    <Button Grid.Row="2" Command="{Binding TestCommand}" Height="30" Content="Try It" />
   </Grid>
 </Window>

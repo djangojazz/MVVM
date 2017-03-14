@@ -15,7 +15,7 @@
   </UserControl.Resources>
   <Grid x:Name="PART_Main">
     <Border Margin="0" Padding="2" Style="{StaticResource Border.Round.Standard}" Focusable="False">
-      <ToggleButton IsChecked="{Binding IsMultiCheckBoxOpen, Mode=OneWayToSource}" Height="20" x:Name="Part_Toggle" Focusable="True" ClickMode="Press" Style="{StaticResource ExpanderDownHeaderStyle}">
+      <ToggleButton IsChecked="{Binding IsMultiCheckBoxOpen}" Height="20" x:Name="Part_Toggle" Focusable="True" ClickMode="Press" Style="{StaticResource ExpanderDownHeaderStyle}">
         <TextBlock Text="{Binding Header}" Style="{StaticResource TextBlock.List.Ellipsis}" />
       </ToggleButton>
     </Border>

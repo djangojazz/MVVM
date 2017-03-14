@@ -6,14 +6,14 @@ Public NotInheritable Class MainWindowViewModel
   Inherits BaseViewModel
 
   Private _lastPoints As New List(Of PlotPoints)
-  Private _testText As String
+  Private _loaded As Boolean = False
 
   Public Sub New()
-    For i = 1 To 30
-      Locs.Add($"Item {i}")
-    Next
-    LocationCollection.ClearAndAddRange(Selects.GetDemandLocations().Take(2))
+    LocationCollection.ClearAndAddRange(Selects.GetDemandLocations().Take(5))
+    Dim locs = New List(Of Integer)({18, 55})
+    locs.ForEach(Sub(x) LocationCollection.Where(Function(y) y.LocationID = x).Single().IsUsed = True)
     UpdateHeader()
+    SelectedItem = TrendChoices.FiscalPeriod
     AddHandler LocationCollection.OnCollectionItemChanged, AddressOf UpdateHeader
   End Sub
 
@@ -38,6 +38,33 @@ Public NotInheritable Class MainWindowViewModel
     Week
     Day
   End Enum
+
+  Public ReadOnly Property SelectedLocations As List(Of Integer)
+    Get
+      Return If(LocationCollection?.Any(), LocationCollection.Where(Function(x) x.IsUsed = True).Select(Function(x) x.LocationID).ToList(), Nothing)
+    End Get
+  End Property
+
+  Private _open As Boolean
+  Public Property Open As Boolean
+    Get
+      Return _open
+    End Get
+    Set(ByVal value As Boolean)
+      _open = value
+      If _loaded And Not Open Then
+        'DemandTrend.DemandLocations.ForEach(Sub(x) LocationCollection.Where(Function(y) y.LocationID = x).ForEach(Function(z) z.IsUsed = True))
+        Dim s = String.Empty
+        SelectedLocations.ForEach(Sub(x) s += x.ToString + Environment.NewLine)
+        MessageBox.Show(s)
+      End If
+      OnPropertyChanged(NameOf(Open))
+      _loaded = True
+    End Set
+  End Property
+
+  Private _testText As String
+
   Public Property TestText As String
     Get
       Return _testText
@@ -63,7 +90,13 @@ Public NotInheritable Class MainWindowViewModel
     End Set
   End Property
 
-  Public ReadOnly Property Array As New ObservableCollection(Of String)({"Day", "Month", "Year", "FiscalPeriod"})
+  Public ReadOnly Property Array As TrendChoices()
+    Get
+      Return [Enum].GetValues(GetType(TrendChoices))
+    End Get
+  End Property
+
+  Public Property SelectedItem As TrendChoices
 
   Public ReadOnly Property DecimalConverter As New InstanceInSetToStringConverter
 
@@ -71,8 +104,6 @@ Public NotInheritable Class MainWindowViewModel
   Public ReadOnly Property LocationCollection As New ObservableCollectionContentNotifying(Of DemandLocation)
   'Dictionary(Of String, Boolean)
   'ObservableCollection(Of DemandLocation)
-
-  Public ReadOnly Property Locs As New ObservableCollection(Of String)
 
   Private _selectedLocation As DemandLocation
   Public Property SelectedLocation As DemandLocation
@@ -108,7 +139,7 @@ Public NotInheritable Class MainWindowViewModel
 
   Private Sub TestCommandExecute()
     'LinePlotAdding()
-    LocationCollection.ClearAndAddRange(Selects.GetDemandLocations().Take(5))
+    LocationCollection.ClearAndAddRange(Selects.GetDemandLocations().Take(10))
   End Sub
 
 

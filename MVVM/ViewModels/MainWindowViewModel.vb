@@ -53,7 +53,6 @@ Public NotInheritable Class MainWindowViewModel
     Set(ByVal value As Boolean)
       _open = value
       If _loaded And Not Open Then
-        'DemandTrend.DemandLocations.ForEach(Sub(x) LocationCollection.Where(Function(y) y.LocationID = x).ForEach(Function(z) z.IsUsed = True))
         Dim s = String.Empty
         SelectedLocations.ForEach(Sub(x) s += x.ToString + Environment.NewLine)
         MessageBox.Show(s)
@@ -71,10 +70,7 @@ Public NotInheritable Class MainWindowViewModel
     End Get
     Set(ByVal value As String)
       _testText = value
-      UpdateChartData()
-      If DecimalConverter IsNot Nothing Then DecimalConverter.OptionalHeader = TestText : DecimalConverter.FirstPosition = ChartData.SelectMany(Function(x) x.Points).Select(Function(x) x.XAsDouble).First
       OnPropertyChanged(NameOf(TestText))
-      UpdateChartData()
     End Set
   End Property
 
@@ -96,7 +92,23 @@ Public NotInheritable Class MainWindowViewModel
     End Get
   End Property
 
+  Private _selectedItem As TrendChoices
   Public Property SelectedItem As TrendChoices
+    Get
+      Return _selectedItem
+    End Get
+    Set(ByVal value As TrendChoices)
+      _selectedItem = value
+      UpdateChartData()
+      If DecimalConverter IsNot Nothing Then
+        DecimalConverter.OptionalHeader = SelectedItem.ToString
+        DecimalConverter.FirstPosition = ChartData.SelectMany(Function(x) x.Points).Select(Function(x) x.XAsDouble).First
+      End If
+      OnPropertyChanged(NameOf(SelectedItem))
+      UpdateChartData()
+    End Set
+  End Property
+
 
   Public ReadOnly Property DecimalConverter As New InstanceInSetToStringConverter
 
@@ -145,12 +157,12 @@ Public NotInheritable Class MainWindowViewModel
 
 #Region "Line Graph parts"
   Public Sub UpdateChartData()
-    Dim demands = Selects.GetDemandTrends(New DemandTrendInput(2278, New Date(2017, 2, 25), New Date(2017, 5, 1), TestText, New List(Of Integer)({2, 25})))
+    Dim demands = Selects.GetDemandTrends(New DemandTrendInput(2278, New Date(2017, 2, 25), New Date(2017, 5, 1), SelectedItem.ToString, New List(Of Integer)({2, 25})))
 
     Dim demand = demands.Select(Function(x) New PlotPoints(New PlotPoint(Of Double)(x.Grouping), New PlotPoint(Of Double)(x.DemandQty)))
     Dim ad = demands.Select(Function(x) New PlotPoints(New PlotPoint(Of Double)(x.Grouping), New PlotPoint(Of Double)(x.DemandAdQty)))
 
-    _lastPoints = New List(Of PlotPoints)({demand.Last, ad.Last})
+    '_lastPoints = New List(Of PlotPoints)({demand.Last, ad.Last})
 
     ChartData.ClearAndAddRange({New PlotTrend("Demand", Brushes.Blue, New Thickness(2), demand), New PlotTrend("Ad", Brushes.Red, New Thickness(2), ad)})
     Dim distinctCounts = (ChartData.SelectMany(Function(x) x.Points).Select(Function(x) x.XAsDouble).Distinct.Count - 1)

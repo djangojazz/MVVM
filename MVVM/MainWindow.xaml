@@ -18,6 +18,7 @@
     <Grid.RowDefinitions>
       <RowDefinition Height="Auto" />
       <RowDefinition Height="Auto" />
+      <RowDefinition Height="*" />
       <RowDefinition Height="Auto" />
     </Grid.RowDefinitions>
     <ComboBox ItemsSource="{Binding Array}" SelectedItem="{Binding SelectedItem}" />
@@ -26,6 +27,20 @@
                                ScrollingHeight="300"
                                IsMultiCheckBoxOpen="{Binding Open, Mode=OneWayToSource}"
                                />
-    <Button Grid.Row="2" Command="{Binding TestCommand}" Height="30" Content="Try It" />
+    <cntrls:LineChart Grid.Row="2"
+      ChartData="{Binding ChartData}"
+      ChartTitle="Test Line Chart"
+      ChartForeground="Wheat"
+      LegendForeground="WhiteSmoke"
+      BackGroundColor="DarkCyan" 
+      BackGroundColorCanvas="White" 
+      BackGroundColorLegend="White"    
+      YNumberOfTicks="3"
+      XNumberOfTicks="{Binding XTicks}"
+      XValueConverter="{Binding DecimalConverter}"
+      YValueConverter="{x:Static cntrls:Converters.DecimalConverter}"
+      FontType="Tahoma"
+      />
+    <Button Grid.Row="3" Command="{Binding TestCommand}" Height="30" Content="Try It" />
   </Grid>
 </Window>

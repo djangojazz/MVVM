@@ -11,6 +11,7 @@ Public Class ObservableCollectionContentNotifying(Of T)
 
   'VARIABLES
   Private disposedValue As Boolean
+  Private _SuspendNotification As Boolean
 
   'CONSTRUCTOR
   Public Sub New()
@@ -19,16 +20,34 @@ Public Class ObservableCollectionContentNotifying(Of T)
 
   'METHODS
   Protected Overrides Sub OnCollectionChanged(e As NotifyCollectionChangedEventArgs)
-    Select Case True
-      Case e.Action = NotifyCollectionChangedAction.Add
-        RegisterPropertyChangedItems(e.NewItems)
-      Case e.Action = NotifyCollectionChangedAction.Remove
-        UnregisterPropertyChangedItems(e.OldItems)
-      Case e.Action = NotifyCollectionChangedAction.Replace
-        UnregisterPropertyChangedItems(e.OldItems)
-        RegisterPropertyChangedItems(e.NewItems)
-    End Select
-    MyBase.OnCollectionChanged(e)
+    If Not SuspendNotification Then
+      Select Case True
+        Case e.Action = NotifyCollectionChangedAction.Add
+          RegisterPropertyChangedItems(e.NewItems)
+        Case e.Action = NotifyCollectionChangedAction.Remove
+          UnregisterPropertyChangedItems(e.OldItems)
+        Case e.Action = NotifyCollectionChangedAction.Replace
+          UnregisterPropertyChangedItems(e.OldItems)
+          RegisterPropertyChangedItems(e.NewItems)
+      End Select
+      MyBase.OnCollectionChanged(e)
+    End If
+  End Sub
+
+  Public Property SuspendNotification As Boolean
+    Get
+      Return _SuspendNotification
+    End Get
+    Set(value As Boolean)
+      Dim Notify = _SuspendNotification And Not value
+      _SuspendNotification = value
+      If Notify Then OnCollectionChanged(New NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset))
+      'OnPropertyChanged(New PropertyChangedEventArgs(NameOf(Me.Count)))
+    End Set
+  End Property
+
+  Protected Overrides Sub OnPropertyChanged(e As PropertyChangedEventArgs)
+    If Not _SuspendNotification Then MyBase.OnPropertyChanged(e)
   End Sub
 
   Protected Overrides Sub ClearItems()

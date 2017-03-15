@@ -99,11 +99,6 @@ Public NotInheritable Class MainWindowViewModel
     End Get
     Set(ByVal value As TrendChoices)
       _selectedItem = value
-      UpdateChartData()
-      If DecimalConverter IsNot Nothing Then
-        DecimalConverter.OptionalHeader = SelectedItem.ToString
-        DecimalConverter.FirstPosition = ChartData.SelectMany(Function(x) x.Points).Select(Function(x) x.XAsDouble).First
-      End If
       OnPropertyChanged(NameOf(SelectedItem))
       UpdateChartData()
     End Set
@@ -162,11 +157,13 @@ Public NotInheritable Class MainWindowViewModel
     Dim demand = demands.Select(Function(x) New PlotPoints(New PlotPoint(Of Double)(x.Grouping), New PlotPoint(Of Double)(x.DemandQty)))
     Dim ad = demands.Select(Function(x) New PlotPoints(New PlotPoint(Of Double)(x.Grouping), New PlotPoint(Of Double)(x.DemandAdQty)))
 
-    '_lastPoints = New List(Of PlotPoints)({demand.Last, ad.Last})
+    If DecimalConverter IsNot Nothing Then
+      XTicks = If(demands.Count > 0, demands.Count - 1, 1)
+      DecimalConverter.OptionalHeader = SelectedItem.ToString
+      DecimalConverter.FirstPosition = demands.Select(Function(x) x.Grouping).First()
 
-    ChartData.ClearAndAddRange({New PlotTrend("Demand", Brushes.Blue, New Thickness(2), demand), New PlotTrend("Ad", Brushes.Red, New Thickness(2), ad)})
-    Dim distinctCounts = (ChartData.SelectMany(Function(x) x.Points).Select(Function(x) x.XAsDouble).Distinct.Count - 1)
-    XTicks = If(distinctCounts > 0, distinctCounts, 1)
+      ChartData.ClearAndAddRange({New PlotTrend("Demand", Brushes.Blue, New Thickness(2), demand), New PlotTrend("Ad", Brushes.Red, New Thickness(2), ad)})
+    End If
   End Sub
 
   Private Sub AddingLinesForLineChart()

@@ -28,19 +28,23 @@
                                IsMultiCheckBoxOpen="{Binding Open, Mode=OneWayToSource}"
                                />
     <cntrls:LineChart Grid.Row="2"
+      XNumberOfTicks="{Binding XTicks}"
       ChartData="{Binding ChartData}"
       ChartTitle="Test Line Chart"
       ChartForeground="Wheat"
-      LegendForeground="WhiteSmoke"
       BackGroundColor="DarkCyan" 
       BackGroundColorCanvas="White" 
       BackGroundColorLegend="White"    
       YNumberOfTicks="3"
-      XNumberOfTicks="{Binding XTicks}"
       XValueConverter="{Binding DecimalConverter}"
       YValueConverter="{x:Static cntrls:Converters.DecimalConverter}"
       FontType="Tahoma"
       />
-    <Button Grid.Row="3" Command="{Binding TestCommand}" Height="30" Content="Try It" />
+    <!--XNumberOfTicks="{Binding XTicks}"-->
+    <StackPanel Grid.Row="3"  Orientation="Horizontal">
+      <TextBlock Text="{Binding XTicks}" Height="30" Width="100" />
+      <Button Command="{Binding TestCommand}" Height="30" Width="100" Content="Try It" />
+    </StackPanel>
+    
   </Grid>
 </Window>

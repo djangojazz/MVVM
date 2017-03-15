@@ -12,6 +12,21 @@ Public Module ExtensionMethods
   End Sub
 
   <Extension>
+  Public Sub ClearAndAddRange(Of T)(input As ObservableCollectionContentNotifying(Of T), array As IEnumerable(Of T))
+    input.SuspendNotification = True
+    input.Clear()
+    'For i = 0 To array.Count - 1
+    '  If i = (array.Count - 1) Then input.SuspendNotification = False
+    '  input.Add(array(i))
+    'Next
+    For Each o In array
+      input.Add(o)
+    Next
+    input.SuspendNotification = False
+  End Sub
+
+
+  <Extension>
   Public Sub ClearAndAddRange(Of T, T2)(input As IDictionary(Of T, T2), dict As IDictionary(Of T, T2))
     input.Clear()
     For Each o In dict

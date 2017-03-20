@@ -53,9 +53,10 @@ Public NotInheritable Class MainWindowViewModel
     Set(ByVal value As Boolean)
       _open = value
       If _loaded And Not Open Then
-        Dim s = String.Empty
-        SelectedLocations.ForEach(Sub(x) s += x.ToString + Environment.NewLine)
-        MessageBox.Show(s)
+        'Dim s = String.Empty
+        'SelectedLocations.ForEach(Sub(x) s += x.ToString + Environment.NewLine)
+        'MessageBox.Show(s)
+        UpdateHeader()
       End If
       OnPropertyChanged(NameOf(Open))
       _loaded = True

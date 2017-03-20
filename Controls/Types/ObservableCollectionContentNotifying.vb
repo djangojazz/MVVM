@@ -10,7 +10,7 @@ Public Class ObservableCollectionContentNotifying(Of T)
   Public Event OnCollectionItemChanged(ByVal sender As Object, e As ObservableCollectionContentChangedArgs)
 
   'VARIABLES
-  Private disposedValue As Boolean
+  Private _disposedValue As Boolean
   Private _SuspendNotification As Boolean
 
   'CONSTRUCTOR
@@ -75,16 +75,14 @@ Public Class ObservableCollectionContentNotifying(Of T)
     Dispose(True)
   End Sub
   Protected Overridable Sub Dispose(disposing As Boolean)
-    If Not disposedValue Then
+    If Not _disposedValue Then
       If disposing Then
         UnregisterPropertyChangedItems(Me)
       End If
     End If
-    disposedValue = True
+    _disposedValue = True
   End Sub
-
 End Class
-
 
 Public Class ObservableCollectionContentChangedArgs
   Inherits EventArgs

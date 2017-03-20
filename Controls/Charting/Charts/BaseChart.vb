@@ -210,18 +210,18 @@ Public MustInherit Class BaseChart
   End Property
 #End Region
 
-#Region "XValueMultiConverter"
-  Public Shared ReadOnly XValueMultiConverterProperty As DependencyProperty = DependencyProperty.Register(NameOf(XValueMultiConverter), GetType(IMultiValueConverter), GetType(BaseChart), Nothing)
+  '#Region "XValueMultiConverter"
+  '  Public Shared ReadOnly XValueMultiConverterProperty As DependencyProperty = DependencyProperty.Register(NameOf(XValueMultiConverter), GetType(IMultiValueConverter), GetType(BaseChart), Nothing)
 
-  Public Property XValueMultiConverter As IMultiValueConverter
-    Get
-      Return CType(GetValue(XValueMultiConverterProperty), IMultiValueConverter)
-    End Get
-    Set
-      SetValue(XValueMultiConverterProperty, Value)
-    End Set
-  End Property
-#End Region
+  '  Public Property XValueMultiConverter As IMultiValueConverter
+  '    Get
+  '      Return CType(GetValue(XValueMultiConverterProperty), IMultiValueConverter)
+  '    End Get
+  '    Set
+  '      SetValue(XValueMultiConverterProperty, Value)
+  '    End Set
+  '  End Property
+  '#End Region
 
 #Region "YValueConverter"
   Public Shared ReadOnly YValueConverterProperty As DependencyProperty = DependencyProperty.Register(NameOf(YValueConverter), GetType(IValueConverter), GetType(BaseChart), Nothing)
@@ -459,5 +459,4 @@ Public MustInherit Class BaseChart
     Next
   End Sub
 #End Region
-
 End Class

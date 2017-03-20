@@ -42,9 +42,9 @@
                       lsv:DoubleClick.Command ="{Binding CommandSelect}"
                       lsv:DoubleClick.CommandParameter="{Binding ElementName=Part_List, Path=SelectedItem}"
                       lsv:EscapeReleased.Command="{Binding CommandEsc}">
-          </ListView>
-        </Grid>
-      </Border>
+          </ListView> 
+        </Grid>  
+      </Border> 
     </local:KeyboardPopup>
   </Grid>
 </UserControl>

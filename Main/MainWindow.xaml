@@ -14,5 +14,6 @@
     </Grid.RowDefinitions>
     <Label Content="{Binding Text}" Height="30" Foreground="Black" />
     <Button Grid.Row="1" Content="Test Command" Command="{Binding TestCommand}" />
+    <local:TestView Grid.Row="2" Counts="{Binding CountsTest}" />
   </Grid>
 </Window>

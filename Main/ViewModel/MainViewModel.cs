@@ -14,8 +14,21 @@ namespace Main
     {
       _text = "Test";
       TestCommand = new DelegateCommand<string>(TestCommandExecute);
+      CountsTest = 1;
     }
-           
+
+    private int _countsTest;
+
+    public int CountsTest
+    {
+      get { return _countsTest; }
+      set
+      {
+        _countsTest = value;
+        OnPropertyChanged(nameof(CountsTest));
+      }
+    }
+                     
     #region Text
     private string _text;
 
@@ -30,11 +43,12 @@ namespace Main
     } 
     #endregion
 
-    public DelegateCommand<string> TestCommand { get; private set; }
+    public DelegateCommand<string> TestCommand { get; }
 
     private void TestCommandExecute(string input)
     {
       Text = "Updated Test";
+      CountsTest = 20;
     }
   }
 }

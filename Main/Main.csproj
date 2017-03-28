@@ -54,6 +54,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Business\TrendChoices.cs" />
     <Compile Include="ViewModel\BaseViewModel.cs" />
     <Compile Include="ViewModel\MainViewModel.cs" />
     <Compile Include="View\TestView.xaml.cs">
@@ -102,13 +103,15 @@
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Business\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <ProjectReference Include="..\CSharpControls\CSharpControls.csproj">
       <Project>{E288391B-8B44-4AAF-82EB-BF33EB9F37C3}</Project>
       <Name>CSharpControls</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\CSharpDataAccess\CSharpDataAccess.csproj">
+      <Project>{35F15E72-34FC-4BD9-A9B5-9920DDE2C24E}</Project>
+      <Name>CSharpDataAccess</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

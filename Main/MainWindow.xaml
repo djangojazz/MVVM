@@ -4,16 +4,49 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Main"
+        xmlns:cntrls="clr-namespace:CSharpControls.Controls;assembly=CSharpControls"
+        xmlns:charting="clr-namespace:CSharpControls.Charting;assembly=CSharpControls"
         mc:Ignorable="d"
         Title="MainWindow" Height="350" Width="525">
+  <Window.Resources>
+    <ResourceDictionary>
+      <ResourceDictionary.MergedDictionaries>
+        <ResourceDictionary Source="pack://application:,,,/CSharpControls;component/styles.xaml" />
+      </ResourceDictionary.MergedDictionaries>
+    </ResourceDictionary>
+  </Window.Resources>
   <Grid>
     <Grid.RowDefinitions>
       <RowDefinition Height="Auto" />
       <RowDefinition Height="Auto" />
       <RowDefinition Height="*" />
+      <RowDefinition Height="Auto" />
     </Grid.RowDefinitions>
-    <Label Content="{Binding Text}" Height="30" Foreground="Black" />
-    <Button Grid.Row="1" Content="Test Command" Command="{Binding TestCommand}" />
-    <local:TestView Grid.Row="2" Counts="{Binding CountsTest}" />
+    <ComboBox ItemsSource="{Binding Array}" SelectedItem="{Binding SelectedItem}" />
+    <cntrls:MultiCheckBoxPopup Grid.Row="1" ItemsCollection="{Binding LocationCollection}" 
+                               Header="{Binding LocationHeader}"
+                               ScrollingHeight="300"
+                               IsMultiCheckBoxOpen="{Binding Open, Mode=OneWayToSource}"
+                               />
+    <charting:LineChart Grid.Row="2"
+      XNumberOfTicks="{Binding XTicks}"
+      ChartData="{Binding ChartData}"
+      ChartTitle="Test Line Chart"
+      ChartForeground="Wheat"
+      BackGroundColor="DarkCyan" 
+      BackGroundColorCanvas="White" 
+      BackGroundColorLegend="White"    
+      YNumberOfTicks="3"
+      XValueConverter="{Binding DecimalConverter}"
+      
+      FontType="Tahoma"
+      />
+    <!--YValueConverter="{x:Static cntrls:Converters.DecimalConverter}"-->
+    <!--XNumberOfTicks="{Binding XTicks}"-->
+    <StackPanel Grid.Row="3"  Orientation="Horizontal">
+      <TextBlock Text="{Binding XTicks}" Height="30" Width="100" />
+      <Button Command="{Binding TestCommand}" Height="30" Width="100" Content="Try It" />
+    </StackPanel>
+
   </Grid>
 </Window>

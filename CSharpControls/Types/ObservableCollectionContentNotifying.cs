@@ -78,14 +78,11 @@
 
     private void RaiseNotification(object sender, PropertyChangedEventArgs e)
     {
-      if (OnCollectionItemChanged != null)
+      OnCollectionItemChanged?.Invoke(this, new ObservableCollectionContentChangedArgs
       {
-        OnCollectionItemChanged(this, new ObservableCollectionContentChangedArgs
-        {
-          ElementChanged = sender,
-          PropertyChanged = e
-        });
-      }
+        ElementChanged = sender,
+        PropertyChanged = e
+      });
     }
 
     public void Dispose()

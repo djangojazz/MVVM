@@ -23,6 +23,9 @@ namespace Main
 
     public MainViewModel()
     {
+      LocationCollection = new ObservableCollectionContentNotifying<DemandLocation>();
+      ChartData = new ObservableCollectionContentNotifying<PlotTrend>();
+
       LocationCollection.ClearAndAddRange(Selects.GetDemandLocations().Take(5));
       var locs = new List<int> { 18, 55 };
       locs.ForEach(x => LocationCollection.Single(y => y.LocationID == x).IsUsed = true);
@@ -172,8 +175,8 @@ namespace Main
 
     private void UpdateHeader()
     {
-      dynamic itemsSelected = LocationCollection.Where(x => x.IsUsed == true).Select(x => x.ToString());
-      dynamic headerUpdated = itemsSelected.Any ? string.Join(", ", itemsSelected) : "No Items";
+      var itemsSelected = LocationCollection.Where(x => x.IsUsed == true).Select(x => x.ToString());
+      var headerUpdated = itemsSelected.Any() ? string.Join(", ", itemsSelected) : "No Items";
       LocationHeader = headerUpdated;
     }
 
@@ -185,8 +188,8 @@ namespace Main
 
       var demands = Selects.GetDemandTrends(serializedInput);
 
-      dynamic demand = demands.Select(x => new PlotPoints(new PlotPoint<double>(x.Grouping), new PlotPoint<decimal>(x.DemandQty)));
-      dynamic ad = demands.Select(x => new PlotPoints(new PlotPoint<double>(x.Grouping), new PlotPoint<decimal>(x.DemandAdQty)));
+      var demand = demands.Select(x => new PlotPoints(new PlotPoint<double>(x.Grouping), new PlotPoint<decimal>(x.DemandQty)));
+      var ad = demands.Select(x => new PlotPoints(new PlotPoint<double>(x.Grouping), new PlotPoint<decimal>(x.DemandAdQty)));
 
       if (DecimalConverter != null)
       {

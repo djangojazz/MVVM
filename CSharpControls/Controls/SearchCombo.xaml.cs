@@ -10,7 +10,7 @@ using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
 using CSharpControls.Business;
 
-namespace CSharpControls
+namespace CSharpControls.Controls
 {
   /// <summary>
   /// Interaction logic for SearchCombo.xaml

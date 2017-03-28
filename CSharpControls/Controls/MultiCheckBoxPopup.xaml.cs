@@ -1,10 +1,12 @@
-﻿using System.Collections;
+﻿using System.Collections;      
 using System.Windows;
-using System.Windows.Controls;
+using System.Windows.Controls; 
 
-namespace CSharpControls
+namespace CSharpControls.Controls
 {
-
+  /// <summary>
+  /// Interaction logic for MultiCheckBoxPopup.xaml
+  /// </summary>
   public partial class MultiCheckBoxPopup : UserControl
   {
     public MultiCheckBoxPopup()

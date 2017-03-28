@@ -50,7 +50,7 @@ namespace CSharpDataAccess.Enterprise.Models
     //METHODS
     public override string ToString()
     {
-      return "{CompanyNbr.Trim}-{DivisionNbr.Trim}-{BranchNbr.Trim} {BranchName.Trim}";
+      return $"{CompanyNbr.Trim()}-{DivisionNbr.Trim()}-{BranchNbr.Trim()} {BranchName.Trim()}";
     }
 
     public override bool Equals(object obj)

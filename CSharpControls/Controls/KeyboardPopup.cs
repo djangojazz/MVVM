@@ -1,7 +1,7 @@
 ﻿using System;      
 using System.Windows.Input;
 
-namespace CSharpControls
+namespace CSharpControls.Controls
 {
   public class KeyboardPopup : System.Windows.Controls.Primitives.Popup
   {

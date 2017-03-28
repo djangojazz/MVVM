@@ -47,13 +47,13 @@ namespace CSharpControls.Charting
     }
            
     #region "DataChangedAndTimingEvents"
-    public override void OnTick(object o)
+    public override void OnTick(object o, EventArgs e)
     {
       Timer.Stop();
       ResizeAndPlotPoints(o, null);
     }
 
-    public override void Resized()
+    public override void Resized(object o, EventArgs e)
     {
       Timer.Stop();
       Timer.Start();
@@ -122,7 +122,7 @@ namespace CSharpControls.Charting
       }
     }
 
-    public override void CalculatePlotTrends(object sender, NotifyCollectionChangedEventArgs e)
+    public override void CalculatePlotTrends(object sender, EventArgs e)
     {
       if (PART_CanvasPoints == null) return;
 

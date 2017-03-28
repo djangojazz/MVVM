@@ -56,14 +56,24 @@ namespace CSharpControls.Charting
     }
     #endregion
 
+    #region "X"
+
+    public static readonly DependencyProperty XTicksDynamicProperty = DependencyProperty.Register(nameof(XTicksDynamic), typeof(bool), typeof(LineChart), new UIPropertyMetadata(false));
+    public bool XTicksDynamic
+    {
+      get { return (bool)GetValue(XTicksDynamicProperty); }
+      set { SetValue(XTicksDynamicProperty, value); }
+    }
+    #endregion
+
     #region "DataChangedAndTimingEvents"
-    public override void OnTick(object o)
+    public override void OnTick(object o, EventArgs e)
     {
       Timer.Stop();
       ResizeAndPlotPoints(o, null);
     }
 
-    public override void Resized()
+    public override void Resized(object o, EventArgs e)
     {
       Timer.Stop();
       Timer.Start();
@@ -125,7 +135,7 @@ namespace CSharpControls.Charting
       }
     }
 
-    public override void CalculatePlotTrends(object sender, NotifyCollectionChangedEventArgs e)
+    public override void CalculatePlotTrends(object sender, EventArgs e)
     {
       if (PART_CanvasPoints == null) return;
 
@@ -157,9 +167,11 @@ namespace CSharpControls.Charting
         }
       }
 
+      var xTicks = XTicksDynamic ? ChartData.SelectMany(x => x.Points).Select(x => x.XAsDouble).Distinct().Count() - 1 : XNumberOfTicks;
+
       PART_CanvasPoints.LayoutTransform = new ScaleTransform(1, -1);
       PART_CanvasPoints.UpdateLayout();
-
+                                                            
       _xFloor = ChartData.SelectMany(x => x.Points).Select(x => x.XAsDouble).OrderBy(x => x).FirstOrDefault();
       _xCeiling = ChartData.SelectMany(x => x.Points).Select(x => x.XAsDouble).OrderByDescending(x => x).FirstOrDefault();
       _yFloor = 0;
@@ -180,7 +192,7 @@ namespace CSharpControls.Charting
         }
       }
 
-      DrawXAxis(PART_CanvasXAxisTicks, PART_CanvasXAxisLabels, _xCeiling, _xFloor, XNumberOfTicks, _viewWidth, _labelHeight);
+      DrawXAxis(PART_CanvasXAxisTicks, PART_CanvasXAxisLabels, _xCeiling, _xFloor, xTicks, _viewWidth, _labelHeight);
       DrawYAxis(PART_CanvasYAxisTicks, PART_CanvasYAxisLabels, _yCeiling, _yFloor, _viewHeight, _labelHeight);
     }
 

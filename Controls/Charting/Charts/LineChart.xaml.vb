@@ -36,6 +36,19 @@
   End Property
 #End Region
 
+#Region "XTicksDynamic"
+  Public Shared ReadOnly XTicksDynamicProperty As DependencyProperty = DependencyProperty.Register("XTicksDynamic", GetType(Boolean), GetType(LineChart), New PropertyMetadata(False))
+
+  Public Property XTicksDynamic As Boolean
+    Get
+      Return CBool(GetValue(XTicksDynamicProperty))
+    End Get
+    Set(ByVal value As Boolean)
+      SetValue(XTicksDynamicProperty, value)
+    End Set
+  End Property
+#End Region
+
 #Region "DataChangedAndTimingEvents"
   Public Overrides Sub OnTick(o As Object)
     Timer.Stop()
@@ -124,6 +137,8 @@
         Return
       End If
     End If
+
+    Dim xTicks = If(XTicksDynamic, ChartData.SelectMany(Function(x) x.Points).Select(Function(x) x.XAsDouble).Distinct.Count - 1, XNumberOfTicks)
 
     Me.PART_CanvasPoints.LayoutTransform = New ScaleTransform(1, -1)
     Me.PART_CanvasPoints.UpdateLayout()

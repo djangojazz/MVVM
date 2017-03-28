@@ -5,9 +5,10 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Main"
         xmlns:cntrls="clr-namespace:CSharpControls.Controls;assembly=CSharpControls"
+        xmlns:conv="clr-namespace:CSharpControls.Converters;assembly=CSharpControls"
         xmlns:charting="clr-namespace:CSharpControls.Charting;assembly=CSharpControls"
         mc:Ignorable="d"
-        Title="MainWindow" Height="350" Width="525">
+        Title="MainWindow" Height="500" Width="800">
   <Window.Resources>
     <ResourceDictionary>
       <ResourceDictionary.MergedDictionaries>
@@ -37,8 +38,8 @@
       BackGroundColorCanvas="White" 
       BackGroundColorLegend="White"    
       YNumberOfTicks="3"
-      XValueConverter="{Binding DecimalConverter}"
-      
+      XValueConverter="{Binding InstanceConverter}"
+      YValueConverter="{x:Static conv:Converters.DecimalConverter}"
       FontType="Tahoma"
       />
     <!--YValueConverter="{x:Static cntrls:Converters.DecimalConverter}"-->

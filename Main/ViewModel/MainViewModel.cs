@@ -23,7 +23,7 @@ namespace Main
 
     public MainViewModel()
     {
-      DecimalConverter = new InstanceInSetToStringConverter();
+      InstanceConverter = new InstanceInSetToStringConverter();
       LocationCollection = new ObservableCollectionContentNotifying<DemandLocation>();
       ChartData = new ObservableCollectionContentNotifying<PlotTrend>();
 
@@ -47,7 +47,7 @@ namespace Main
       get => (TrendChoices[])Enum.GetValues(typeof(TrendChoices));
     }
 
-    public InstanceInSetToStringConverter DecimalConverter { get; }
+    public InstanceInSetToStringConverter InstanceConverter { get; }
     public ObservableCollectionContentNotifying<PlotTrend> ChartData { get; }
     public ObservableCollectionContentNotifying<DemandLocation> LocationCollection { get; }
 
@@ -193,11 +193,11 @@ namespace Main
       var demand = demands.Select(x => new PlotPoints(new PlotPoint<double>(x.Grouping), new PlotPoint<decimal>(x.DemandQty)));
       var ad = demands.Select(x => new PlotPoints(new PlotPoint<double>(x.Grouping), new PlotPoint<decimal>(x.DemandAdQty)));
 
-      if (DecimalConverter != null)
+      if (InstanceConverter != null)
       {
         XTicks = demands.Count > 0 ? demands.Count - 1 : 1;
-        DecimalConverter.OptionalHeader = SelectedItem.ToString();
-        DecimalConverter.FirstPosition = demands.Select(x => x.Grouping).First();
+        InstanceConverter.OptionalHeader = SelectedItem.ToString();
+        InstanceConverter.FirstPosition = demands.Select(x => x.Grouping).First();
 
         ChartData.ClearAndAddRange(new List<PlotTrend> { new PlotTrend("Demand", Brushes.Blue, new Thickness(2), demand), new PlotTrend("Ad", Brushes.Red, new Thickness(2), ad) });
       }
@@ -238,7 +238,7 @@ namespace Main
       ChartData.ClearAndAddRange(new List<PlotTrend>{
         new PlotTrend("First", Brushes.Blue, new Thickness(2), o),
         new PlotTrend("Second", Brushes.Red, new Thickness(2), o2),
-        new PlotTrend("Thrid", Brushes.Purple, new Thickness(2), o3),
+        new PlotTrend("Third", Brushes.Purple, new Thickness(2), o3),
         new PlotTrend("Fourth", Brushes.Brown, new Thickness(2), o4)
       });
 

@@ -250,7 +250,7 @@ namespace CSharpControls.Charting
       if ((e.OldValue != null))
       {
         var OldCollection = e.OldValue as ObservableCollectionContentNotifying<PlotTrend>;
-        //RemoveHandler OldCollection.OnCollectionItemChanged, AddressOf o.CalculatePlotTrends
+        OldCollection.OnCollectionItemChanged -= o.CalculatePlotTrends;                            
         OldCollection.CollectionChanged -= o.CalculatePlotTrends;
        
       }
@@ -258,22 +258,21 @@ namespace CSharpControls.Charting
       if ((e.NewValue != null))
       {
         var NewCollection = e.NewValue as ObservableCollectionContentNotifying<PlotTrend>;
-        //AddHandler NewCollection.OnCollectionItemChanged, AddressOf o.CalculatePlotTrends
+        NewCollection.OnCollectionItemChanged += o.CalculatePlotTrends;
         NewCollection.CollectionChanged += o.CalculatePlotTrends;
         o.Loaded += o.ResizeAndPlotPoints;
-        
-        //o.SizeChanged += o.Resized();
-        //o.Timer.Tick += o.OnTick(o);
+        o.SizeChanged += o.Resized;
+        o.Timer.Tick += o.OnTick;
       }
     }
 
-    public abstract void OnTick(object o);
+    public abstract void OnTick(object o, EventArgs e);
 
-    public abstract void Resized();
+    public abstract void Resized(object o, EventArgs e);
 
     public abstract void ResizeAndPlotPoints(object o, EventArgs e);
 
-    public abstract void CalculatePlotTrends(object sender, NotifyCollectionChangedEventArgs e);
+    public abstract void CalculatePlotTrends(object sender, EventArgs e);
 
     
     #endregion
@@ -359,7 +358,7 @@ namespace CSharpControls.Charting
         {
           Text = textForLabel,
           FontSize = fontSize,
-          Margin = new Thickness(0, viewHeight - 20 - (ySegment - i == 0 ? 0 : i == YNumberOfTicks ? lastSpaceFactor : finalSpacing), 0, 0)
+          Margin = new Thickness(0, viewHeight - 20 - (ySegment - (i == 0 ? 0 : (i == YNumberOfTicks) ? lastSpaceFactor : finalSpacing)), 0, 0)
         };
 
         partCanvasYLabels.Children.Add(labelSegment);
@@ -443,7 +442,7 @@ namespace CSharpControls.Charting
         {
           Text = textForLabel,
           FontSize = fontSize,
-          Margin = new Thickness(xSegment - i == 0 ? 0 : i == xTicks ? lastSpaceFactor : finalSpacing, 0, 0, 0)
+          Margin = new Thickness(xSegment - (i == 0 ? 0 : (i == xTicks) ? lastSpaceFactor : finalSpacing), 0, 0, 0)
         };
 
         partCanvasXLabels.Children.Add(labelSegment);

@@ -197,46 +197,46 @@ namespace CSharpControls.Charting
       });
 
       //Sizing should be done from the ceiling
-      dynamic lastText = XValueConverter == null ? xCeiling.ToString() : XValueConverter.Convert(xCeiling, typeof(string), null, System.Globalization.CultureInfo.InvariantCulture);
-      dynamic spacingForText = lastText.Count * 6;
-      dynamic totalLength = spacingForText * xTicks;
-      dynamic fontSize = 0;
-      dynamic spacing = 0;
+      var lastText = XValueConverter == null ? xCeiling.ToString() : (string)XValueConverter.Convert(xCeiling, typeof(string), null, System.Globalization.CultureInfo.InvariantCulture);
+      var spacingForText = lastText.Length * 6;
+      var totalLength = spacingForText * xTicks;
+      var fontSize = 0;
+      var spacing = 0;
 
-      if (totalLength == 200)
+      if (totalLength <= 200)
       {
         fontSize = 30;
-        spacing = spacingForText * 1.2;
+        spacing = (int)(spacingForText * 1.2);
       }
-      else if (totalLength == 250)
+      else if (totalLength <= 250)
       {
         fontSize = 20;
-        spacing = spacingForText * 0.9;
+        spacing = (int)(spacingForText * 0.9);
       }
-      else if (totalLength == 500)
+      else if (totalLength <= 500)
       {
         fontSize = 16;
-        spacing = spacingForText * 0.6;
+        spacing = (int)(spacingForText * 0.6);
       }
-      else if (totalLength == 750)
+      else if (totalLength <= 750)
       {
         fontSize = 12;
-        spacing = spacingForText * 0.45;
+        spacing = (int)(spacingForText * 0.45);
       }
       else
       {
         fontSize = 8;
-        spacing = spacingForText * 0.3;
+        spacing = (int)(spacingForText * 0.3);
       }
         
       for (int i = 0; i <= xTicks - 1; i++)
       {
-        dynamic segment = GetSegment(i);
+        var segment = GetSegment(i);
 
-        dynamic xSegmentLabel = _explicitTicks[i];
-        dynamic textForLabel = new string(XValueConverter == null ? xSegmentLabel.ToString : XValueConverter.Convert(xSegmentLabel, typeof(string), null, System.Globalization.CultureInfo.InvariantCulture));
+        var xSegmentLabel = _explicitTicks[i];
+        var textForLabel = (XValueConverter == null) ? xSegmentLabel.ToString() : (string)XValueConverter.Convert(xSegmentLabel, typeof(string), null, System.Globalization.CultureInfo.InvariantCulture);
 
-        dynamic lineSegment = new Line
+        var lineSegment = new Line
         {
           X1 = segment,
           X2 = segment,
@@ -263,7 +263,7 @@ namespace CSharpControls.Charting
       var widthOfBar = viewWidth / ((_xNumberOfTicks + 2) * ChartData.Count);
       var yFactor = (viewHeight / (yCeiling - yFloor));
 
-      yFactor = double.IsNaN(yFactor) || double.IsInfinity(yFactor) ? 1 : yFactor;
+      yFactor = (double.IsNaN(yFactor) || double.IsInfinity(yFactor)) ? 1 : yFactor;
 
       for (int i = 0; i <= _xNumberOfTicks - 1; i++)
       {
@@ -284,10 +284,10 @@ namespace CSharpControls.Charting
         var segment = GetSegment(segmentIndex);
 
         //If I have two sets or more on the same day I need to see that
-        segment = segment + t.Index > 0 ? (t.Index) * widthOfBar : 0;
+        segment = segment + (t.Index > 0 ? (t.Index) * widthOfBar : 0);
 
         var matches = ChartData.Where((x, ind) => x.Points.ToList().Exists(y => y.XAsDouble == t.XAsDouble & y.YAsDouble == t.YAsDouble));
-        var color = matches.Count() > 1 ? matches.Skip(t.Index).Take(1).First().LineColor : matches.First().LineColor;
+        var color = (matches.Count() > 1 ? matches.Skip(t.Index).Take(1).First().LineColor : matches.First().LineColor);
 
         var toDraw = new Line
         {

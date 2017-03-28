@@ -60,10 +60,7 @@ namespace Main
       {
         _open = value;
         if (_loaded & !Open)
-        {
-          //Dim s = String.Empty
-          //SelectedLocations.ForEach(Sub(x) s += x.ToString + Environment.NewLine)
-          //MessageBox.Show(s)
+        { 
           UpdateHeader();
         }
         OnPropertyChanged(nameof(Open));

@@ -16,7 +16,7 @@ namespace CSharpControls.Converters.Instances
     {
       if (!Information.IsNumeric(value) | FirstPosition <= 0)
         return string.Empty;
-      var val = (double)value;
+      var val = System.Convert.ToDouble(value);
       
       var final = (val == FirstPosition) ? "Current" : ((int)(val - FirstPosition + 1)).DisplayNumberWithStringSuffix();
 

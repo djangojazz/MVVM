@@ -23,6 +23,7 @@ namespace Main
 
     public MainViewModel()
     {
+      DecimalConverter = new InstanceInSetToStringConverter();
       LocationCollection = new ObservableCollectionContentNotifying<DemandLocation>();
       ChartData = new ObservableCollectionContentNotifying<PlotTrend>();
 
@@ -31,6 +32,7 @@ namespace Main
       locs.ForEach(x => LocationCollection.Single(y => y.LocationID == x).IsUsed = true);
       UpdateHeader();
       SelectedItem = TrendChoices.FiscalPeriod;
+      UpdateChartData();
       LocationCollection.OnCollectionItemChanged += UpdateHeader;
     }
 

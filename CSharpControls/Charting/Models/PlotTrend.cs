@@ -9,7 +9,19 @@ namespace CSharpControls.Charting
 {
   public sealed class PlotTrend : INotifyPropertyChanged
   {
+    public PlotTrend(string seriesName, Brush lineColor, Thickness pointThickness, IEnumerable<PlotPoints> points)
+    {
+      Points = new ObservableCollection<PlotPoints>();
 
+      this.SeriesName = seriesName;
+      this.LineColor = lineColor;
+      this.PointThickness = pointThickness;
+      this.Points.ClearAndAddRange(points);
+
+      this.Points.CollectionChanged += NotifyChangedCollection;
+    }
+
+    #region SeriesName
     private string _seriesName;
     public string SeriesName
     {
@@ -20,7 +32,9 @@ namespace CSharpControls.Charting
         OnPropertyChanged(nameof(SeriesName));
       }
     }
+    #endregion
 
+    #region LineColor
     private Brush _lineColor;
     public Brush LineColor
     {
@@ -30,7 +44,8 @@ namespace CSharpControls.Charting
         _lineColor = value;
         OnPropertyChanged(nameof(LineColor));
       }
-    }
+    } 
+    #endregion
 
     private Thickness _pointThickness;
 
@@ -38,7 +53,7 @@ namespace CSharpControls.Charting
 
     public Thickness PointThickness
     {
-      get { return _pointThickness; }
+      get => _pointThickness;
       set
       {
         _pointThickness = value;
@@ -47,17 +62,7 @@ namespace CSharpControls.Charting
     }
 
     public ObservableCollection<PlotPoints> Points { get; }
-
-    public PlotTrend(string seriesName, Brush lineColor, Thickness pointThickness, IEnumerable<PlotPoints> points)
-    {
-      this.SeriesName = seriesName;
-      this.LineColor = lineColor;
-      this.PointThickness = pointThickness;
-      this.Points.ClearAndAddRange(points);
-
-      this.Points.CollectionChanged += NotifyChangedCollection;
-    }
-
+               
     private void NotifyChangedCollection(object sender, EventArgs e)
     {
       this.OnPropertyChanged(nameof(Points));

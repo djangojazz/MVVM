@@ -1,5 +1,6 @@
 ﻿using CSharpControls.Types;
-using System;      
+using System;
+using System.Collections.Specialized;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
@@ -10,7 +11,13 @@ using System.Windows.Threading;
 namespace CSharpControls.Charting
 {
   public abstract class BaseChart : UserControl
-  {          
+  {
+    //public delegate void CollectionChangedEventHandler(object sender, ObservableCollectionContentChangedArgs e);
+    //public event CollectionChangedEventHandler OnCollectionChanged;
+
+    //public delegate void LoadedEventHandler(object sender, EventArgs e);
+    //public event LoadedEventHandler OnLoaded;
+
     private TimeSpan _defaultTimeSpan = new TimeSpan(1000);
 
     internal DispatcherTimer Timer = new DispatcherTimer();
@@ -232,25 +239,31 @@ namespace CSharpControls.Charting
     #endregion
 
     #region "Override Methods"
+    
+
+    //public abstract void NotifyCollectionChanged(object sender, ObservableCollectionContentChangedArgs e);
+
     public static void ChartDataChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
     {
-      dynamic o = (BaseChart)d;
+      var o = (BaseChart)d;
 
       if ((e.OldValue != null))
       {
-        dynamic OldCollection = e.OldValue as ObservableCollectionContentNotifying<PlotTrend>;
+        var OldCollection = e.OldValue as ObservableCollectionContentNotifying<PlotTrend>;
         //RemoveHandler OldCollection.OnCollectionItemChanged, AddressOf o.CalculatePlotTrends
         OldCollection.CollectionChanged -= o.CalculatePlotTrends;
+       
       }
 
       if ((e.NewValue != null))
       {
-        dynamic NewCollection = e.NewValue as ObservableCollectionContentNotifying<PlotTrend>;
+        var NewCollection = e.NewValue as ObservableCollectionContentNotifying<PlotTrend>;
         //AddHandler NewCollection.OnCollectionItemChanged, AddressOf o.CalculatePlotTrends
         NewCollection.CollectionChanged += o.CalculatePlotTrends;
-        o.Loaded += o.ResizeAndPlotPoints(o);
-        o.SizeChanged += o.Resized();
-        o.Timer.Tick += o.OnTick(o);
+        o.Loaded += o.ResizeAndPlotPoints;
+        
+        //o.SizeChanged += o.Resized();
+        //o.Timer.Tick += o.OnTick(o);
       }
     }
 
@@ -258,9 +271,11 @@ namespace CSharpControls.Charting
 
     public abstract void Resized();
 
-    public abstract void ResizeAndPlotPoints(object o);
+    public abstract void ResizeAndPlotPoints(object o, EventArgs e);
 
-    public abstract void CalculatePlotTrends();
+    public abstract void CalculatePlotTrends(object sender, NotifyCollectionChangedEventArgs e);
+
+    
     #endregion
 
     #region "Protected Methods to be used by inheriting classes"
@@ -292,31 +307,31 @@ namespace CSharpControls.Charting
       var finalSpacing = 0.0;
       var lastSpaceFactor = 0.0;
 
-      if (spacingForText == 7)
+      if (spacingForText <= 7)
       {
         fontSize = 30;
         finalSpacing = spacingForText * 0.3;
         lastSpaceFactor = finalSpacing * 1.2;
       }
-      else if (spacingForText == 9)
+      else if (spacingForText <= 9)
       {
         fontSize = 24;
         finalSpacing = spacingForText * 0.5;
         lastSpaceFactor = finalSpacing * 1.5;
       }
-      else if (spacingForText == 11)
+      else if (spacingForText <= 11)
       {
         fontSize = 18;
         finalSpacing = spacingForText * 0.68;
         lastSpaceFactor = finalSpacing * 1.45;
       }
-      else if (spacingForText == 13)
+      else if (spacingForText <= 13)
       {
         fontSize = 16;
         finalSpacing = spacingForText * 0.7;
         lastSpaceFactor = finalSpacing * 1.44;
       }
-      else if (spacingForText == 14)
+      else
       {
         fontSize = 14;
         finalSpacing = spacingForText * 0.7;
@@ -376,25 +391,25 @@ namespace CSharpControls.Charting
       var finalSpacing = 0.0;
       var lastSpaceFactor = 0.0;
 
-      if (totalLength == 200)
+      if (totalLength <= 200)
       {
         fontSize = 30;
         finalSpacing = spacingForText * 1.2;
         lastSpaceFactor = finalSpacing * 2;
       }
-      else if (totalLength == 250)
+      else if (totalLength <= 250)
       {
         fontSize = 20;
         finalSpacing = spacingForText * 0.9;
         lastSpaceFactor = finalSpacing * 1.75;
       }
-      else if (totalLength == 500)
+      else if (totalLength <= 500)
       {
         fontSize = 16;
         finalSpacing = spacingForText * 0.6;
         lastSpaceFactor = finalSpacing * 2;
       }
-      else if (totalLength == 750)
+      else if (totalLength <= 750)
       {
         fontSize = 12;
         finalSpacing = spacingForText * 0.45;

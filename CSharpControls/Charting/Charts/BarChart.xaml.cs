@@ -1,6 +1,8 @@
-﻿using System;
+﻿using CSharpControls.Types;
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.Linq;       
 using System.Windows;
 using System.Windows.Controls;  
@@ -48,7 +50,7 @@ namespace CSharpControls.Charting
     public override void OnTick(object o)
     {
       Timer.Stop();
-      ResizeAndPlotPoints(o);
+      ResizeAndPlotPoints(o, null);
     }
 
     public override void Resized()
@@ -59,12 +61,12 @@ namespace CSharpControls.Charting
     #endregion
 
     #region "ResivingAndPlotPoints"
-    public override void ResizeAndPlotPoints(object o)
+    public override void ResizeAndPlotPoints(object o, EventArgs e)
     {
       SetupInternalHeightAndWidths();
       SetupHeightAndWidthsOfObjects();
       ResetTicksForSpecificDateRange();
-      CalculatePlotTrends();
+      CalculatePlotTrends(this, null);
     }
 
     private void ResetTicksForSpecificDateRange()
@@ -120,7 +122,7 @@ namespace CSharpControls.Charting
       }
     }
 
-    public override void CalculatePlotTrends()
+    public override void CalculatePlotTrends(object sender, NotifyCollectionChangedEventArgs e)
     {
       if (PART_CanvasPoints == null) return;
 

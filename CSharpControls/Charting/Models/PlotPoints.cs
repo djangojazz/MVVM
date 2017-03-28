@@ -23,12 +23,11 @@ namespace CSharpControls.Charting
     {
       get
       {
-        if ((X.PointType.GetType() == typeof(int)) || (X.PointType.GetType() == typeof(double)) || (X.PointType.GetType() == typeof(decimal)))
-          return Convert.ToDouble(((PlotPoint<double>)X).Point);
-        else if (X.PointType == typeof(DateTime))
-          return Convert.ToDouble(((PlotPoint<DateTime>)X).Point.Ticks);
-        else
-          return 0;
+        if (X.PointType == typeof(int)) { return Convert.ToDouble(((PlotPoint<int>)X).Point); }
+        else if (X.PointType == typeof(double)) { return Convert.ToDouble(((PlotPoint<double>)X).Point); }
+        else if (X.PointType == typeof(decimal)) { return Convert.ToDouble(((PlotPoint<decimal>)X).Point); }
+        else if (X.PointType == typeof(DateTime)) { return Convert.ToDouble(((PlotPoint<DateTime>)X).Point.Ticks); }
+        else { return 0; }
       }
     }
 
@@ -36,12 +35,11 @@ namespace CSharpControls.Charting
     {
       get
       {
-        if ((Y.PointType.GetType() == typeof(int)) || (Y.PointType.GetType() == typeof(double)) || (Y.PointType.GetType() == typeof(decimal)))
-          return Convert.ToDouble(((PlotPoint<double>)Y).Point);
-        else if (Y.PointType == typeof(DateTime))
-          return Convert.ToDouble(((PlotPoint<DateTime>)Y).Point.Ticks);
-        else
-          return 0;     
+        if (Y.PointType == typeof(int)) { return Convert.ToDouble(((PlotPoint<int>)Y).Point); }
+        else if (Y.PointType == typeof(double)) { return Convert.ToDouble(((PlotPoint<double>)Y).Point); }
+        else if (Y.PointType == typeof(decimal)) { return Convert.ToDouble(((PlotPoint<decimal>)Y).Point); }
+        else if (Y.PointType == typeof(DateTime)) { return Convert.ToDouble(((PlotPoint<DateTime>)Y).Point.Ticks); }
+        else { return 0; }
       }
     }
 

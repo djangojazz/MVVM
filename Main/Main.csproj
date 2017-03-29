@@ -104,15 +104,5 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup />
-  <ItemGroup>
-    <ProjectReference Include="..\CSharpControls\CSharpControls.csproj">
-      <Project>{E288391B-8B44-4AAF-82EB-BF33EB9F37C3}</Project>
-      <Name>CSharpControls</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\CSharpDataAccess\CSharpDataAccess.csproj">
-      <Project>{35F15E72-34FC-4BD9-A9B5-9920DDE2C24E}</Project>
-      <Name>CSharpDataAccess</Name>
-    </ProjectReference>
-  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

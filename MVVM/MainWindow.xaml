@@ -27,8 +27,7 @@
                                ScrollingHeight="300"
                                IsMultiCheckBoxOpen="{Binding Open, Mode=OneWayToSource}"
                                />
-    <cntrls:LineChart Grid.Row="2"
-      XNumberOfTicks="{Binding XTicks}"
+    <cntrls:BarChart Grid.Row="2"
       ChartData="{Binding ChartData}"
       ChartTitle="Test Line Chart"
       ChartForeground="Wheat"

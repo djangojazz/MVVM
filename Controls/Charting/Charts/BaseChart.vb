@@ -257,17 +257,17 @@ Public MustInherit Class BaseChart
 
     If Not IsNothing(e.OldValue) Then
       Dim OldCollection = TryCast(e.OldValue, ObservableCollectionContentNotifying(Of PlotTrend))
-      'RemoveHandler OldCollection.OnCollectionItemChanged, AddressOf o.CalculatePlotTrends
-      'RemoveHandler OldCollection.CollectionChanged, AddressOf o.CalculatePlotTrends
+      RemoveHandler OldCollection.OnCollectionItemChanged, AddressOf o.CalculatePlotTrends
+      RemoveHandler OldCollection.CollectionChanged, AddressOf o.CalculatePlotTrends
     End If
 
     If Not IsNothing(e.NewValue) Then
       Dim NewCollection = TryCast(e.NewValue, ObservableCollectionContentNotifying(Of PlotTrend))
-      'AddHandler NewCollection.OnCollectionItemChanged, AddressOf o.CalculatePlotTrends
-      'AddHandler NewCollection.CollectionChanged, AddressOf o.CalculatePlotTrends
+      AddHandler NewCollection.OnCollectionItemChanged, AddressOf o.CalculatePlotTrends
+      AddHandler NewCollection.CollectionChanged, AddressOf o.CalculatePlotTrends
       AddHandler o.Loaded, Sub() o.ResizeAndPlotPoints(o)
-      'AddHandler o.SizeChanged, Sub() o.Resized()
-      'AddHandler o.Timer.Tick, Sub() o.OnTick(o)
+      AddHandler o.SizeChanged, Sub() o.Resized()
+      AddHandler o.Timer.Tick, Sub() o.OnTick(o)
     End If
   End Sub
 
